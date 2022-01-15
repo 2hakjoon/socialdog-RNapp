@@ -27,42 +27,58 @@ function GoogleMap() {
   const [locationDialog] = useState(true);
   const [location, setLocation] = useState<latlngObj | null>(null);
   const [locations, setLocations] = useState<latlngObj[]>([]);
+  const [trackingId, setTrackingId] = useState(null);
+  const [tracking, setTracking] = useState(false);
 
-  const getLocation = () => {
+  const getLocation = () =>
     Geolocation.getCurrentPosition(
       position => {
         setLocation({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         });
-        setLocations(prev =>
-          prev.concat([
-            {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-            },
-          ]),
-        );
+        console.log(tracking);
+        if (tracking) {
+          setLocations(prev =>
+            prev.concat([
+              {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              },
+            ]),
+          );
+        }
         console.log(position);
       },
       error => Alert.alert('Error', JSON.stringify(error)),
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
     );
-  };
 
   const startTracking = () => {
-    BackgroundTimer.setInterval(() => {
-      getLocation();
-    }, 6000);
+    setTracking(true);
   };
 
   const stopTracking = () => {
-    BackgroundTimer.clearInterval();
+    setTracking(false);
+  };
+
+  const watchUserLocation = () => {
+    BackgroundTimer.clearInterval(trackingId);
+    const intervalId = BackgroundTimer.setInterval(() => {
+      getLocation();
+    }, 3000);
+    setTrackingId(intervalId);
   };
 
   useEffect(() => {
-    getLocation();
-  }, []);
+    if (tracking) {
+      getLocation();
+    }
+    watchUserLocation();
+    if (!tracking) {
+      getLocation();
+    }
+  }, [tracking]);
 
   useEffect(() => {
     console.log(locations.length);
@@ -104,7 +120,7 @@ function GoogleMap() {
         </RNMapView>
       )}
       <TouchableOpacity onPress={startTracking}>
-        <Text>추적 시작</Text>
+        <Text>{tracking ? '추적 중...' : '추적 시작'}</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={stopTracking}>
         <Text>추적 그만</Text>
