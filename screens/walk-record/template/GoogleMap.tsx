@@ -9,9 +9,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import RNMapView, {Polyline} from 'react-native-maps';
-import Geolocation, {GeoPosition} from 'react-native-geolocation-service';
 
 import BackgroundTimer from 'react-native-background-timer';
+import Geolocation, {
+  GeolocationResponse,
+} from '@react-native-community/geolocation';
 
 interface latlngObj {
   latitude: number;
@@ -23,91 +25,16 @@ function GoogleMap() {
   const [forceLocation] = useState(true);
   const [highAccuracy] = useState(true);
   const [locationDialog] = useState(true);
-  const [location, setLocation] = useState<GeoPosition | null>(null);
+  const [location, setLocation] = useState<latlngObj | null>(null);
   const [locations, setLocations] = useState<latlngObj[]>([]);
-  const [trackingPosition, setTrackingPosition] = useState(false);
 
-  const hasPermissionIOS = async () => {
-    const openSetting = () => {
-      Linking.openSettings().catch(() => {
-        Alert.alert('Unable to open settings');
-      });
-    };
-    const status = await Geolocation.requestAuthorization('whenInUse');
-
-    if (status === 'granted') {
-      return true;
-    }
-
-    if (status === 'denied') {
-      Alert.alert('Location permission denied');
-    }
-
-    if (status === 'disabled') {
-      Alert.alert(
-        'Turn on Location Services to allow "social dog" to determine your location.',
-        '',
-        [
-          {text: 'Go to Settings', onPress: openSetting},
-          {text: "Don't Use Location", onPress: () => {}},
-        ],
-      );
-    }
-
-    return false;
-  };
-
-  const hasLocationPermission = async () => {
-    if (Platform.OS === 'ios') {
-      const hasPermission = await hasPermissionIOS();
-      return hasPermission;
-    }
-
-    if (Platform.OS === 'android' && Platform.Version < 23) {
-      return true;
-    }
-
-    const hasPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
-    );
-
-    if (hasPermission) {
-      return true;
-    }
-
-    const status = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
-    );
-
-    if (status === PermissionsAndroid.RESULTS.GRANTED) {
-      return true;
-    }
-
-    if (status === PermissionsAndroid.RESULTS.DENIED) {
-      ToastAndroid.show(
-        'Location permission denied by user.',
-        ToastAndroid.LONG,
-      );
-    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-      ToastAndroid.show(
-        'Location permission revoked by user.',
-        ToastAndroid.LONG,
-      );
-    }
-
-    return false;
-  };
-
-  const getLocation = async () => {
-    const hasPermission = await hasLocationPermission();
-    if (!hasPermission) {
-      return;
-    }
-
+  const getLocation = () => {
     Geolocation.getCurrentPosition(
-      (position: GeoPosition) => {
-        console.log(position);
-        setLocation(position);
+      position => {
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
         setLocations(prev =>
           prev.concat([
             {
@@ -116,23 +43,10 @@ function GoogleMap() {
             },
           ]),
         );
+        console.log(position);
       },
-      error => {
-        Alert.alert(`Code ${error.code}`, error.message);
-        setLocation(null);
-        console.log(error);
-      },
-      {
-        accuracy: {
-          android: 'high',
-          ios: 'best',
-        },
-        enableHighAccuracy: highAccuracy,
-        distanceFilter: 0,
-        forceRequestLocation: forceLocation,
-        forceLocationManager: useLocationManager,
-        showLocationDialog: locationDialog,
-      },
+      error => Alert.alert('Error', JSON.stringify(error)),
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
     );
   };
 
@@ -143,11 +57,11 @@ function GoogleMap() {
   };
 
   const stopTracking = () => {
-    BackgroundTimer.clearTimeout();
+    BackgroundTimer.clearInterval();
   };
 
   useEffect(() => {
-    //getLocation();
+    getLocation();
   }, []);
 
   useEffect(() => {
@@ -162,20 +76,14 @@ function GoogleMap() {
           style={{width: '100%', height: '70%'}}
           initialCamera={{
             altitude: 15000,
-            center: {
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-            },
+            center: location,
             heading: 0,
             pitch: 0,
             zoom: 18,
           }}
           camera={{
             altitude: 15000,
-            center: {
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-            },
+            center: location,
             heading: 0,
             pitch: 0,
             zoom: 18,
