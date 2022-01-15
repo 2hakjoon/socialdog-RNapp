@@ -4,11 +4,12 @@ import {
   Linking,
   PermissionsAndroid,
   Platform,
+  Text,
   ToastAndroid,
+  TouchableOpacity,
 } from 'react-native';
 import RNMapView, {Polyline} from 'react-native-maps';
 import Geolocation, {GeoPosition} from 'react-native-geolocation-service';
-import {trackingData} from '../../../utils/trackingData';
 
 import BackgroundTimer from 'react-native-background-timer';
 
@@ -24,6 +25,7 @@ function GoogleMap() {
   const [locationDialog] = useState(true);
   const [location, setLocation] = useState<GeoPosition | null>(null);
   const [locations, setLocations] = useState<latlngObj[]>([]);
+  const [trackingPosition, setTrackingPosition] = useState(false);
 
   const hasPermissionIOS = async () => {
     const openSetting = () => {
@@ -66,7 +68,7 @@ function GoogleMap() {
     }
 
     const hasPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
     );
 
     if (hasPermission) {
@@ -74,7 +76,7 @@ function GoogleMap() {
     }
 
     const status = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
     );
 
     if (status === PermissionsAndroid.RESULTS.GRANTED) {
@@ -98,7 +100,6 @@ function GoogleMap() {
 
   const getLocation = async () => {
     const hasPermission = await hasLocationPermission();
-
     if (!hasPermission) {
       return;
     }
@@ -134,16 +135,19 @@ function GoogleMap() {
       },
     );
   };
-  //rest of code will be performing for iOS on background too
 
-  //BackgroundTimer.stopBackgroundTimer(); //after this call all code on background stop run.
+  const startTracking = () => {
+    BackgroundTimer.setInterval(() => {
+      getLocation();
+    }, 6000);
+  };
+
+  const stopTracking = () => {
+    BackgroundTimer.clearTimeout();
+  };
 
   useEffect(() => {
-    BackgroundTimer.runBackgroundTimer(() => {
-      getLocation();
-    }, 3000);
-    BackgroundTimer.start();
-    getLocation();
+    //getLocation();
   }, []);
 
   useEffect(() => {
@@ -155,7 +159,7 @@ function GoogleMap() {
     <>
       {location && (
         <RNMapView
-          style={{width: '100%', height: '100%'}}
+          style={{width: '100%', height: '70%'}}
           initialCamera={{
             altitude: 15000,
             center: {
@@ -191,6 +195,12 @@ function GoogleMap() {
           />
         </RNMapView>
       )}
+      <TouchableOpacity onPress={startTracking}>
+        <Text>추적 시작</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={stopTracking}>
+        <Text>추적 그만</Text>
+      </TouchableOpacity>
     </>
   );
 }
