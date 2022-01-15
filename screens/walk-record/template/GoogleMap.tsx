@@ -8,12 +8,15 @@ import {
 } from 'react-native';
 import RNMapView, {Polyline} from 'react-native-maps';
 import Geolocation, {GeoPosition} from 'react-native-geolocation-service';
-import { trackingData } from '../../../utils/trackingData';
+import {trackingData} from '../../../utils/trackingData';
+
+import BackgroundTimer from 'react-native-background-timer';
 
 interface latlngObj {
   latitude: number;
   longitude: number;
 }
+
 function GoogleMap() {
   const [useLocationManager] = useState(false);
   const [forceLocation] = useState(true);
@@ -100,7 +103,7 @@ function GoogleMap() {
       return;
     }
 
-    Geolocation.watchPosition(
+    Geolocation.getCurrentPosition(
       (position: GeoPosition) => {
         console.log(position);
         setLocation(position);
@@ -124,7 +127,6 @@ function GoogleMap() {
           ios: 'best',
         },
         enableHighAccuracy: highAccuracy,
-        interval: 5000,
         distanceFilter: 0,
         forceRequestLocation: forceLocation,
         forceLocationManager: useLocationManager,
@@ -132,8 +134,15 @@ function GoogleMap() {
       },
     );
   };
+  //rest of code will be performing for iOS on background too
+
+  //BackgroundTimer.stopBackgroundTimer(); //after this call all code on background stop run.
 
   useEffect(() => {
+    BackgroundTimer.runBackgroundTimer(() => {
+      getLocation();
+    }, 3000);
+    BackgroundTimer.start();
     getLocation();
   }, []);
 
@@ -168,7 +177,7 @@ function GoogleMap() {
             zoom: 18,
           }}>
           <Polyline
-            coordinates={trackingData}
+            coordinates={locations}
             strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
             strokeColors={[
               '#7F0000',
