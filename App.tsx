@@ -12,6 +12,7 @@ import React from 'react';
 import {SafeAreaView, StatusBar, Text, useColorScheme} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import GoogleMap from './screens/walk-record/template/GoogleMap';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -23,7 +24,7 @@ const App = () => {
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <Text>어플 개발 시작!</Text>
+      <GoogleMap />
     </SafeAreaView>
   );
 };
