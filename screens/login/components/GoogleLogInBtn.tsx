@@ -45,12 +45,6 @@ function GoogleLoginBtn() {
     return auth().signInWithCredential(googleCredential);
   }
 
-  const logOutHandler = () => {
-    auth()
-      .signOut()
-      .then(() => console.log('User signed out!'));
-  };
-
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
@@ -70,7 +64,6 @@ function GoogleLoginBtn() {
           )
         }
       />
-      <Button onPress={logOutHandler} title="로그아웃" />
       {user?.email && <Text>Welcome {user?.email}</Text>}
     </>
   );
