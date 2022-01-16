@@ -15,7 +15,6 @@ function LogInScreen() {
   }
 
   useEffect(() => {
-    console.log('??');
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
   }, []);
@@ -25,13 +24,17 @@ function LogInScreen() {
       <Text>asdfjasdflajsdfl</Text>
       <GoogleLogInBtn />
       <LogOutBtn />
-      {user?.email && <Text>Welcome {user?.email}</Text>}
-      <Button
-        title="산책하러가기"
-        onPress={() => {
-          navigation.navigate('WalkRecord');
-        }}
-      />
+      {user?.email && (
+        <>
+          <Text>Welcome {user?.email}</Text>
+          <Button
+            title="산책하러가기"
+            onPress={() => {
+              navigation.navigate('WalkRecord');
+            }}
+          />
+        </>
+      )}
     </>
   );
 }

@@ -4,8 +4,8 @@ import firestore from '@react-native-firebase/firestore';
 import {trackingData} from '../../../utils/trackingData';
 import GoogleLoginBtn from '../../login/components/GoogleLogInBtn';
 
-const usersCollection = firestore().collection('Users');
-const walksCollection = firestore().collection('Walks');
+export const usersCollection = firestore().collection('Users');
+export const walksCollection = firestore().collection('Walks');
 
 function Firebase() {
   const uploadUserData = () => {

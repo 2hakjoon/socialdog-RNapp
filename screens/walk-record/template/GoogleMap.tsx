@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Alert, Text, TouchableOpacity} from 'react-native';
+import {Alert, Text, TouchableOpacity, View} from 'react-native';
 import RNMapView, {Polyline} from 'react-native-maps';
 
 import BackgroundTimer from 'react-native-background-timer';
@@ -49,6 +49,10 @@ function GoogleMap() {
     setTracking(false);
   };
 
+  const saveTracking = () => {
+    setTracking(false);
+  };
+
   const watchUserLocation = () => {
     BackgroundTimer.clearInterval(trackingId);
     const intervalId = BackgroundTimer.setInterval(() => {
@@ -86,7 +90,7 @@ function GoogleMap() {
 
   return (
     <>
-      {location && (
+      {location ? (
         <RNMapView
           style={{width: '100%', height: '70%'}}
           initialCamera={{
@@ -117,12 +121,43 @@ function GoogleMap() {
             strokeWidth={6}
           />
         </RNMapView>
+      ) : (
+        <View
+          style={{
+            width: '100%',
+            height: '70%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <Text>위치정보를 받아오는 중입니다....</Text>
+        </View>
       )}
-      <TouchableOpacity onPress={startTracking}>
-        <Text>{tracking ? '추적 중...' : '추적 시작'}</Text>
+      <TouchableOpacity
+        style={{
+          width: '100%',
+          height: 30,
+          backgroundColor: 'skyblue',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          margin: 5,
+        }}
+        onPress={tracking ? stopTracking : startTracking}>
+        <Text>{tracking ? '산책 종료' : '산책 시작'}</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={stopTracking}>
-        <Text>추적 그만</Text>
+      <TouchableOpacity
+        style={{
+          width: '100%',
+          height: 30,
+          backgroundColor: 'skyblue',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          margin: 5,
+        }}
+        onPress={stopTracking}>
+        <Text>잠깐 휴식</Text>
       </TouchableOpacity>
     </>
   );
