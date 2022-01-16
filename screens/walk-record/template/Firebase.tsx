@@ -2,6 +2,7 @@ import React from 'react';
 import {Pressable, Text} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {trackingData} from '../../../utils/trackingData';
+import GoogleLoginBtn from '../components/GoogleLoginBtn';
 
 const usersCollection = firestore().collection('Users');
 const walksCollection = firestore().collection('Walks');
@@ -57,6 +58,7 @@ function Firebase() {
       <Pressable onPress={readTrackingData}>
         <Text>산책데이터불러오기</Text>
       </Pressable>
+      <GoogleLoginBtn />
     </>
   );
 }
