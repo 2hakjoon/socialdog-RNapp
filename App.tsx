@@ -12,6 +12,7 @@ import React from 'react';
 import {SafeAreaView, StatusBar, Text, useColorScheme} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import Firebase from './screens/walk-record/template/Firebase';
 import GoogleMap from './screens/walk-record/template/GoogleMap';
 
 const App = () => {
@@ -24,7 +25,8 @@ const App = () => {
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <GoogleMap />
+      {/* <GoogleMap /> */}
+      <Firebase />
     </SafeAreaView>
   );
 };
