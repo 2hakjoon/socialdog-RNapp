@@ -1,19 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {
-  Alert,
-  Linking,
-  PermissionsAndroid,
-  Platform,
-  Text,
-  ToastAndroid,
-  TouchableOpacity,
-} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Alert, Text, TouchableOpacity} from 'react-native';
 import RNMapView, {Polyline} from 'react-native-maps';
 
 import BackgroundTimer from 'react-native-background-timer';
-import Geolocation, {
-  GeolocationResponse,
-} from '@react-native-community/geolocation';
+import Geolocation from '@react-native-community/geolocation';
+import {useFocusEffect} from '@react-navigation/native';
 
 interface latlngObj {
   latitude: number;
@@ -21,10 +12,6 @@ interface latlngObj {
 }
 
 function GoogleMap() {
-  const [useLocationManager] = useState(false);
-  const [forceLocation] = useState(true);
-  const [highAccuracy] = useState(true);
-  const [locationDialog] = useState(true);
   const [location, setLocation] = useState<latlngObj | null>(null);
   const [locations, setLocations] = useState<latlngObj[]>([]);
   const [trackingId, setTrackingId] = useState(null);
@@ -70,20 +57,32 @@ function GoogleMap() {
     setTrackingId(intervalId);
   };
 
-  useEffect(() => {
-    if (tracking) {
-      getLocation();
-    }
-    watchUserLocation();
-    if (!tracking) {
-      getLocation();
-    }
-  }, [tracking]);
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        BackgroundTimer.clearInterval(trackingId);
+      };
+    }, [trackingId]),
+  );
 
-  useEffect(() => {
-    console.log(locations.length);
-    console.log(locations);
-  }, [locations]);
+  useFocusEffect(
+    useCallback(() => {
+      if (tracking) {
+        getLocation();
+      }
+      watchUserLocation();
+      if (!tracking) {
+        getLocation();
+      }
+    }, [tracking]),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log(locations.length);
+      console.log(locations);
+    }, [locations]),
+  );
 
   return (
     <>

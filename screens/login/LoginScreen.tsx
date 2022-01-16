@@ -1,66 +1,39 @@
-import React from 'react';
-import {Pressable, Text} from 'react-native';
-import firestore from '@react-native-firebase/firestore';
-import {trackingData} from '../../../utils/trackingData';
-import GoogleLoginBtn from '../components/GoogleLoginBtn';
+import React, {useEffect, useState} from 'react';
+import {Button, Text, View} from 'react-native';
+import GoogleLogInBtn from './components/GoogleLogInBtn';
+import {User} from './components/GoogleLoginBtn';
+import auth from '@react-native-firebase/auth';
+import LogOutBtn from './components/LogOutBtn';
+import {useNavigation} from '@react-navigation/native';
 
-const usersCollection = firestore().collection('Users');
-const walksCollection = firestore().collection('Walks');
+function LogInScreen() {
+  const [user, setUser] = useState<User | null>();
+  const navigation = useNavigation();
 
-function Firebase() {
-  const uploadUserData = () => {
-    usersCollection
-      .doc('순대 고유아이디')
-      .set({
-        name: '순대',
-        age: 5,
-      })
-      .then(() => {
-        console.log('User added!');
-      });
-  };
+  function onAuthStateChanged(userData: User | null) {
+    setUser(userData);
+  }
 
-  const uploadTrackingData = () => {
-    walksCollection
-      .doc('순대 고유아이디')
-      .collection('오늘')
-      .doc('1')
-      .set({trackingData})
-      .then(() => {
-        console.log('walks added!');
-      });
-  };
-
-  const readUserData = async () => {
-    const res = await usersCollection.doc('순대 고유아이디').get();
-    console.log(res);
-  };
-  const readTrackingData = async () => {
-    const res = await walksCollection
-      .doc('순대 고유아이디')
-      .collection('오늘')
-      .doc('1')
-      .get();
-    console.log(res);
-  };
+  useEffect(() => {
+    console.log('??');
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
 
   return (
     <>
-      <Pressable onPress={uploadUserData}>
-        <Text>유저데이터업로드</Text>
-      </Pressable>
-      <Pressable onPress={uploadTrackingData}>
-        <Text>산책데이터업로드</Text>
-      </Pressable>
-      <Pressable onPress={readUserData}>
-        <Text>유저데이터불러오기</Text>
-      </Pressable>
-      <Pressable onPress={readTrackingData}>
-        <Text>산책데이터불러오기</Text>
-      </Pressable>
-      <GoogleLoginBtn />
+      <Text>asdfjasdflajsdfl</Text>
+      <GoogleLogInBtn />
+      <LogOutBtn />
+      {user?.email && <Text>Welcome {user?.email}</Text>}
+      <Button
+        title="산책하러가기"
+        onPress={() => {
+          navigation.navigate('WalkRecord');
+        }}
+      />
     </>
   );
 }
 
-export default Firebase;
+export default LogInScreen;

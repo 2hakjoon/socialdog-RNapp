@@ -10,12 +10,12 @@
 
 import React from 'react';
 import {SafeAreaView, StatusBar, Text, useColorScheme} from 'react-native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import Firebase from './screens/walk-record/template/Firebase';
 import GoogleMap from './screens/walk-record/template/GoogleMap';
 import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import LogInScreen from './screens/login/LogInScreen';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -27,15 +27,16 @@ const App = () => {
   const Stack = createNativeStackNavigator();
 
   return (
-    <SafeAreaView style={backgroundStyle}>
+    <>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <Text>asfasdf</Text>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen name="Login" component={Firebase} />
+        <Stack.Navigator initialRouteName="Login">
+          <Stack.Screen name="Login" component={LogInScreen} />
           <Stack.Screen name="WalkRecord" component={GoogleMap} />
         </Stack.Navigator>
       </NavigationContainer>
-    </SafeAreaView>
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Text} from 'react-native';
+import {Button} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
@@ -8,7 +8,7 @@ GoogleSignin.configure({
     '147772000843-6b96b92gvdvovklpsn8e6v59ueqoaqcf.apps.googleusercontent.com',
 });
 
-interface User {
+export interface User {
   displayName: string | null;
   email: string | null;
   emailVerified: boolean;
@@ -21,7 +21,7 @@ interface User {
   uid: string;
 }
 
-function GoogleLoginBtn() {
+function GoogleLogInBtn() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState<User | null>();
@@ -64,8 +64,7 @@ function GoogleLoginBtn() {
           )
         }
       />
-      {user?.email && <Text>Welcome {user?.email}</Text>}
     </>
   );
 }
-export default GoogleLoginBtn;
+export default GoogleLogInBtn;

@@ -10,3 +10,5 @@ function LogOutBtn() {
   };
   return <Button onPress={logOutHandler} title="로그아웃" />;
 }
+
+export default LogOutBtn;
