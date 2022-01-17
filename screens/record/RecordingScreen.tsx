@@ -6,20 +6,20 @@ import BackgroundTimer from 'react-native-background-timer';
 import Geolocation from '@react-native-community/geolocation';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
-import {RootState} from '../../../module';
-import {now_yyyy_mm_dd} from '../../../utils/dataformat/dateformat';
-import {walksCollection} from '../../../firebase';
+import {RootState} from '../../module';
+import {now_yyyy_mm_dd} from '../../utils/dataformat/dateformat';
+import {walksCollection} from '../../firebase';
 
 interface latlngObj {
   latitude: number;
   longitude: number;
 }
 
-function GoogleMap() {
+function RecordingScreen() {
   const [location, setLocation] = useState<latlngObj | null>(null);
   const [locations, setLocations] = useState<latlngObj[]>([]);
-  const [trackingId, setTrackingId] = useState(null);
-  const [tracking, setTracking] = useState(false);
+  const [recordingId, setRecordingId] = useState(null);
+  const [recording, setRecording] = useState(false);
   const [startTime, setStartTime] = useState<number>();
   const user = useSelector((state: RootState) => state.auth.user);
 
@@ -30,8 +30,8 @@ function GoogleMap() {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         });
-        console.log(tracking);
-        if (tracking) {
+        console.log(recording);
+        if (recording) {
           setLocations(prev =>
             prev.concat([
               {
@@ -47,17 +47,17 @@ function GoogleMap() {
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
     );
 
-  const startTracking = () => {
-    setTracking(true);
+  const startRecording = () => {
+    setRecording(true);
     setStartTime(Date.now());
   };
 
-  const stopTracking = () => {
-    setTracking(false);
+  const pauseRecording = () => {
+    setRecording(false);
   };
 
-  const saveTracking = () => {
-    setTracking(false);
+  const saveRecording = () => {
+    setRecording(false);
     walksCollection
       .doc(user?.uid)
       .collection(now_yyyy_mm_dd())
@@ -68,32 +68,33 @@ function GoogleMap() {
       });
   };
 
+
   const watchUserLocation = () => {
-    BackgroundTimer.clearInterval(trackingId);
+    BackgroundTimer.clearInterval(recordingId);
     const intervalId = BackgroundTimer.setInterval(() => {
       getLocation();
     }, 3000);
-    setTrackingId(intervalId);
+    setRecordingId(intervalId);
   };
 
   useFocusEffect(
     useCallback(() => {
       return () => {
-        BackgroundTimer.clearInterval(trackingId);
+        BackgroundTimer.clearInterval(recordingId);
       };
-    }, [trackingId]),
+    }, [recordingId]),
   );
 
   useFocusEffect(
     useCallback(() => {
-      if (tracking) {
+      if (recording) {
         getLocation();
       }
       watchUserLocation();
-      if (!tracking) {
+      if (!recording) {
         getLocation();
       }
-    }, [tracking]),
+    }, [recording]),
   );
 
   useFocusEffect(
@@ -158,8 +159,8 @@ function GoogleMap() {
           justifyContent: 'center',
           margin: 5,
         }}
-        onPress={tracking ? saveTracking : startTracking}>
-        <Text>{tracking ? '산책 종료' : '산책 시작'}</Text>
+        onPress={recording ? saveRecording : startRecording}>
+        <Text>{recording ? '산책 종료' : '산책 시작'}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={{
@@ -171,11 +172,11 @@ function GoogleMap() {
           justifyContent: 'center',
           margin: 5,
         }}
-        onPress={stopTracking}>
+        onPress={pauseRecording}>
         <Text>잠깐 휴식</Text>
       </TouchableOpacity>
     </>
   );
 }
 
-export default GoogleMap;
+export default RecordingScreen;

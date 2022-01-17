@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../module';
 import {authorize} from '../../module/auth';
 import {usersCollection} from '../../firebase';
+import {routes} from '../../routes';
 
 function LogInScreen() {
   const navigation = useNavigation();
@@ -50,7 +51,14 @@ function LogInScreen() {
           <Button
             title="산책하러가기"
             onPress={() => {
-              navigation.navigate('WalkRecord');
+              navigation.navigate(routes.record);
+            }}
+          />
+          <Text></Text>
+          <Button
+            title="산책 기록 확인"
+            onPress={() => {
+              navigation.navigate(routes.walkRecords);
             }}
           />
         </>
