@@ -16,6 +16,9 @@ import GoogleMap from './screens/walk-record/template/GoogleMap';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LogInScreen from './screens/login/LogInScreen';
+import {Provider} from 'react-redux';
+import {createStore} from 'redux';
+import rootReducer from './module';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -25,9 +28,10 @@ const App = () => {
   };
 
   const Stack = createNativeStackNavigator();
+  const store = createStore(rootReducer);
 
   return (
-    <>
+    <Provider store={store}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Login">
@@ -35,7 +39,7 @@ const App = () => {
           <Stack.Screen name="WalkRecord" component={GoogleMap} />
         </Stack.Navigator>
       </NavigationContainer>
-    </>
+    </Provider>
   );
 };
 

@@ -5,6 +5,7 @@ import RNMapView, {Polyline} from 'react-native-maps';
 import BackgroundTimer from 'react-native-background-timer';
 import Geolocation from '@react-native-community/geolocation';
 import {useFocusEffect} from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 interface latlngObj {
   latitude: number;
@@ -16,6 +17,7 @@ function GoogleMap() {
   const [locations, setLocations] = useState<latlngObj[]>([]);
   const [trackingId, setTrackingId] = useState(null);
   const [tracking, setTracking] = useState(false);
+  const user = useSelector((state))
 
   const getLocation = () =>
     Geolocation.getCurrentPosition(

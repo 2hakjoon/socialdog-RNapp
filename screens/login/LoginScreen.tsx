@@ -1,32 +1,52 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Text, View} from 'react-native';
+import {Button, Text} from 'react-native';
 import GoogleLogInBtn from './components/GoogleLogInBtn';
-import {User} from './components/GoogleLoginBtn';
-import auth from '@react-native-firebase/auth';
 import LogOutBtn from './components/LogOutBtn';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../../module';
+import {authorize} from '../../module/auth';
+import {usersCollection} from '../../firebase';
 
 function LogInScreen() {
-  const [user, setUser] = useState<User | null>();
   const navigation = useNavigation();
+  const user = useSelector((state: RootState) => state.auth.user);
+  const dispatch = useDispatch();
 
-  function onAuthStateChanged(userData: User | null) {
-    setUser(userData);
-  }
-
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
-  }, []);
-
+  const createOrLogInUser = async (uid: string) => {
+    let userData = (await usersCollection.doc(uid).get()).data();
+    if (userData) {
+      dispatch(
+        authorize({
+          uid: userData.uid,
+          username: userData.username,
+        }),
+      );
+    } else {
+      usersCollection
+        .doc(uid)
+        .set({
+          uid,
+          username: `회원${Date.now()}`,
+        })
+        .then(async () => {
+          userData = (await usersCollection.doc(uid).get()).data();
+          dispatch(
+            authorize({
+              uid: userData?.uid,
+              username: userData?.username,
+            }),
+          );
+        });
+    }
+  };
+  console.log(user);
   return (
     <>
-      <Text>asdfjasdflajsdfl</Text>
-      <GoogleLogInBtn />
-      <LogOutBtn />
-      {user?.email && (
+      {user?.username ? (
         <>
-          <Text>Welcome {user?.email}</Text>
+          <LogOutBtn />
+          <Text>Welcome {user?.username}</Text>
           <Button
             title="산책하러가기"
             onPress={() => {
@@ -34,6 +54,8 @@ function LogInScreen() {
             }}
           />
         </>
+      ) : (
+        <GoogleLogInBtn authHandler={createOrLogInUser} />
       )}
     </>
   );

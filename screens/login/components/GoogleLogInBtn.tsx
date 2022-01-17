@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {Button} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {Button, Text} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {useFocusEffect} from '@react-navigation/native';
 
 GoogleSignin.configure({
   webClientId:
@@ -21,18 +22,22 @@ export interface User {
   uid: string;
 }
 
-function GoogleLogInBtn() {
-  // Set an initializing state whilst Firebase connects
-  const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState<User | null>();
+interface IGoogleLogInBtnProps {
+  authHandler: (uid: string) => void;
+}
 
-  // Handle user state changes
-  function onAuthStateChanged(userData: User | null) {
-    setUser(userData);
+function GoogleLogInBtn({authHandler}: IGoogleLogInBtnProps) {
+  const [initializing, setInitializing] = useState(true);
+
+  const onAuthStateChanged = async (userData: User | null) => {
     if (initializing) {
       setInitializing(false);
     }
-  }
+
+    if (userData?.uid) {
+      authHandler(userData.uid);
+    }
+  };
 
   async function onGoogleButtonPress() {
     // Get the users ID token
@@ -45,25 +50,27 @@ function GoogleLogInBtn() {
     return auth().signInWithCredential(googleCredential);
   }
 
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
-  }, []);
-
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
+  useFocusEffect(
+    useCallback(() => {
+      const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+      return subscriber; // unsubscribe on unmount
+    }, []),
+  );
 
   return (
     <>
-      <Button
-        title="Google Sign-In"
-        onPress={() =>
-          onGoogleButtonPress().then(() =>
-            console.log('Signed in with Google!'),
-          )
-        }
-      />
+      {initializing ? (
+        <Text>로그인정보를 확인중입니다....</Text>
+      ) : (
+        <Button
+          title="Google Sign-In"
+          onPress={() =>
+            onGoogleButtonPress().then(() =>
+              console.log('Signed in with Google!'),
+            )
+          }
+        />
+      )}
     </>
   );
 }
