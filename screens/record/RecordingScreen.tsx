@@ -8,7 +8,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../module';
 import {now_yyyy_mm_dd} from '../../utils/dataformat/dateformat';
-import {walksCollection} from '../../firebase';
+import {recordsCollection, walksCollection} from '../../firebase';
 
 interface latlngObj {
   latitude: number;
@@ -56,18 +56,31 @@ function RecordingScreen() {
     setRecording(false);
   };
 
-  const saveRecording = () => {
+  const saveRecording = async () => {
     setRecording(false);
-    walksCollection
-      .doc(user?.uid)
-      .collection(now_yyyy_mm_dd())
-      .doc(`${startTime}-${Date.now()}`)
-      .set({locations})
-      .then(() => {
-        console.log('walks added!');
-      });
-  };
+    const now = Date.now();
+    const recordingUid = `${user?.uid}-${startTime}-${now}`;
+    await recordsCollection.doc(recordingUid).set({
+      ...locations,
+    });
 
+    const todayRecords = await (
+      await walksCollection.doc(user?.uid).get()
+    ).data();
+    console.log(todayRecords);
+    if (todayRecords && todayRecords[`${now_yyyy_mm_dd()}`].length) {
+      walksCollection.doc(user?.uid).set({
+        [`${now_yyyy_mm_dd()}`]: [
+          ...todayRecords[`${now_yyyy_mm_dd()}`],
+          `${startTime}-${now}`,
+        ],
+      });
+    } else {
+      walksCollection
+        .doc(user?.uid)
+        .set({[`${now_yyyy_mm_dd()}`]: [`${startTime}-${now}`]});
+    }
+  };
 
   const watchUserLocation = () => {
     BackgroundTimer.clearInterval(recordingId);
@@ -124,7 +137,7 @@ function RecordingScreen() {
             zoom: 18,
           }}>
           <Polyline
-            coordinates={locations}
+            coordinates={{...locations}}
             strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
             strokeColors={[
               '#7F0000',
