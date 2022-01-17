@@ -12,9 +12,11 @@ import {routes} from '../../routes';
 function LogInScreen() {
   const navigation = useNavigation();
   const user = useSelector((state: RootState) => state.auth.user);
+  const [userDataLoading, setUserDataLoading] = useState(false);
   const dispatch = useDispatch();
 
   const createOrLogInUser = async (uid: string) => {
+    setUserDataLoading(true);
     let userData = (await usersCollection.doc(uid).get()).data();
     if (userData) {
       dispatch(
@@ -23,6 +25,7 @@ function LogInScreen() {
           username: userData.username,
         }),
       );
+      setUserDataLoading(false);
     } else {
       usersCollection
         .doc(uid)
@@ -38,13 +41,14 @@ function LogInScreen() {
               username: userData?.username,
             }),
           );
+          setUserDataLoading(false);
         });
     }
   };
   console.log(user);
   return (
     <>
-      {user?.username ? (
+      {user?.username && !userDataLoading ? (
         <>
           <LogOutBtn />
           <Text>Welcome {user?.username}</Text>
@@ -54,7 +58,7 @@ function LogInScreen() {
               navigation.navigate(routes.record);
             }}
           />
-          <Text></Text>
+          <Text />
           <Button
             title="산책 기록 확인"
             onPress={() => {
