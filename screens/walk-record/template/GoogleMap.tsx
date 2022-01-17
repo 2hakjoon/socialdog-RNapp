@@ -5,7 +5,10 @@ import RNMapView, {Polyline} from 'react-native-maps';
 import BackgroundTimer from 'react-native-background-timer';
 import Geolocation from '@react-native-community/geolocation';
 import {useFocusEffect} from '@react-navigation/native';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../../module';
+import {now_yyyy_mm_dd} from '../../../utils/dataformat/dateformat';
+import {walksCollection} from '../../../firebase';
 
 interface latlngObj {
   latitude: number;
@@ -17,7 +20,8 @@ function GoogleMap() {
   const [locations, setLocations] = useState<latlngObj[]>([]);
   const [trackingId, setTrackingId] = useState(null);
   const [tracking, setTracking] = useState(false);
-  const user = useSelector((state))
+  const [startTime, setStartTime] = useState<number>();
+  const user = useSelector((state: RootState) => state.auth.user);
 
   const getLocation = () =>
     Geolocation.getCurrentPosition(
@@ -45,6 +49,7 @@ function GoogleMap() {
 
   const startTracking = () => {
     setTracking(true);
+    setStartTime(Date.now());
   };
 
   const stopTracking = () => {
@@ -53,6 +58,14 @@ function GoogleMap() {
 
   const saveTracking = () => {
     setTracking(false);
+    walksCollection
+      .doc(user?.uid)
+      .collection(now_yyyy_mm_dd())
+      .doc(`${startTime}-${Date.now()}`)
+      .set({locations})
+      .then(() => {
+        console.log('walks added!');
+      });
   };
 
   const watchUserLocation = () => {
@@ -145,7 +158,7 @@ function GoogleMap() {
           justifyContent: 'center',
           margin: 5,
         }}
-        onPress={tracking ? stopTracking : startTracking}>
+        onPress={tracking ? saveTracking : startTracking}>
         <Text>{tracking ? '산책 종료' : '산책 시작'}</Text>
       </TouchableOpacity>
       <TouchableOpacity
