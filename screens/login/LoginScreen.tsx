@@ -9,7 +9,11 @@ import {authorize} from '../../module/auth';
 import {usersCollection} from '../../firebase';
 import {routes} from '../../routes';
 
-function LogInScreen() {
+interface ILogInScreenProps {
+  setUserData: Function;
+}
+
+function LogInScreen({setUserData}: ILogInScreenProps) {
   const navigation = useNavigation();
   const user = useSelector((state: RootState) => state.auth.user);
   const [userDataLoading, setUserDataLoading] = useState(false);
@@ -45,32 +49,14 @@ function LogInScreen() {
         });
     }
   };
-  console.log(user);
-  return (
-    <>
-      {user?.username && !userDataLoading ? (
-        <>
-          <LogOutBtn />
-          <Text>Welcome {user?.username}</Text>
-          <Button
-            title="산책하러가기"
-            onPress={() => {
-              navigation.navigate(routes.record);
-            }}
-          />
-          <Text />
-          <Button
-            title="산책 기록 확인"
-            onPress={() => {
-              navigation.navigate(routes.walkRecords);
-            }}
-          />
-        </>
-      ) : (
-        <GoogleLogInBtn authHandler={createOrLogInUser} />
-      )}
-    </>
-  );
+
+  useEffect(() => {
+    if (user) {
+      setUserData(user);
+    }
+  }, [user]);
+  console.log(user, '여긴 login');
+  return <GoogleLogInBtn authHandler={createOrLogInUser} />;
 }
 
 export default LogInScreen;

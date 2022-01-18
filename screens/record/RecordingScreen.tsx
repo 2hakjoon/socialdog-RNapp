@@ -22,7 +22,6 @@ function RecordingScreen() {
   const [recording, setRecording] = useState(false);
   const [startTime, setStartTime] = useState<number>();
   const user = useSelector((state: RootState) => state.auth.user);
-
   const getLocation = () =>
     Geolocation.getCurrentPosition(
       position => {

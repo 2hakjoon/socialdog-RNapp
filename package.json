@@ -16,19 +16,22 @@
     "@react-native-firebase/firestore": "^14.2.2",
     "@react-native-firebase/storage": "^14.2.2",
     "@react-native-google-signin/google-signin": "^7.0.4",
+    "@react-navigation/bottom-tabs": "^6.0.9",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
     "@reduxjs/toolkit": "^1.7.1",
     "@types/react-redux": "^7.1.22",
     "@voximplant/react-native-foreground-service": "^2.0.0",
     "react": "17.0.2",
+    "react-devtools": "^4.22.1",
     "react-native": "0.66.4",
     "react-native-background-timer": "^2.4.1",
     "react-native-maps": "^0.30.1",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.10.1",
     "react-redux": "^7.2.6",
-    "redux": "^4.1.2"
+    "redux": "^4.1.2",
+    "redux-devtools-extension": "^2.13.9"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

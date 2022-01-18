@@ -5,6 +5,8 @@ import {useSelector} from 'react-redux';
 import {recordsCollection, walksCollection} from '../../firebase';
 import {RootState} from '../../module';
 import Geolocation from '@react-native-community/geolocation';
+import {useNavigation} from '@react-navigation/native';
+import {routes} from '../../routes';
 
 interface latlngObj {
   latitude: number;
@@ -20,6 +22,7 @@ function WalkRecordsScreen() {
   const [locations, setLocations] = useState<latlngObj[]>([]);
   const [recordDays, setRecordDays] = useState<ArrayLikeType>({});
   const user = useSelector((state: RootState) => state.auth.user);
+  const navigation = useNavigation();
 
   const getLocation = () =>
     Geolocation.getCurrentPosition(
@@ -56,6 +59,7 @@ function WalkRecordsScreen() {
   useEffect(() => {
     getLocation();
   }, []);
+
 
   return (
     <>
@@ -103,11 +107,17 @@ function WalkRecordsScreen() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          margin: 5,
+          marginVertical: 5,
         }}
         onPress={loadRecordedDays}>
         <Text>산책정보 불러오기</Text>
       </TouchableOpacity>
+      <Button
+        title="산책하러가기"
+        onPress={() => {
+          navigation.navigate(routes.record);
+        }}
+      />
       <ScrollView>
         {Object.keys(recordDays).map((date, idx) => {
           return (
