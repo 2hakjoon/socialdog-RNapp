@@ -137,7 +137,7 @@ function RecordingScreen() {
             zoom: 18,
           }}>
           <Polyline
-            coordinates={{...locations}}
+            coordinates={locations}
             strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
             strokeColors={[
               '#7F0000',
