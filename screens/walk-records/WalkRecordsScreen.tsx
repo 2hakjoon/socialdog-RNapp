@@ -7,6 +7,13 @@ import {RootState} from '../../module';
 import Geolocation from '@react-native-community/geolocation';
 import {useNavigation} from '@react-navigation/native';
 import {routes} from '../../routes';
+import styled from 'styled-components/native';
+
+const StyledView = styled.View`
+  background-color: ${({theme}) => theme.PBlue};
+  height: 100%;
+  width: 100%;
+`;
 
 interface latlngObj {
   latitude: number;
@@ -52,14 +59,15 @@ function WalkRecordsScreen() {
     const record = await (
       await recordsCollection.doc(`${user?.uid}-${recordDays[date][0]}`).get()
     ).data();
-    console.log(Object.values(record));
-    setLocations(Object.values(record));
+    if (record) {
+      console.log(Object.values(record));
+      setLocations(Object.values(record));
+    }
   };
 
   useEffect(() => {
     getLocation();
   }, []);
-
 
   return (
     <>
@@ -115,20 +123,22 @@ function WalkRecordsScreen() {
       <Button
         title="산책하러가기"
         onPress={() => {
-          navigation.navigate(routes.record);
+          navigation.navigate({key: routes.record});
         }}
       />
-      <ScrollView>
-        {Object.keys(recordDays).map((date, idx) => {
-          return (
-            <Button
-              key={idx}
-              onPress={() => recordToPolyLine(date)}
-              title={date}
-            />
-          );
-        })}
-      </ScrollView>
+      <StyledView>
+        <ScrollView>
+          {Object.keys(recordDays).map((date, idx) => {
+            return (
+              <Button
+                key={idx}
+                onPress={() => recordToPolyLine(date)}
+                title={date}
+              />
+            );
+          })}
+        </ScrollView>
+      </StyledView>
     </>
   );
 }

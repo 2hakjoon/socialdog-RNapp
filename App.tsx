@@ -10,8 +10,6 @@
 
 import React, {useState} from 'react';
 import {StatusBar, useColorScheme} from 'react-native';
-
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import RecordingScreen from './screens/record/RecordingScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -26,6 +24,8 @@ import {User} from './module/auth';
 import Profile from './screens/profile/Profile';
 import Social from './screens/social/Social';
 import {composeWithDevTools} from 'redux-devtools-extension';
+import {theme} from './utils/colors';
+import {ThemeProvider} from 'styled-components/native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -36,50 +36,48 @@ const App = () => {
   const [userData, setUserData] = useState<User>();
   console.log(userData, '여긴 APP');
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
   return (
-    <Provider store={store}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <NavigationContainer>
-        {!userData ? (
-          <LogInScreen setUserData={setUserData} />
-        ) : (
-          <Tab.Navigator initialRouteName={routes.walkRecords}>
-            <Tab.Screen name={routes.walkRecords}>
-              {() => (
-                <Stack.Navigator>
-                  <Stack.Screen
-                    name={routes.walkRecords}
-                    component={WalkRecordsScreen}
-                  />
-                  <Stack.Screen
-                    name={routes.record}
-                    component={RecordingScreen}
-                  />
-                </Stack.Navigator>
-              )}
-            </Tab.Screen>
-            <Tab.Screen name={routes.social}>
-              {() => (
-                <Stack.Navigator>
-                  <Stack.Screen name={routes.social} component={Social} />
-                </Stack.Navigator>
-              )}
-            </Tab.Screen>
-            <Tab.Screen name={routes.profile}>
-              {() => (
-                <Stack.Navigator>
-                  <Stack.Screen name={routes.profile} component={Profile} />
-                </Stack.Navigator>
-              )}
-            </Tab.Screen>
-          </Tab.Navigator>
-        )}
-      </NavigationContainer>
-    </Provider>
+    <ThemeProvider theme={theme}>
+      <Provider store={store}>
+        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+        <NavigationContainer>
+          {!userData ? (
+            <LogInScreen setUserData={setUserData} />
+          ) : (
+            <Tab.Navigator initialRouteName={routes.walkRecords}>
+              <Tab.Screen name={routes.walkRecords}>
+                {() => (
+                  <Stack.Navigator>
+                    <Stack.Screen
+                      name={routes.walkRecords}
+                      component={WalkRecordsScreen}
+                    />
+                    <Stack.Screen
+                      name={routes.record}
+                      component={RecordingScreen}
+                    />
+                  </Stack.Navigator>
+                )}
+              </Tab.Screen>
+              <Tab.Screen name={routes.social}>
+                {() => (
+                  <Stack.Navigator>
+                    <Stack.Screen name={routes.social} component={Social} />
+                  </Stack.Navigator>
+                )}
+              </Tab.Screen>
+              <Tab.Screen name={routes.profile}>
+                {() => (
+                  <Stack.Navigator>
+                    <Stack.Screen name={routes.profile} component={Profile} />
+                  </Stack.Navigator>
+                )}
+              </Tab.Screen>
+            </Tab.Navigator>
+          )}
+        </NavigationContainer>
+      </Provider>
+    </ThemeProvider>
   );
 };
 

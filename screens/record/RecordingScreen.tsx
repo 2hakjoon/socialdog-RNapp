@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {Alert, Text, TouchableOpacity, View} from 'react-native';
 import RNMapView, {Polyline} from 'react-native-maps';
 
