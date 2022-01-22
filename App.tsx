@@ -26,6 +26,7 @@ import Social from './screens/social/Social';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import {theme} from './utils/colors';
 import {ThemeProvider} from 'styled-components/native';
+import WheatherScrean from './screens/wheather/WheatherScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -45,9 +46,13 @@ const App = () => {
             <LogInScreen setUserData={setUserData} />
           ) : (
             <Tab.Navigator initialRouteName={routes.walkRecords}>
-              <Tab.Screen name={routes.walkRecords}>
+              <Tab.Screen name={routes.wheather}>
                 {() => (
                   <Stack.Navigator>
+                    <Stack.Screen
+                      name={routes.wheather}
+                      component={WheatherScrean}
+                    />
                     <Stack.Screen
                       name={routes.walkRecords}
                       component={WalkRecordsScreen}
