@@ -27,6 +27,8 @@ import {composeWithDevTools} from 'redux-devtools-extension';
 import {theme} from './utils/colors';
 import {ThemeProvider} from 'styled-components/native';
 import WheatherScrean from './screens/wheather/WheatherScreen';
+import FAIcon from 'react-native-vector-icons/FontAwesome5';
+import MIcon from 'react-native-vector-icons/MaterialIcons';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -46,7 +48,13 @@ const App = () => {
             <LogInScreen setUserData={setUserData} />
           ) : (
             <Tab.Navigator initialRouteName={routes.walkRecords}>
-              <Tab.Screen name={routes.wheather}>
+              <Tab.Screen
+                name={routes.wheather}
+                options={{
+                  tabBarIcon: ({color, size}) => (
+                    <FAIcon name="dog" color={color} size={size} />
+                  ),
+                }}>
                 {() => (
                   <Stack.Navigator>
                     <Stack.Screen
@@ -64,14 +72,26 @@ const App = () => {
                   </Stack.Navigator>
                 )}
               </Tab.Screen>
-              <Tab.Screen name={routes.social}>
+              <Tab.Screen
+                name={routes.social}
+                options={{
+                  tabBarIcon: ({color, size}) => (
+                    <MIcon name="nature-people" color={color} size={size} />
+                  ),
+                }}>
                 {() => (
                   <Stack.Navigator>
                     <Stack.Screen name={routes.social} component={Social} />
                   </Stack.Navigator>
                 )}
               </Tab.Screen>
-              <Tab.Screen name={routes.profile}>
+              <Tab.Screen
+                name={routes.profile}
+                options={{
+                  tabBarIcon: ({color, size}) => (
+                    <MIcon name="face" color={color} size={size} />
+                  ),
+                }}>
                 {() => (
                   <Stack.Navigator>
                     <Stack.Screen name={routes.profile} component={Profile} />
