@@ -3,21 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>336033896955-sj43jdhsdm0vulmjs4a7hh8th90mq3eu.apps.googleusercontent.com</string>
+	<string>147772000843-uslp492a991mdig3eehts509n9fs7tst.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.336033896955-sj43jdhsdm0vulmjs4a7hh8th90mq3eu</string>
+	<string>com.googleusercontent.apps.147772000843-uslp492a991mdig3eehts509n9fs7tst</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>147772000843-vv5hj5c2ce81dfhjr880ge01c081i6k6.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAFt_MgAQf0OhGL7Fh6FXx9T0cA_-u8jmc</string>
+	<string>AIzaSyBjkpuega3hfik1guz_hPGBYSM2qLEY2KI</string>
 	<key>GCM_SENDER_ID</key>
-	<string>336033896955</string>
+	<string>147772000843</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.socialdog</string>
 	<key>PROJECT_ID</key>
-	<string>myphotomap-290bb</string>
+	<string>socialdog-firebase</string>
 	<key>STORAGE_BUCKET</key>
-	<string>myphotomap-290bb.appspot.com</string>
+	<string>socialdog-firebase.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:336033896955:ios:96320eebe1b11bb86d935e</string>
+	<string>1:147772000843:ios:7501038a07d0b5904a9bce</string>
 </dict>
 </plist>

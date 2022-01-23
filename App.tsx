@@ -9,7 +9,7 @@
  */
 
 import React, {useState} from 'react';
-import {StatusBar, useColorScheme} from 'react-native';
+import {StatusBar, Text, useColorScheme} from 'react-native';
 import RecordingScreen from './screens/record/RecordingScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -43,6 +43,8 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <Provider store={store}>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+        <Text>aa</Text>
+        <Text>aa</Text>
         <NavigationContainer>
           {!userData ? (
             <LogInScreen setUserData={setUserData} />

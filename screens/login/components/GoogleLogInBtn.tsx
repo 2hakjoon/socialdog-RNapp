@@ -1,11 +1,11 @@
 import React, {useCallback, useState} from 'react';
-import {Button, Text} from 'react-native';
+import {Button, Platform, Text} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useFocusEffect} from '@react-navigation/native';
 
 GoogleSignin.configure({
-  webClientId:
+  webClientId: Platform.OS === "ios" ? "147772000843-uslp492a991mdig3eehts509n9fs7tst.apps.googleusercontent.com" : 
     '147772000843-6b96b92gvdvovklpsn8e6v59ueqoaqcf.apps.googleusercontent.com',
 });
 
