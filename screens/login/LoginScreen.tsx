@@ -9,7 +9,7 @@ interface ILogInScreenProps {
   setUserData: Function;
 }
 
-function LogInScreen({setUserData}: ILogInScreenProps) {
+export function LogInScreen({setUserData}: ILogInScreenProps) {
   const user = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch();
 
@@ -49,4 +49,3 @@ function LogInScreen({setUserData}: ILogInScreenProps) {
   return <GoogleLogInBtn authHandler={createOrLogInUser} />;
 }
 
-export default LogInScreen;

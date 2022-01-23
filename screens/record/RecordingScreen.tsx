@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {Alert, Text, TouchableOpacity, View} from 'react-native';
-import RNMapView, {Polyline} from 'react-native-maps';
+import RNMapView, {Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 
 import BackgroundTimer from 'react-native-background-timer';
 import Geolocation from '@react-native-community/geolocation';
@@ -120,6 +120,7 @@ function RecordingScreen() {
     <>
       {location ? (
         <RNMapView
+        provider={PROVIDER_GOOGLE}
           style={{width: '100%', height: '70%'}}
           initialCamera={{
             altitude: 15000,

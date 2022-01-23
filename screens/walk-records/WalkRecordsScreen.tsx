@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Alert, Button, ScrollView, Text, TouchableOpacity} from 'react-native';
-import RNMapView, {Polyline} from 'react-native-maps';
+import RNMapView, {Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import {useSelector} from 'react-redux';
 import {recordsCollection, walksCollection} from '../../firebase';
 import {RootState} from '../../module';
@@ -70,6 +70,7 @@ function WalkRecordsScreen() {
     <>
       {location ? (
         <RNMapView
+        provider={PROVIDER_GOOGLE}
           style={{width: '100%', height: '70%'}}
           initialCamera={{
             altitude: 15000,
