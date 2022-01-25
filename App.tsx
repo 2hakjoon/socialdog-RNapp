@@ -35,7 +35,6 @@ const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const [userData, setUserData] = useState<User>();
-  console.log(userData, '여긴 APP');
 
   return (
     <Provider store={store}>
@@ -48,6 +47,8 @@ const App = () => {
             <Tab.Screen
               name={routes.wheather}
               options={{
+                headerShown: false,
+                tabBarLabel: '산책',
                 tabBarIcon: ({color, size}) => (
                   <FAIcon name="dog" color={color} size={size} />
                 ),
@@ -72,6 +73,8 @@ const App = () => {
             <Tab.Screen
               name={routes.social}
               options={{
+                headerShown: false,
+                tabBarLabel: '친구들',
                 tabBarIcon: ({color, size}) => (
                   <MIcon name="nature-people" color={color} size={size} />
                 ),
@@ -85,6 +88,8 @@ const App = () => {
             <Tab.Screen
               name={routes.profile}
               options={{
+                headerShown: false,
+                tabBarLabel: '프로필',
                 tabBarIcon: ({color, size}) => (
                   <MIcon name="face" color={color} size={size} />
                 ),
