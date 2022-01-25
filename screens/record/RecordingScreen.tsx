@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {Alert, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, StyleSheet, Text, View} from 'react-native';
 import RNMapView, {Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 
 import BackgroundTimer from 'react-native-background-timer';
@@ -9,7 +9,6 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../module';
 import {now_yyyy_mm_dd} from '../../utils/dataformat/dateformat';
 import {recordsCollection, walksCollection} from '../../firebase';
-import styled from 'styled-components/native';
 import BtnRecord from './components/BtnRecord';
 import TimerComp from './components/TimerComp';
 import BtnPause from './components/BtnPause';
@@ -19,16 +18,6 @@ interface latlngObj {
   latitude: number;
   longitude: number;
 }
-
-const ButtonWrapper = styled.View`
-  width: 100%;
-  height: 30%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-  background-color: white;
-`;
 
 function RecordingScreen() {
   const [location, setLocation] = useState<latlngObj | null>(null);
@@ -106,16 +95,20 @@ function RecordingScreen() {
   };
 
   const createSaveAlert = () =>
-    Alert.alert('산책이 끝나셨나요?', `${timerFormatKor(timer + 1)}`, [
-      {
-        text: '아직이요!',
-        onPress: () => {
-          setPause(false);
+    Alert.alert(
+      '산책이 끝났나요?',
+      `${timerFormatKor(timer + 1)} 동안 산책했어요.`,
+      [
+        {
+          text: '아직이요',
+          onPress: () => {
+            setPause(false);
+          },
+          style: 'cancel',
         },
-        style: 'cancel',
-      },
-      {text: '끝났어요', onPress: () => saveRecordingAndReset()},
-    ]);
+        {text: '끝났어요', onPress: () => saveRecordingAndReset()},
+      ],
+    );
 
   const stopRecording = async () => {
     setPause(true);
@@ -162,7 +155,7 @@ function RecordingScreen() {
       {location ? (
         <RNMapView
           provider={PROVIDER_GOOGLE}
-          style={{width: '100%', height: '70%'}}
+          style={{flex: 7}}
           initialCamera={{
             altitude: 15000,
             center: location,
@@ -194,16 +187,14 @@ function RecordingScreen() {
       ) : (
         <View
           style={{
-            width: '100%',
-            height: '70%',
-            display: 'flex',
+            flex: 7,
             alignItems: 'center',
             justifyContent: 'center',
           }}>
           <Text>위치정보를 받아오는 중입니다....</Text>
         </View>
       )}
-      <ButtonWrapper>
+      <View style={styles.ButtonWrapper}>
         <TimerComp
           recording={recording}
           pause={pause}
@@ -221,9 +212,19 @@ function RecordingScreen() {
           pause={pause}
           recording={recording}
         />
-      </ButtonWrapper>
+      </View>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  ButtonWrapper: {
+    flex: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    backgroundColor: 'white',
+  },
+});
 
 export default RecordingScreen;

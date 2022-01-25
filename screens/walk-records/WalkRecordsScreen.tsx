@@ -1,17 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {Alert, Button, ScrollView, Text, TouchableOpacity} from 'react-native';
+import {
+  Alert,
+  Button,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import RNMapView, {Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import {useSelector} from 'react-redux';
 import {recordsCollection, walksCollection} from '../../firebase';
 import {RootState} from '../../module';
 import Geolocation from '@react-native-community/geolocation';
-import styled from 'styled-components/native';
-
-const StyledView = styled.View`
-  background-color: ${({theme}) => theme.PBlue};
-  height: 100%;
-  width: 100%;
-`;
 
 interface latlngObj {
   latitude: number;
@@ -70,7 +70,7 @@ function WalkRecordsScreen() {
     <>
       {location ? (
         <RNMapView
-        provider={PROVIDER_GOOGLE}
+          provider={PROVIDER_GOOGLE}
           style={{width: '100%', height: '70%'}}
           initialCamera={{
             altitude: 15000,
@@ -118,7 +118,7 @@ function WalkRecordsScreen() {
         onPress={loadRecordedDays}>
         <Text>산책정보 불러오기</Text>
       </TouchableOpacity>
-      <StyledView>
+      <View>
         <ScrollView>
           {Object.keys(recordDays).map((date, idx) => {
             return (
@@ -130,7 +130,7 @@ function WalkRecordsScreen() {
             );
           })}
         </ScrollView>
-      </StyledView>
+      </View>
     </>
   );
 }

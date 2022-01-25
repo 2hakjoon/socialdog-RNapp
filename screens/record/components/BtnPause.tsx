@@ -1,25 +1,7 @@
 import React from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
-import styled from 'styled-components/native';
+import {Platform, StyleSheet, TouchableOpacity, View} from 'react-native';
 import FdIcon from 'react-native-vector-icons/Foundation';
 import {theme} from '../../../utils/colors';
-import TextComp from '../../components/TextComp';
-
-const BtnWrapper = styled.View`
-  height: 60px;
-  width: 60px;
-  border-radius: 30px;
-  background-color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const BtnInnerWrapper = styled.View`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 
 interface IBtnPauseProps {
   recording: boolean;
@@ -32,22 +14,12 @@ function BtnPause({toggleRecording, pause, recording}: IBtnPauseProps) {
     <TouchableOpacity
       disabled={!(recording || pause)}
       onPress={toggleRecording}>
-      <BtnWrapper
+      <View
         style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          //ios
-          shadowOpacity: 0.25,
-          shadowRadius: 13,
-          shadowOffset: {
-            height: 10,
-            width: 0,
-          },
-          //android
-          elevation: 20,
+          ...styles.BtnWrapper,
           opacity: recording || pause ? 1 : 0.5,
         }}>
-        <BtnInnerWrapper>
+        <View style={styles.BtnInnerWrapper}>
           {pause ? (
             <FdIcon
               name={'play'}
@@ -58,10 +30,54 @@ function BtnPause({toggleRecording, pause, recording}: IBtnPauseProps) {
           ) : (
             <FdIcon name={'pause'} size={50} color={theme.PBlue} />
           )}
-        </BtnInnerWrapper>
-      </BtnWrapper>
+        </View>
+      </View>
     </TouchableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  BtnWrapper: {
+    height: 60,
+    width: 60,
+    borderRadius: 30,
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowOpacity: 0.25,
+        shadowRadius: 13,
+        shadowOffset: {
+          height: 10,
+          width: 0,
+        },
+      },
+      //android
+      android: {
+        elevation: 20,
+      },
+    }),
+  },
+  BtnInnerWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  // const BtnWrapper = styled.View`
+  // height: 60px;
+  // width: 60px;
+  // border-radius: 30px;
+  // background-color: white;
+  // display: flex;
+  // align-items: center;
+  // justify-content: center;
+  // `;
+
+  // const BtnInnerWrapper = styled.View`
+  // display: flex;
+  // align-items: center;
+  // justify-content: center;
+  // `;
+});
 
 export default BtnPause;

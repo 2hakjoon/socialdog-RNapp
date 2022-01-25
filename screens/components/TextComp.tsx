@@ -10,8 +10,8 @@ interface ITextCompProps {
 }
 
 function TextComp({text, color = 'red', weight = '400', size}: ITextCompProps) {
-  // @ts-ignore
   return (
+    // @ts-ignore
     <Text style={{color, fontSize: size, fontWeight: weight}}>{text}</Text>
   );
 }

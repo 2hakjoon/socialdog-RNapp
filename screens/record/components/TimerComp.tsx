@@ -1,5 +1,5 @@
 import {useFocusEffect} from '@react-navigation/core';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 import {View} from 'react-native';
 import {timerFormat} from '../../../utils/dataformat/timeformat';
 import TextComp from '../../components/TextComp';
