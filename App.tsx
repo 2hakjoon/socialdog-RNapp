@@ -29,6 +29,7 @@ import {ThemeProvider} from 'styled-components/native';
 import WheatherScrean from './screens/wheather/WheatherScreen';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -43,8 +44,7 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <Provider store={store}>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-        <Text>aa</Text>
-        <Text>aa</Text>
+
         <NavigationContainer>
           {!userData ? (
             <LogInScreen setUserData={setUserData} />

@@ -9,19 +9,37 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../module';
 import {now_yyyy_mm_dd} from '../../utils/dataformat/dateformat';
 import {recordsCollection, walksCollection} from '../../firebase';
+import styled from 'styled-components/native';
+import BtnRecord from './components/BtnRecord';
+import TimerComp from './components/TimerComp';
+import BtnPause from './components/BtnPause';
+import {timerFormatKor} from '../../utils/dataformat/timeformat';
 
 interface latlngObj {
   latitude: number;
   longitude: number;
 }
 
+const ButtonWrapper = styled.View`
+  width: 100%;
+  height: 30%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  background-color: white;
+`;
+
 function RecordingScreen() {
   const [location, setLocation] = useState<latlngObj | null>(null);
   const [locations, setLocations] = useState<latlngObj[]>([]);
   const [recordingId, setRecordingId] = useState(null);
   const [recording, setRecording] = useState(false);
+  const [pause, setPause] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<number>();
+  const [timer, setTimer] = useState<number>(0);
   const user = useSelector((state: RootState) => state.auth.user);
+
   const getLocation = () =>
     Geolocation.getCurrentPosition(
       position => {
@@ -51,12 +69,12 @@ function RecordingScreen() {
     setStartTime(Date.now());
   };
 
-  const pauseRecording = () => {
-    setRecording(false);
+  const toggleRecording = () => {
+    setPause(prev => !prev);
+    setRecording(prev => !prev);
   };
 
-  const saveRecording = async () => {
-    setRecording(false);
+  const saveRecordingAndReset = async () => {
     const now = Date.now();
     const recordingUid = `${user?.uid}-${startTime}-${now}`;
     await recordsCollection.doc(recordingUid).set({
@@ -67,18 +85,41 @@ function RecordingScreen() {
       await walksCollection.doc(user?.uid).get()
     ).data();
     console.log(todayRecords);
-    if (todayRecords && todayRecords[`${now_yyyy_mm_dd()}`].length) {
-      walksCollection.doc(user?.uid).set({
+    const walkRecordKey = `${startTime}-${now}-${timer}`;
+
+    if (todayRecords && todayRecords[`${now_yyyy_mm_dd()}`]?.length) {
+      walksCollection.doc(user?.uid).update({
         [`${now_yyyy_mm_dd()}`]: [
           ...todayRecords[`${now_yyyy_mm_dd()}`],
-          `${startTime}-${now}`,
+          walkRecordKey,
         ],
       });
     } else {
       walksCollection
         .doc(user?.uid)
-        .set({[`${now_yyyy_mm_dd()}`]: [`${startTime}-${now}`]});
+        .update({[`${now_yyyy_mm_dd()}`]: [walkRecordKey]});
     }
+    setRecording(false);
+    setPause(false);
+    setTimer(0);
+    setLocations([]);
+  };
+
+  const createSaveAlert = () =>
+    Alert.alert('산책이 끝나셨나요?', `${timerFormatKor(timer + 1)}`, [
+      {
+        text: '아직이요!',
+        onPress: () => {
+          setPause(false);
+        },
+        style: 'cancel',
+      },
+      {text: '끝났어요', onPress: () => saveRecordingAndReset()},
+    ]);
+
+  const stopRecording = async () => {
+    setPause(true);
+    createSaveAlert();
   };
 
   const watchUserLocation = () => {
@@ -120,7 +161,7 @@ function RecordingScreen() {
     <>
       {location ? (
         <RNMapView
-        provider={PROVIDER_GOOGLE}
+          provider={PROVIDER_GOOGLE}
           style={{width: '100%', height: '70%'}}
           initialCamera={{
             altitude: 15000,
@@ -162,32 +203,25 @@ function RecordingScreen() {
           <Text>위치정보를 받아오는 중입니다....</Text>
         </View>
       )}
-      <TouchableOpacity
-        style={{
-          width: '100%',
-          height: 30,
-          backgroundColor: 'skyblue',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          margin: 5,
-        }}
-        onPress={recording ? saveRecording : startRecording}>
-        <Text>{recording ? '산책 종료' : '산책 시작'}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={{
-          width: '100%',
-          height: 30,
-          backgroundColor: 'skyblue',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          margin: 5,
-        }}
-        onPress={pauseRecording}>
-        <Text>잠깐 휴식</Text>
-      </TouchableOpacity>
+      <ButtonWrapper>
+        <TimerComp
+          recording={recording}
+          pause={pause}
+          timer={timer}
+          setTimer={setTimer}
+        />
+        <BtnRecord
+          recording={recording}
+          startRecording={startRecording}
+          stopRecording={stopRecording}
+          pause={pause}
+        />
+        <BtnPause
+          toggleRecording={toggleRecording}
+          pause={pause}
+          recording={recording}
+        />
+      </ButtonWrapper>
     </>
   );
 }
