@@ -64,34 +64,38 @@ function RecordingScreen() {
   };
 
   const saveRecordingAndReset = async () => {
-    const now = Date.now();
-    const recordingUid = `${user?.uid}-${startTime}-${now}`;
-    await recordsCollection.doc(recordingUid).set({
-      ...locations,
-    });
-
-    const todayRecords = await (
-      await walksCollection.doc(user?.uid).get()
-    ).data();
-    console.log(todayRecords);
-    const walkRecordKey = `${startTime}-${now}-${timer}`;
-
-    if (todayRecords && todayRecords[`${now_yyyy_mm_dd()}`]?.length) {
-      walksCollection.doc(user?.uid).update({
-        [`${now_yyyy_mm_dd()}`]: [
-          ...todayRecords[`${now_yyyy_mm_dd()}`],
-          walkRecordKey,
-        ],
+    try {
+      const now = Date.now();
+      const walkRecordKey = `${startTime}-${now}-${timer}`;
+      const recordingUid = `${user?.uid}-${walkRecordKey}`;
+      await recordsCollection.doc(recordingUid).set({
+        ...locations,
       });
-    } else {
-      walksCollection
-        .doc(user?.uid)
-        .update({[`${now_yyyy_mm_dd()}`]: [walkRecordKey]});
+
+      const todayRecords = await (
+        await walksCollection.doc(user?.uid).get()
+      ).data();
+      console.log(todayRecords);
+
+      if (todayRecords && todayRecords[`${now_yyyy_mm_dd()}`]?.length) {
+        walksCollection.doc(user?.uid).update({
+          [`${now_yyyy_mm_dd()}`]: [
+            ...todayRecords[`${now_yyyy_mm_dd()}`],
+            walkRecordKey,
+          ],
+        });
+      } else {
+        walksCollection
+          .doc(user?.uid)
+          .set({[`${now_yyyy_mm_dd()}`]: [walkRecordKey]});
+      }
+      setRecording(false);
+      setPause(false);
+      setTimer(0);
+      setLocations([]);
+    } catch (e) {
+      console.log(e);
     }
-    setRecording(false);
-    setPause(false);
-    setTimer(0);
-    setLocations([]);
   };
 
   const createSaveAlert = () =>

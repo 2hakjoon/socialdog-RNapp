@@ -2,7 +2,7 @@ import React from 'react';
 import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import FdIcon from 'react-native-vector-icons/Foundation';
 import OTIcon from 'react-native-vector-icons/Octicons';
-import {theme} from '../../../utils/colors';
+import {colors} from '../../../utils/colors';
 import TextComp from '../../components/TextComp';
 
 interface IBtnRecordProps {
@@ -26,7 +26,7 @@ function BtnRecord({
             <OTIcon
               name={'home'}
               size={50}
-              color={theme.PBlue}
+              color={colors.PBlue}
               style={{marginLeft: 2}}
             />
             <TextComp text={'산책 종료'} />
@@ -36,7 +36,7 @@ function BtnRecord({
             <FdIcon
               name={'guide-dog'}
               size={50}
-              color={theme.PBlue}
+              color={colors.PBlue}
               style={{marginLeft: 8}}
             />
             <TextComp text={'산책 시작'} />

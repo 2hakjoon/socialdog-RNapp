@@ -1,7 +1,7 @@
 import React from 'react';
 import {Platform, StyleSheet, TouchableOpacity, View} from 'react-native';
 import FdIcon from 'react-native-vector-icons/Foundation';
-import {theme} from '../../../utils/colors';
+import {colors} from '../../../utils/colors';
 
 interface IBtnPauseProps {
   recording: boolean;
@@ -24,11 +24,11 @@ function BtnPause({toggleRecording, pause, recording}: IBtnPauseProps) {
             <FdIcon
               name={'play'}
               size={50}
-              color={theme.PBlue}
+              color={colors.PBlue}
               style={{marginLeft: 7}}
             />
           ) : (
-            <FdIcon name={'pause'} size={50} color={theme.PBlue} />
+            <FdIcon name={'pause'} size={50} color={colors.PBlue} />
           )}
         </View>
       </View>

@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Alert,
-  Button,
+  FlatList,
   ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -12,6 +13,14 @@ import {useSelector} from 'react-redux';
 import {recordsCollection, walksCollection} from '../../firebase';
 import {RootState} from '../../module';
 import Geolocation from '@react-native-community/geolocation';
+import LineCalendar from './components/LineCalendar';
+import {useFocusEffect} from '@react-navigation/core';
+import TextComp from '../components/TextComp';
+import {
+  formatAmPmHour,
+  formatWalkingTime,
+} from '../../utils/dataformat/timeformat';
+import {colors} from '../../utils/colors';
 
 interface latlngObj {
   latitude: number;
@@ -19,13 +28,16 @@ interface latlngObj {
 }
 
 interface ArrayLikeType {
-  [key: string]: Object[];
+  [key: string]: string[];
 }
 
 function WalkRecordsScreen() {
   const [location, setLocation] = useState<latlngObj | null>(null);
   const [locations, setLocations] = useState<latlngObj[]>([]);
   const [recordDays, setRecordDays] = useState<ArrayLikeType>({});
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [recordList, setRecordList] = useState<string[]>([]);
+  const [selectedRecord, setSelectedRecord] = useState<string>('');
   const user = useSelector((state: RootState) => state.auth.user);
 
   const getLocation = () =>
@@ -50,11 +62,9 @@ function WalkRecordsScreen() {
     }
   };
 
-  const recordToPolyLine = async (date: string) => {
-    console.log(date);
-    console.log(recordDays[date][0]);
+  const recordToPolyLine = async (key: string) => {
     const record = await (
-      await recordsCollection.doc(`${user?.uid}-${recordDays[date][0]}`).get()
+      await recordsCollection.doc(`${user?.uid}-${key}`).get()
     ).data();
     if (record) {
       console.log(Object.values(record));
@@ -62,16 +72,42 @@ function WalkRecordsScreen() {
     }
   };
 
+  //firbase의 키에 담긴 내용을 포멧팅해서 산책시작시간, 산책시간이 담긴 문자열로 리턴함
+  const formatRcordKeyToTime = (key: string) => {
+    console.log(key);
+    const startTime = new Date(+key.split('-')[0]).getHours();
+    const walkingTime = +key.split('-')[2];
+    return `${formatAmPmHour(startTime)} ${formatWalkingTime(walkingTime)}`;
+  };
+
+  //날짜를 선택할때마다 해당 날짜의 산책데이터 리스트를 recordList에 넣어줌.
   useEffect(() => {
-    getLocation();
-  }, []);
+    if (selectedDate.trim()) {
+      setRecordList([...recordDays[selectedDate]]);
+    }
+  }, [selectedDate]);
+
+  useEffect(() => {
+    if (selectedRecord.trim()) {
+      recordToPolyLine(selectedRecord);
+    }
+  }, [selectedRecord]);
+
+  useFocusEffect(
+    useCallback(() => {
+      getLocation();
+      loadRecordedDays();
+    }, []),
+  );
+
+  console.log(recordDays);
 
   return (
     <>
       {location ? (
         <RNMapView
           provider={PROVIDER_GOOGLE}
-          style={{width: '100%', height: '70%'}}
+          style={styles.mapContainer}
           initialCamera={{
             altitude: 15000,
             center: location,
@@ -89,50 +125,61 @@ function WalkRecordsScreen() {
           <Polyline
             coordinates={locations}
             strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
-            strokeColors={[
-              '#7F0000',
-              '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
-              '#B24112',
-              '#E5845C',
-              '#238C23',
-              '#7F0000',
-            ]}
             strokeWidth={6}
           />
         </RNMapView>
       ) : (
-        <Text style={{width: '100%', height: '70%'}}>
-          위치정보를 불러오는 중입니다.
-        </Text>
+        <Text style={styles.mapContainer}>위치정보를 불러오는 중입니다.</Text>
       )}
-      <TouchableOpacity
-        style={{
-          width: '100%',
-          height: 30,
-          backgroundColor: 'skyblue',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginVertical: 5,
-        }}
-        onPress={loadRecordedDays}>
-        <Text>산책정보 불러오기</Text>
-      </TouchableOpacity>
-      <View>
-        <ScrollView>
-          {Object.keys(recordDays).map((date, idx) => {
-            return (
-              <Button
-                key={idx}
-                onPress={() => recordToPolyLine(date)}
-                title={date}
-              />
-            );
-          })}
-        </ScrollView>
+      <View style={styles.calendarContainer}>
+        <>
+          {recordDays && (
+            <LineCalendar
+              recordDays={recordDays}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+            />
+          )}
+          <ScrollView style={styles.recordListContainer} horizontal>
+            {recordList.map(key => {
+              return (
+                <TouchableOpacity
+                  onPress={() => setSelectedRecord(key)}
+                  style={styles.recordBtn}>
+                  <TextComp
+                    text={formatRcordKeyToTime(key)}
+                    color={colors.PWhite}
+                  />
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </>
       </View>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  mapContainer: {
+    flex: 7,
+  },
+  calendarContainer: {
+    flex: 3,
+  },
+  recordListContainer: {
+    flex: 1,
+  },
+  recordBtn: {
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.PBlue,
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    marginHorizontal: 10,
+    borderRadius: 15,
+  },
+});
 
 export default WalkRecordsScreen;
