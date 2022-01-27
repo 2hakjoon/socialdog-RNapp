@@ -117,15 +117,17 @@ function WalkRecordsScreen() {
           }}
           camera={{
             altitude: 15000,
-            center: location,
+            center: locations.length ? locations[0] : location,
             heading: 0,
             pitch: 0,
-            zoom: 18,
+            zoom: 17,
           }}>
           <Polyline
             coordinates={locations}
-            strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
-            strokeWidth={6}
+            strokeColor={colors.PBlue} // fallback for when `strokeColors` is not supported by the map-provider
+            strokeWidth={5}
+            lineJoin={'round'}
+            lineCap={'round'}
           />
         </RNMapView>
       ) : (
