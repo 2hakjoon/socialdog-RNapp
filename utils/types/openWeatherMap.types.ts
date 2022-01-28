@@ -10,6 +10,7 @@ interface openWeatherMapOneCall {
     {
       uvi:number
       temp:number
+      dt:number
       weather:[{
         main:string
       }]

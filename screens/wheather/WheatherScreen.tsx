@@ -7,6 +7,7 @@ import WeatherIcon from './components/WeatherIcon';
 import {getAddressFromLatLng} from '../../utils/googlemaps/geocoding';
 import {openAqi, openWeather} from '../../utils/types/openWeatherMap.types';
 import TextComp from '../components/TextComp';
+import AqiComponent from './components/AqiComponent';
 
 function WheatherScrean() {
   //0:onecall날씨정보, 1:미세먼지 2:주소
@@ -42,7 +43,7 @@ function WheatherScrean() {
   }, []);
 
   return (
-    <>
+    <View style={styles.wrapper}>
       {Boolean(location.length) && <TextComp text={location} />}
       {weather && (
         <>
@@ -52,12 +53,25 @@ function WheatherScrean() {
           <TextComp text={weather.daily[0].temp.max} />
 
           {aqi && (
-            <>
-              <TextComp text={aqi.list[0].main.aqi} />
-              <TextComp text={aqi.list[0].components.pm10} />
-              <TextComp text={aqi.list[0].components.pm2_5} />
-            </>
+            <AqiComponent
+              pm10={aqi.list[0].components.pm10}
+              pm2_5={aqi.list[0].components.pm2_5}
+            />
           )}
+
+          <View style={styles.weekWeather}>
+            {weather.hourly.map(({dt, weather, temp}, idx) => {
+              if (idx < 8) {
+                return (
+                  <View>
+                    <TextComp text={`${new Date(dt * 1000).getHours()}시`} />
+                    <WeatherIcon size={30} weather={weather[0].main} />
+                    <TextComp size={10} text={`${temp}°C`} />
+                  </View>
+                );
+              }
+            })}
+          </View>
 
           <View style={styles.weekWeather}>
             {weather.daily.map(({dt, temp, weather}) => (
@@ -83,11 +97,14 @@ function WheatherScrean() {
           navigation.navigate(routes.walkRecords);
         }}
       />
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    width: '100%',
+  },
   weekWeather: {
     flexDirection: 'row',
   },
