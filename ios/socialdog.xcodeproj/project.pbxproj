@@ -11,10 +11,10 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		6172F2D35A4C3AA820D92908 /* libPods-socialdog.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6423831EA8574132BED9D8CC /* libPods-socialdog.a */; };
-		7EF68E3733C33B6898317E18 /* libPods-socialdog-socialdogTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABFE59519B596E51CEFDCCC0 /* libPods-socialdog-socialdogTests.a */; };
+		7382CF844AA7A6F548642D2D /* libPods-socialdog.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BD2D6884B7CA8FDD86FE2ACC /* libPods-socialdog.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9126DA30279DF27D000A32B1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9126DA2F279DF27D000A32B1 /* GoogleService-Info.plist */; };
+		FD68C1DD5ACD4EFF3A014053 /* libPods-socialdog-socialdogTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FD5867E298AD28AE7FFF5C8 /* libPods-socialdog-socialdogTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,11 +38,11 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = socialdog/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = socialdog/main.m; sourceTree = "<group>"; };
 		1D0AE47A65C8663E3B452821 /* Pods-socialdog-socialdogTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-socialdog-socialdogTests.release.xcconfig"; path = "Target Support Files/Pods-socialdog-socialdogTests/Pods-socialdog-socialdogTests.release.xcconfig"; sourceTree = "<group>"; };
-		6423831EA8574132BED9D8CC /* libPods-socialdog.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-socialdog.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5FD5867E298AD28AE7FFF5C8 /* libPods-socialdog-socialdogTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-socialdog-socialdogTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C97AB639B58BBB4B15BBE30 /* Pods-socialdog-socialdogTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-socialdog-socialdogTests.debug.xcconfig"; path = "Target Support Files/Pods-socialdog-socialdogTests/Pods-socialdog-socialdogTests.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = socialdog/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9126DA2F279DF27D000A32B1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		ABFE59519B596E51CEFDCCC0 /* libPods-socialdog-socialdogTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-socialdog-socialdogTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BD2D6884B7CA8FDD86FE2ACC /* libPods-socialdog.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-socialdog.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0A881CF5CF3F2B244570E2A /* Pods-socialdog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-socialdog.debug.xcconfig"; path = "Target Support Files/Pods-socialdog/Pods-socialdog.debug.xcconfig"; sourceTree = "<group>"; };
 		D00AAFFCFCFDA5787532823F /* Pods-socialdog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-socialdog.release.xcconfig"; path = "Target Support Files/Pods-socialdog/Pods-socialdog.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -53,7 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7EF68E3733C33B6898317E18 /* libPods-socialdog-socialdogTests.a in Frameworks */,
+				FD68C1DD5ACD4EFF3A014053 /* libPods-socialdog-socialdogTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,7 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6172F2D35A4C3AA820D92908 /* libPods-socialdog.a in Frameworks */,
+				7382CF844AA7A6F548642D2D /* libPods-socialdog.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,8 +103,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				6423831EA8574132BED9D8CC /* libPods-socialdog.a */,
-				ABFE59519B596E51CEFDCCC0 /* libPods-socialdog-socialdogTests.a */,
+				BD2D6884B7CA8FDD86FE2ACC /* libPods-socialdog.a */,
+				5FD5867E298AD28AE7FFF5C8 /* libPods-socialdog-socialdogTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

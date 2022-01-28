@@ -63,7 +63,7 @@ function WheatherScrean() {
             {weather.hourly.map(({dt, weather, temp}, idx) => {
               if (idx < 8) {
                 return (
-                  <View>
+                  <View key={idx}>
                     <TextComp text={`${new Date(dt * 1000).getHours()}시`} />
                     <WeatherIcon size={30} weather={weather[0].main} />
                     <TextComp size={10} text={`${temp}°C`} />
@@ -74,8 +74,8 @@ function WheatherScrean() {
           </View>
 
           <View style={styles.weekWeather}>
-            {weather.daily.map(({dt, temp, weather}) => (
-              <View>
+            {weather.daily.map(({dt, temp, weather}, idx) => (
+              <View key={idx}>
                 <TextComp text={`${new Date(dt * 1000).getDate()}일`} />
                 <WeatherIcon size={30} weather={weather[0].main} />
                 <TextComp size={10} text={`${temp.max}°C`} />

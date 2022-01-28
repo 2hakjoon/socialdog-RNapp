@@ -73,22 +73,21 @@ function RecordingScreen() {
         ...locations,
       });
 
-      const todayRecords = await (
-        await walksCollection.doc(user?.uid).get()
-      ).data();
-      console.log(todayRecords);
+      const records = await (await walksCollection.doc(user?.uid).get()).data();
+      console.log(records);
 
-      if (todayRecords && todayRecords[`${now_yyyy_mm_dd()}`]?.length) {
+      if (records && records[`${now_yyyy_mm_dd()}`]?.length) {
         walksCollection.doc(user?.uid).update({
           [`${now_yyyy_mm_dd()}`]: [
-            ...todayRecords[`${now_yyyy_mm_dd()}`],
+            ...records[`${now_yyyy_mm_dd()}`],
             walkRecordKey,
           ],
         });
       } else {
-        walksCollection
-          .doc(user?.uid)
-          .set({[`${now_yyyy_mm_dd()}`]: [walkRecordKey]});
+        walksCollection.doc(user?.uid).set({
+          ...records,
+          [`${now_yyyy_mm_dd()}`]: [walkRecordKey],
+        });
       }
       setRecording(false);
       setPause(false);

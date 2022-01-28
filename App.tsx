@@ -8,8 +8,16 @@
  * @format
  */
 
-import React, {useState} from 'react';
-import {StatusBar, useColorScheme} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  Alert,
+  AppState,
+  Linking,
+  PermissionsAndroid,
+  Platform,
+  StatusBar,
+  useColorScheme,
+} from 'react-native';
 import RecordingScreen from './screens/record/RecordingScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -27,6 +35,7 @@ import {composeWithDevTools} from 'redux-devtools-extension';
 import WheatherScrean from './screens/wheather/WheatherScreen';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
+import {PERMISSIONS, request} from 'react-native-permissions';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -35,6 +44,44 @@ const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const [userData, setUserData] = useState<User>();
+
+  const test = async () => {};
+
+  const checkLocationPermission = async () => {
+    const hasPermission = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
+    );
+    if (hasPermission) {
+      return true;
+    } else {
+      Alert.alert(
+        '백그라운드 위치정보.',
+        `정상적인 산책정보 수집을 위해, 위치정보를 항상 허용으로 설정해주세요`,
+        [
+          {
+            text: '괜찮아요',
+            onPress: () => {},
+            style: 'cancel',
+          },
+          {text: '설정하기', onPress: () => Linking.openSettings()},
+        ],
+      );
+    }
+  };
+
+  useEffect(() => {
+    test();
+    const listener = AppState.addEventListener('change', status => {
+      if (Platform.OS === 'ios' && status === 'active') {
+        request(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY)
+          .then(result => console.log(result))
+          .catch(error => console.log(error));
+      } else if (Platform.OS === 'android') {
+        checkLocationPermission();
+      }
+    });
+    return listener.remove;
+  }, []);
 
   return (
     <Provider store={store}>

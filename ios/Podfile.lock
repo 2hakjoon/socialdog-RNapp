@@ -546,6 +546,12 @@ PODS:
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
   - OpenSSL-Universal (1.1.180)
+  - Permission-LocationAccuracy (3.2.0):
+    - RNPermissions
+  - Permission-LocationAlways (3.2.0):
+    - RNPermissions
+  - Permission-LocationWhenInUse (3.2.0):
+    - RNPermissions
   - PromisesObjC (2.0.0)
   - RCT-Folly (2021.06.28.00-v2):
     - boost
@@ -840,6 +846,8 @@ PODS:
   - RNGoogleSignin (7.0.4):
     - GoogleSignIn (~> 6.0.0)
     - React-Core
+  - RNPermissions (3.2.0):
+    - React-Core
   - RNScreens (3.10.1):
     - React-Core
     - React-RCTImage
@@ -878,6 +886,9 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - Google-Maps-iOS-Utils
   - GoogleMaps
+  - Permission-LocationAccuracy (from `../node_modules/react-native-permissions/ios/LocationAccuracy`)
+  - Permission-LocationAlways (from `../node_modules/react-native-permissions/ios/LocationAlways`)
+  - Permission-LocationWhenInUse (from `../node_modules/react-native-permissions/ios/LocationWhenInUse`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -914,6 +925,7 @@ DEPENDENCIES:
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - "RNFBStorage (from `../node_modules/@react-native-firebase/storage`)"
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -967,6 +979,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/React/FBReactNativeSpec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
+  Permission-LocationAccuracy:
+    :path: "../node_modules/react-native-permissions/ios/LocationAccuracy"
+  Permission-LocationAlways:
+    :path: "../node_modules/react-native-permissions/ios/LocationAlways"
+  Permission-LocationWhenInUse:
+    :path: "../node_modules/react-native-permissions/ios/LocationWhenInUse"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -1035,6 +1053,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/storage"
   RNGoogleSignin:
     :path: "../node_modules/@react-native-google-signin/google-signin"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNVectorIcons:
@@ -1081,6 +1101,9 @@ SPEC CHECKSUMS:
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
+  Permission-LocationAccuracy: c13bf629b614be250031458cf81d6a2e9dcdf64f
+  Permission-LocationAlways: 012fd2c1f610068c5f9a7b48bc908ea41edd0c43
+  Permission-LocationWhenInUse: 13de9a01e006cb53a6ac3c9f8d1ab6cc98318d9c
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   RCT-Folly: a21c126816d8025b547704b777a2ba552f3d9fa9
   RCTRequired: 4bf86c70714490bca4bf2696148638284622644b
@@ -1116,11 +1139,12 @@ SPEC CHECKSUMS:
   RNFBFirestore: 0b11664ee7aef061378ad3a3acc48d0bc31d821a
   RNFBStorage: ca6753df72fdf9e5d9fbc266f4348cc1f2c184ab
   RNGoogleSignin: c4381751eefd73c552b923ba347a9bfc6f18771c
+  RNPermissions: f7ebe52db07c00901127966ca080b4ec6a6ceb0a
   RNScreens: 522705f2e5c9d27efb17f24aceb2bf8335bc7b8e
   RNVectorIcons: 4143ba35feebab8fdbe6bc43d1e776b393d47ac8
   Yoga: e7dc4e71caba6472ff48ad7d234389b91dadc280
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 7833f7d3927705883553f8d7b88e1bc48fd14ba2
+PODFILE CHECKSUM: f59428eb0c9e1bf89da3c5e4470d263ba6475789
 
 COCOAPODS: 1.11.2
