@@ -3,7 +3,7 @@ import {Text, TextStyle} from 'react-native';
 import {colors} from '../../utils/colors';
 
 interface ITextCompProps {
-  text: string;
+  text: string | number;
   color?: string;
   weight?: string;
   size?: number;

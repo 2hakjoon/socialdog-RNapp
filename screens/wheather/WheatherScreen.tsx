@@ -1,14 +1,76 @@
-import React from 'react';
-import {Button, Text} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Button, StyleSheet, View} from 'react-native';
 
 import {useNavigation} from '@react-navigation/native';
 import {routes} from '../../routes';
+import WeatherIcon from './components/WeatherIcon';
+import {getAddressFromLatLng} from '../../utils/googlemaps/geocoding';
+import {openAqi, openWeather} from '../../utils/types/openWeatherMap.types';
+import TextComp from '../components/TextComp';
 
 function WheatherScrean() {
+  //0:onecall날씨정보, 1:미세먼지 2:주소
+  const [[weather, aqi, location], setWeatherData] = useState<
+    [openWeather, openAqi, string]
+  >([undefined, undefined, '']);
+  const APIkey = 'c426ab12a65113b5edf8fa2bc8bf914f';
+
   const navigation = useNavigation();
+
+  const getWeather = async () => {
+    try {
+      const response = await Promise.all([
+        //날씨정보
+        await fetch(
+          `https://api.openweathermap.org/data/2.5/onecall?lat=50&lon=50&exclude=minutely,alerts&units=metric&appid=${APIkey}`,
+        ).then(r => r.json()),
+        //미세먼지
+        await fetch(
+          `https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=50&lon=50&appid=${APIkey}`,
+        ).then(r => r.json()),
+        await getAddressFromLatLng(),
+      ]);
+      console.log(response);
+      setWeatherData(response);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    getWeather();
+  }, []);
+
   return (
     <>
-      <Text>여기는 날씨정보표시 페이지!</Text>
+      {Boolean(location.length) && <TextComp text={location} />}
+      {weather && (
+        <>
+          <WeatherIcon weather={weather.current.weather[0].main} />
+          <TextComp text={weather.daily[0].temp.min} />
+          <TextComp text={`${weather.current.temp}°C,`} />
+          <TextComp text={weather.daily[0].temp.max} />
+
+          {aqi && (
+            <>
+              <TextComp text={aqi.list[0].main.aqi} />
+              <TextComp text={aqi.list[0].components.pm10} />
+              <TextComp text={aqi.list[0].components.pm2_5} />
+            </>
+          )}
+
+          <View style={styles.weekWeather}>
+            {weather.daily.map(({dt, temp, weather}) => (
+              <View>
+                <TextComp text={`${new Date(dt * 1000).getDate()}일`} />
+                <WeatherIcon size={30} weather={weather[0].main} />
+                <TextComp size={10} text={`${temp.max}°C`} />
+                <TextComp size={10} text={`${temp.min}°C`} />
+              </View>
+            ))}
+          </View>
+        </>
+      )}
       <Button
         title="산책하러가기"
         onPress={() => {
@@ -24,5 +86,11 @@ function WheatherScrean() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  weekWeather: {
+    flexDirection: 'row',
+  },
+});
 
 export default WheatherScrean;
