@@ -5,7 +5,7 @@ interface IStoreData {
   value:any
 }
 
-const storeData = async ({key, value}:IStoreData) => {
+export const storeData = async ({key, value}:IStoreData) => {
   try {
     const jsonValue = JSON.stringify(value)
     await AsyncStorage.setItem(`${key}`, jsonValue)
@@ -15,12 +15,14 @@ const storeData = async ({key, value}:IStoreData) => {
 }
 
 
-const getData = async () => {
+interface IGetData {
+  key:string
+}
+
+export const getData = async ({key}:IGetData) => {
   try {
-    const value = await AsyncStorage.getItem('@storage_Key')
-    if(value !== null) {
-      // value previously stored
-    }
+    const value = await AsyncStorage.getItem(key)
+    return value != null ? JSON.parse(value) : null;
   } catch(e) {
     console.log(e)
   }

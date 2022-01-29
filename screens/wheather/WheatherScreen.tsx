@@ -24,32 +24,32 @@ function WheatherScrean() {
   const navigation = useNavigation();
 
   const getWeather = async () => {
-    if (geolocation?.latitude && geolocation.longitude) {
-      try {
-        const response = await Promise.all([
-          //날씨정보
-          await fetch(
-            `https://api.openweathermap.org/data/2.5/onecall?lat=${geolocation.latitude}&lon=${geolocation.longitude}&exclude=minutely,alerts&units=metric&appid=${APIkey}`,
-          ).then(r => r.json()),
-          //미세먼지
-          await fetch(
-            `https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=${geolocation.latitude}&lon=${geolocation.longitude}&appid=${APIkey}`,
-          ).then(r => r.json()),
-          await getAddressFromLatLng({
-            lat: geolocation.latitude,
-            lng: geolocation.longitude,
-          }),
-        ]);
-        console.log(response);
-        setWeatherData(response);
-      } catch (e) {
-        console.log(e);
-      }
+    try {
+      const response = await Promise.all([
+        //날씨정보
+        await fetch(
+          `https://api.openweathermap.org/data/2.5/onecall?lat=${geolocation.latitude}&lon=${geolocation.longitude}&exclude=minutely,alerts&units=metric&appid=${APIkey}`,
+        ).then(r => r.json()),
+        //미세먼지
+        await fetch(
+          `https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=${geolocation.latitude}&lon=${geolocation.longitude}&appid=${APIkey}`,
+        ).then(r => r.json()),
+        await getAddressFromLatLng({
+          lat: geolocation.latitude,
+          lng: geolocation.longitude,
+        }),
+      ]);
+      console.log(response);
+      setWeatherData(response);
+    } catch (e) {
+      console.log(e);
     }
   };
 
   useEffect(() => {
-    getWeather();
+    if (geolocation?.latitude && geolocation.longitude) {
+      getWeather();
+    }
   }, [geolocation]);
 
   return (
