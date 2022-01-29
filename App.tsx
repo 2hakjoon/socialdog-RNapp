@@ -36,6 +36,7 @@ import WheatherScrean from './screens/wheather/WheatherScreen';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {PERMISSIONS, request} from 'react-native-permissions';
+import GeolocationComponent from './screens/components/GeolocationComponent';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -44,8 +45,6 @@ const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const [userData, setUserData] = useState<User>();
-
-  const test = async () => {};
 
   const checkLocationPermission = async () => {
     const hasPermission = await PermissionsAndroid.check(
@@ -70,7 +69,6 @@ const App = () => {
   };
 
   useEffect(() => {
-    test();
     const listener = AppState.addEventListener('change', status => {
       if (Platform.OS === 'ios' && status === 'active') {
         request(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY)
@@ -86,6 +84,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <GeolocationComponent />
       <NavigationContainer>
         {!userData ? (
           <LogInScreen setUserData={setUserData} />

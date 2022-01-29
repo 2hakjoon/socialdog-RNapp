@@ -8,39 +8,49 @@ import {getAddressFromLatLng} from '../../utils/googlemaps/geocoding';
 import {openAqi, openWeather} from '../../utils/types/openWeatherMap.types';
 import TextComp from '../components/TextComp';
 import AqiComponent from './components/AqiComponent';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../module';
 
 function WheatherScrean() {
   //0:onecall날씨정보, 1:미세먼지 2:주소
   const [[weather, aqi, location], setWeatherData] = useState<
     [openWeather, openAqi, string]
   >([undefined, undefined, '']);
+  const geolocation = useSelector(
+    (state: RootState) => state.geolocation.geolocation,
+  );
   const APIkey = 'c426ab12a65113b5edf8fa2bc8bf914f';
 
   const navigation = useNavigation();
 
   const getWeather = async () => {
-    try {
-      const response = await Promise.all([
-        //날씨정보
-        await fetch(
-          `https://api.openweathermap.org/data/2.5/onecall?lat=50&lon=50&exclude=minutely,alerts&units=metric&appid=${APIkey}`,
-        ).then(r => r.json()),
-        //미세먼지
-        await fetch(
-          `https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=50&lon=50&appid=${APIkey}`,
-        ).then(r => r.json()),
-        await getAddressFromLatLng(),
-      ]);
-      console.log(response);
-      setWeatherData(response);
-    } catch (e) {
-      console.log(e);
+    if (geolocation?.latitude && geolocation.longitude) {
+      try {
+        const response = await Promise.all([
+          //날씨정보
+          await fetch(
+            `https://api.openweathermap.org/data/2.5/onecall?lat=${geolocation.latitude}&lon=${geolocation.longitude}&exclude=minutely,alerts&units=metric&appid=${APIkey}`,
+          ).then(r => r.json()),
+          //미세먼지
+          await fetch(
+            `https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=${geolocation.latitude}&lon=${geolocation.longitude}&appid=${APIkey}`,
+          ).then(r => r.json()),
+          await getAddressFromLatLng({
+            lat: geolocation.latitude,
+            lng: geolocation.longitude,
+          }),
+        ]);
+        console.log(response);
+        setWeatherData(response);
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 
   useEffect(() => {
     getWeather();
-  }, []);
+  }, [geolocation]);
 
   return (
     <View style={styles.wrapper}>
