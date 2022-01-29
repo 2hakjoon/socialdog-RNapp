@@ -39,6 +39,9 @@ function WalkRecordsScreen() {
   const [recordList, setRecordList] = useState<string[]>([]);
   const [selectedRecord, setSelectedRecord] = useState<string>('');
   const user = useSelector((state: RootState) => state.auth.user);
+  const geolocaton = useSelector(
+    (state: RootState) => state.geolocation.geolocation,
+  );
 
   const getLocation = () =>
     Geolocation.getCurrentPosition(
@@ -99,6 +102,12 @@ function WalkRecordsScreen() {
       loadRecordedDays();
     }, []),
   );
+
+  useEffect(() => {
+    if (geolocaton?.latitude && geolocaton.longitude) {
+      setLocation({...geolocaton});
+    }
+  }, []);
 
   console.log(recordDays);
 

@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, StyleSheet, Text, View} from 'react-native';
 import RNMapView, {Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 
@@ -29,6 +29,9 @@ function RecordingScreen() {
   const [startTime, setStartTime] = useState<number>();
   const [timer, setTimer] = useState<number>(0);
   const user = useSelector((state: RootState) => state.auth.user);
+  const geolocaton = useSelector(
+    (state: RootState) => state.geolocation.geolocation,
+  );
 
   const getLocation = () =>
     Geolocation.getCurrentPosition(
@@ -153,6 +156,12 @@ function RecordingScreen() {
       console.log(locations);
     }, [locations]),
   );
+
+  useEffect(() => {
+    if (geolocaton?.latitude && geolocaton.longitude) {
+      setLocation({...geolocaton});
+    }
+  }, []);
 
   return (
     <>

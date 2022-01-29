@@ -10,6 +10,7 @@ import TextComp from '../components/TextComp';
 import AqiComponent from './components/AqiComponent';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../module';
+import {Geolocation} from '../../module/geolocation';
 
 function WheatherScrean() {
   //0:onecall날씨정보, 1:미세먼지 2:주소
@@ -23,20 +24,20 @@ function WheatherScrean() {
 
   const navigation = useNavigation();
 
-  const getWeather = async () => {
+  const getWeather = async ({latitude, longitude}: Geolocation) => {
     try {
       const response = await Promise.all([
         //날씨정보
         await fetch(
-          `https://api.openweathermap.org/data/2.5/onecall?lat=${geolocation.latitude}&lon=${geolocation.longitude}&exclude=minutely,alerts&units=metric&appid=${APIkey}`,
+          `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely,alerts&units=metric&appid=${APIkey}`,
         ).then(r => r.json()),
         //미세먼지
         await fetch(
-          `https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=${geolocation.latitude}&lon=${geolocation.longitude}&appid=${APIkey}`,
+          `https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=${latitude}&lon=${longitude}&appid=${APIkey}`,
         ).then(r => r.json()),
         await getAddressFromLatLng({
-          lat: geolocation.latitude,
-          lng: geolocation.longitude,
+          lat: latitude,
+          lng: longitude,
         }),
       ]);
       console.log(response);
@@ -48,7 +49,10 @@ function WheatherScrean() {
 
   useEffect(() => {
     if (geolocation?.latitude && geolocation.longitude) {
-      getWeather();
+      getWeather({
+        latitude: geolocation.latitude,
+        longitude: geolocation.longitude,
+      });
     }
   }, [geolocation]);
 
