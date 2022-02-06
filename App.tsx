@@ -8,10 +8,9 @@
  * @format
  */
 
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Alert,
-  AppState,
   Linking,
   PermissionsAndroid,
   Platform,
@@ -19,7 +18,7 @@ import {
   useColorScheme,
 } from 'react-native';
 import RecordingScreen from './screens/record/RecordingScreen';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useFocusEffect} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {LogInScreen} from './screens/login/LoginScreen';
@@ -29,14 +28,12 @@ import rootReducer from './module';
 import {routes} from './routes';
 import WalkRecordsScreen from './screens/walk-records/WalkRecordsScreen';
 import {User} from './module/auth';
-import Profile from './screens/profile/Profile';
 import Social from './screens/social/Social';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
-import {PERMISSIONS, request} from 'react-native-permissions';
+import {check, PERMISSIONS, request} from 'react-native-permissions';
 import GeolocationComponent from './screens/components/GeolocationComponent';
-import TextComp from './screens/components/TextComp';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import WeatherScreen from './screens/weather/WeatherScreen';
 
@@ -47,40 +44,88 @@ const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const [userData, setUserData] = useState<User>();
+  const [locationPermission, setLocationPermission] = useState(false);
 
-  const checkLocationPermission = async () => {
-    const hasPermission = await PermissionsAndroid.check(
+  const androidHasPermission = async () => {
+    return await PermissionsAndroid.check(
       PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
     );
-    if (hasPermission) {
+  };
+
+  const getAndroidLocationPermission = async () => {
+    if (await androidHasPermission()) {
+      setLocationPermission(true);
       return true;
+    } else {
+      const result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+      if (result === 'granted') {
+        setLocationPermission(true);
+        Alert.alert(
+          '백그라운드 위치정보.',
+          `정상적인 위치정보 수집을 위해, 추가로 위치정보를 항상 허용으로 설정해주세요`,
+          [
+            {
+              text: '괜찮아요',
+              onPress: () => {},
+              style: 'cancel',
+            },
+            {
+              text: '설정하기',
+              onPress: () => {
+                Linking.openSettings();
+              },
+            },
+          ],
+        );
+      } else {
+        Alert.alert(
+          '백그라운드 위치정보.',
+          `위치정보 권한이 없으면, 관련 서비스를 이용하실 수 업습니다.`,
+          [
+            {
+              text: '확인',
+            },
+          ],
+        );
+      }
+    }
+  };
+
+  const checkIosLocationPermission = async () => {
+    const always = await check(PERMISSIONS.IOS.LOCATION_ALWAYS);
+    const whenUse = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+    console.log(always, whenUse);
+    if (always === 'granted' || whenUse === 'granted') {
+      setLocationPermission(true);
     } else {
       Alert.alert(
         '백그라운드 위치정보.',
-        `정상적인 산책정보 수집을 위해, 위치정보를 항상 허용으로 설정해주세요`,
+        `정상적인 위치 수집을 위해, 위치정보를 항상 허용으로 설정해주세요`,
         [
           {
-            text: '괜찮아요',
-            onPress: () => {},
-            style: 'cancel',
+            text: '알겠어요',
+            onPress: () => {
+              request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE)
+                .then(result => {
+                  console.log(result);
+                  if (result !== 'blocked') {
+                    setLocationPermission(true);
+                  }
+                })
+                .catch(error => console.log(error));
+            },
           },
-          {text: '설정하기', onPress: () => Linking.openSettings()},
         ],
       );
     }
   };
 
   useEffect(() => {
-    const listener = AppState.addEventListener('change', status => {
-      if (Platform.OS === 'ios' && status === 'active') {
-        request(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY)
-          .then(result => console.log(result))
-          .catch(error => console.log(error));
-      } else if (Platform.OS === 'android') {
-        checkLocationPermission();
-      }
-    });
-    return listener.remove;
+    if (Platform.OS === 'android') {
+      getAndroidLocationPermission();
+    } else {
+      checkIosLocationPermission();
+    }
   }, []);
 
   function Walk() {
@@ -113,7 +158,7 @@ const App = () => {
     <Provider store={store}>
       <SafeAreaView style={{height: '100%'}}>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-        <GeolocationComponent />
+        {locationPermission && <GeolocationComponent />}
         <NavigationContainer>
           {!userData ? (
             <LogInScreen setUserData={setUserData} />

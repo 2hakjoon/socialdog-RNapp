@@ -9,9 +9,6 @@ import {getData, storeData} from '../../utils/asyncStorage';
 const LOCATION = 'LOCATION';
 
 function GeolocationComponent() {
-  const geolocation = useSelector<RootState>(
-    state => state.geolocation.geolocation,
-  );
   const dispatch = useDispatch();
 
   const getLocation = () =>
