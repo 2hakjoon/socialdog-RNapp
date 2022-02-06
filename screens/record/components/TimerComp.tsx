@@ -3,6 +3,7 @@ import React, {useCallback} from 'react';
 import {View} from 'react-native';
 import {timerFormat} from '../../../utils/dataformat/timeformat';
 import TextComp from '../../components/TextComp';
+import BackgroundTimer from 'react-native-background-timer';
 
 interface ITimerCompProps {
   recording: boolean;
@@ -15,7 +16,7 @@ function TimerComp({recording, timer, setTimer, pause}: ITimerCompProps) {
   useFocusEffect(
     useCallback(() => {
       if (recording && !pause) {
-        setTimeout(() => {
+        BackgroundTimer.setTimeout(() => {
           setTimer(timer + 1);
         }, 1000);
       }
