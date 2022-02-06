@@ -2,6 +2,7 @@ interface openWeatherMapOneCall {
   current:{
     uvi:number
     temp:number
+    feels_like:number
     weather:[{
       main:string
     }]

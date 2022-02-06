@@ -42,25 +42,39 @@ function AqiComponent({pm2_5, pm10}: IAqiComponent) {
   };
 
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.block}>
-        <TextComp text={pm10Level(pm10)} />
-        <TextComp text={`pm10:${pm10}㎍/㎥`} />
-      </View>
-      <View style={styles.block}>
-        <TextComp text={pm2_5Level(pm2_5)} />
-        <TextComp text={`pm2_5:${pm2_5}㎍/㎥`} />
+    <View style={styles.outerWrapper}>
+      <TextComp text={'미세먼지'} size={20} />
+      <View style={styles.wrapper}>
+        <View style={styles.block}>
+          <TextComp text={'pm10'} />
+          <TextComp text={pm10Level(pm10)} size={30} />
+          <TextComp text={`pm10 : ${pm10}㎍/㎥`} />
+        </View>
+        <View style={styles.block}>
+          <TextComp text={'pm2.5'} />
+          <TextComp text={pm2_5Level(pm2_5)} size={30} />
+          <TextComp text={`${pm2_5}㎍/㎥`} />
+        </View>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  outerWrapper: {
+    alignItems: 'center',
+    height: '25%',
+    paddingBottom: 30,
+  },
   wrapper: {
+    paddingTop: 10,
+    height: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
   },
   block: {
+    alignItems: 'center',
+    justifyContent: 'space-around',
     width: '50%',
   },
 });

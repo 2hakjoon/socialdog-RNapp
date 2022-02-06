@@ -1,6 +1,7 @@
 
 
-const geocodingApiKey = "AIzaSyAFJ3P-P0iEmZ8-qUS8B5cXiT_YkYcD_fk";
+const geocodingApiKey = "AIzaSyCUBupiI9nCBQD9X4Mhch0ilHQI9sSg2Gw";
+
 
 interface GetAddressFromLatLng {
   lat: number,

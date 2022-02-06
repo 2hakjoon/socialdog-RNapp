@@ -32,11 +32,13 @@ import {User} from './module/auth';
 import Profile from './screens/profile/Profile';
 import Social from './screens/social/Social';
 import {composeWithDevTools} from 'redux-devtools-extension';
-import WheatherScrean from './screens/wheather/WheatherScreen';
+import WeatherScrean from './screens/weather/WeatherScreen';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {PERMISSIONS, request} from 'react-native-permissions';
 import GeolocationComponent from './screens/components/GeolocationComponent';
+import TextComp from './screens/components/TextComp';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -83,72 +85,74 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <GeolocationComponent />
-      <NavigationContainer>
-        {!userData ? (
-          <LogInScreen setUserData={setUserData} />
-        ) : (
-          <Tab.Navigator initialRouteName={routes.walkRecords}>
-            <Tab.Screen
-              name={routes.wheather}
-              options={{
-                headerShown: false,
-                tabBarLabel: '산책',
-                tabBarIcon: ({color, size}) => (
-                  <FAIcon name="dog" color={color} size={size} />
-                ),
-              }}>
-              {() => (
-                <Stack.Navigator>
-                  <Stack.Screen
-                    name={routes.wheather}
-                    component={WheatherScrean}
-                  />
-                  <Stack.Screen
-                    name={routes.walkRecords}
-                    component={WalkRecordsScreen}
-                  />
-                  <Stack.Screen
-                    name={routes.record}
-                    component={RecordingScreen}
-                  />
-                </Stack.Navigator>
-              )}
-            </Tab.Screen>
-            <Tab.Screen
-              name={routes.social}
-              options={{
-                headerShown: false,
-                tabBarLabel: '친구들',
-                tabBarIcon: ({color, size}) => (
-                  <MIcon name="nature-people" color={color} size={size} />
-                ),
-              }}>
-              {() => (
-                <Stack.Navigator>
-                  <Stack.Screen name={routes.social} component={Social} />
-                </Stack.Navigator>
-              )}
-            </Tab.Screen>
-            <Tab.Screen
-              name={routes.profile}
-              options={{
-                headerShown: false,
-                tabBarLabel: '프로필',
-                tabBarIcon: ({color, size}) => (
-                  <MIcon name="face" color={color} size={size} />
-                ),
-              }}>
-              {() => (
-                <Stack.Navigator>
-                  <Stack.Screen name={routes.profile} component={Profile} />
-                </Stack.Navigator>
-              )}
-            </Tab.Screen>
-          </Tab.Navigator>
-        )}
-      </NavigationContainer>
+      <SafeAreaView style={{height: '100%'}}>
+        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+        <GeolocationComponent />
+        <NavigationContainer>
+          {!userData ? (
+            <LogInScreen setUserData={setUserData} />
+          ) : (
+            <Tab.Navigator initialRouteName={routes.walkRecords}>
+              <Tab.Screen
+                name={routes.weather}
+                options={{
+                  headerShown: false,
+                  tabBarLabel: '산책',
+                  tabBarIcon: ({color, size}) => (
+                    <FAIcon name="dog" color={color} size={size} />
+                  ),
+                }}>
+                {() => (
+                  <Stack.Navigator>
+                    <Stack.Screen
+                      name={routes.weather}
+                      component={WeatherScrean}
+                    />
+                    <Stack.Screen
+                      name={routes.walkRecords}
+                      component={WalkRecordsScreen}
+                    />
+                    <Stack.Screen
+                      name={routes.record}
+                      component={RecordingScreen}
+                    />
+                  </Stack.Navigator>
+                )}
+              </Tab.Screen>
+              <Tab.Screen
+                name={routes.social}
+                options={{
+                  headerShown: false,
+                  tabBarLabel: '친구들',
+                  tabBarIcon: ({color, size}) => (
+                    <MIcon name="nature-people" color={color} size={size} />
+                  ),
+                }}>
+                {() => (
+                  <Stack.Navigator>
+                    <Stack.Screen name={routes.social} component={Social} />
+                  </Stack.Navigator>
+                )}
+              </Tab.Screen>
+              <Tab.Screen
+                name={routes.profile}
+                options={{
+                  headerShown: false,
+                  tabBarLabel: '프로필',
+                  tabBarIcon: ({color, size}) => (
+                    <MIcon name="face" color={color} size={size} />
+                  ),
+                }}>
+                {() => (
+                  <Stack.Navigator>
+                    <Stack.Screen name={routes.profile} component={Profile} />
+                  </Stack.Navigator>
+                )}
+              </Tab.Screen>
+            </Tab.Navigator>
+          )}
+        </NavigationContainer>
+      </SafeAreaView>
     </Provider>
   );
 };

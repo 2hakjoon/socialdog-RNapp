@@ -4,5 +4,5 @@ export const routes = {
   walkRecords: 'walkRecords',
   profile: 'profile',
   social: 'social',
-  wheather: 'wheather',
+  weather: 'weather',
 };

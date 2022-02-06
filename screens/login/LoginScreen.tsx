@@ -48,4 +48,3 @@ export function LogInScreen({setUserData}: ILogInScreenProps) {
   }, [user]);
   return <GoogleLogInBtn authHandler={createOrLogInUser} />;
 }
-
