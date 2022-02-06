@@ -32,13 +32,13 @@ import {User} from './module/auth';
 import Profile from './screens/profile/Profile';
 import Social from './screens/social/Social';
 import {composeWithDevTools} from 'redux-devtools-extension';
-import WeatherScrean from './screens/weather/WeatherScreen';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import {PERMISSIONS, request} from 'react-native-permissions';
 import GeolocationComponent from './screens/components/GeolocationComponent';
 import TextComp from './screens/components/TextComp';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import WeatherScreen from './screens/weather/WeatherScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -83,6 +83,32 @@ const App = () => {
     return listener.remove;
   }, []);
 
+  function Walk() {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen name={routes.weather} component={WeatherScreen} />
+        <Stack.Screen name={routes.walkRecords} component={WalkRecordsScreen} />
+        <Stack.Screen name={routes.record} component={RecordingScreen} />
+      </Stack.Navigator>
+    );
+  }
+
+  function Profile() {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen name={routes.social} component={Social} />
+      </Stack.Navigator>
+    );
+  }
+
+  function Sns() {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen name={routes.profile} component={Profile} />
+      </Stack.Navigator>
+    );
+  }
+
   return (
     <Provider store={store}>
       <SafeAreaView style={{height: '100%'}}>
@@ -92,63 +118,39 @@ const App = () => {
           {!userData ? (
             <LogInScreen setUserData={setUserData} />
           ) : (
-            <Tab.Navigator initialRouteName={routes.walkRecords}>
+            <Tab.Navigator>
               <Tab.Screen
                 name={routes.weather}
+                component={Walk}
                 options={{
                   headerShown: false,
                   tabBarLabel: '산책',
                   tabBarIcon: ({color, size}) => (
                     <FAIcon name="dog" color={color} size={size} />
                   ),
-                }}>
-                {() => (
-                  <Stack.Navigator>
-                    <Stack.Screen
-                      name={routes.weather}
-                      component={WeatherScrean}
-                    />
-                    <Stack.Screen
-                      name={routes.walkRecords}
-                      component={WalkRecordsScreen}
-                    />
-                    <Stack.Screen
-                      name={routes.record}
-                      component={RecordingScreen}
-                    />
-                  </Stack.Navigator>
-                )}
-              </Tab.Screen>
+                }}></Tab.Screen>
+
               <Tab.Screen
                 name={routes.social}
+                component={Sns}
                 options={{
                   headerShown: false,
                   tabBarLabel: '친구들',
                   tabBarIcon: ({color, size}) => (
                     <MIcon name="nature-people" color={color} size={size} />
                   ),
-                }}>
-                {() => (
-                  <Stack.Navigator>
-                    <Stack.Screen name={routes.social} component={Social} />
-                  </Stack.Navigator>
-                )}
-              </Tab.Screen>
+                }}></Tab.Screen>
+
               <Tab.Screen
                 name={routes.profile}
+                component={Profile}
                 options={{
                   headerShown: false,
                   tabBarLabel: '프로필',
                   tabBarIcon: ({color, size}) => (
                     <MIcon name="face" color={color} size={size} />
                   ),
-                }}>
-                {() => (
-                  <Stack.Navigator>
-                    <Stack.Screen name={routes.profile} component={Profile} />
-                  </Stack.Navigator>
-                )}
-              </Tab.Screen>
+                }}></Tab.Screen>
             </Tab.Navigator>
           )}
         </NavigationContainer>

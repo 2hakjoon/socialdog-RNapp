@@ -21,7 +21,7 @@ import {RootState} from '../../module';
 import {Geolocation} from '../../module/geolocation';
 import {colors} from '../../utils/colors';
 
-function WeatherScrean() {
+function WeatherScreen() {
   //0:onecall날씨정보, 1:미세먼지 2:주소
   const [[weather, aqi, location], setWeatherData] = useState<
     [openWeather, openAqi, string]
@@ -261,4 +261,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WeatherScrean;
+export default WeatherScreen;
