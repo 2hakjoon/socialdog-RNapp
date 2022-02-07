@@ -11,6 +11,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   Alert,
+  AppRegistry,
   Linking,
   PermissionsAndroid,
   Platform,
@@ -36,6 +37,13 @@ import {check, PERMISSIONS, request} from 'react-native-permissions';
 import GeolocationComponent from './screens/components/GeolocationComponent';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import WeatherScreen from './screens/weather/WeatherScreen';
+import {ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client';
+
+// Initialize Apollo Client
+const client = new ApolloClient({
+  uri: 'http://121.154.94.120/graphql',
+  cache: new InMemoryCache(),
+});
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -155,52 +163,55 @@ const App = () => {
   }
 
   return (
-    <Provider store={store}>
-      <SafeAreaView style={{height: '100%'}}>
-        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-        {locationPermission && <GeolocationComponent />}
-        <NavigationContainer>
-          {!userData ? (
-            <LogInScreen setUserData={setUserData} />
-          ) : (
-            <Tab.Navigator>
-              <Tab.Screen
-                name={routes.weather}
-                component={Walk}
-                options={{
-                  headerShown: false,
-                  tabBarLabel: '산책',
-                  tabBarIcon: ({color, size}) => (
-                    <FAIcon name="dog" color={color} size={size} />
-                  ),
-                }}></Tab.Screen>
+    <ApolloProvider client={client}>
+      <Provider store={store}>
+        <SafeAreaView style={{height: '100%'}}>
+          <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
 
-              <Tab.Screen
-                name={routes.social}
-                component={Sns}
-                options={{
-                  headerShown: false,
-                  tabBarLabel: '친구들',
-                  tabBarIcon: ({color, size}) => (
-                    <MIcon name="nature-people" color={color} size={size} />
-                  ),
-                }}></Tab.Screen>
+          {locationPermission && <GeolocationComponent />}
+          <NavigationContainer>
+            {!userData ? (
+              <LogInScreen setUserData={setUserData} />
+            ) : (
+              <Tab.Navigator>
+                <Tab.Screen
+                  name={routes.weather}
+                  component={Walk}
+                  options={{
+                    headerShown: false,
+                    tabBarLabel: '산책',
+                    tabBarIcon: ({color, size}) => (
+                      <FAIcon name="dog" color={color} size={size} />
+                    ),
+                  }}></Tab.Screen>
 
-              <Tab.Screen
-                name={routes.profile}
-                component={Profile}
-                options={{
-                  headerShown: false,
-                  tabBarLabel: '프로필',
-                  tabBarIcon: ({color, size}) => (
-                    <MIcon name="face" color={color} size={size} />
-                  ),
-                }}></Tab.Screen>
-            </Tab.Navigator>
-          )}
-        </NavigationContainer>
-      </SafeAreaView>
-    </Provider>
+                <Tab.Screen
+                  name={routes.social}
+                  component={Sns}
+                  options={{
+                    headerShown: false,
+                    tabBarLabel: '친구들',
+                    tabBarIcon: ({color, size}) => (
+                      <MIcon name="nature-people" color={color} size={size} />
+                    ),
+                  }}></Tab.Screen>
+
+                <Tab.Screen
+                  name={routes.profile}
+                  component={Profile}
+                  options={{
+                    headerShown: false,
+                    tabBarLabel: '프로필',
+                    tabBarIcon: ({color, size}) => (
+                      <MIcon name="face" color={color} size={size} />
+                    ),
+                  }}></Tab.Screen>
+              </Tab.Navigator>
+            )}
+          </NavigationContainer>
+        </SafeAreaView>
+      </Provider>
+    </ApolloProvider>
   );
 };
 
