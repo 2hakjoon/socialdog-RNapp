@@ -138,7 +138,7 @@ const App = () => {
     );
   }
 
-  function Profile() {
+  function Sns() {
     return (
       <Stack.Navigator>
         <Stack.Screen name={routes.social} component={Social} />
@@ -146,7 +146,7 @@ const App = () => {
     );
   }
 
-  function Sns() {
+  function Profile() {
     return (
       <Stack.Navigator>
         <Stack.Screen name={routes.profile} component={Profile} />
