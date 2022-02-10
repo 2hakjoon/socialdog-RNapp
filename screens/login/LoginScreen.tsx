@@ -11,6 +11,13 @@ import {Controller, useForm} from 'react-hook-form';
 import {regexEmail, regexPassword} from '../../utils/regex';
 import BasicButton from '../components/BasicButton';
 import TextComp from '../components/TextComp';
+import {
+  LOGIN_MUTATION,
+  LOGIN_MUTATIONVariables,
+} from '../../__generated__/LOGIN_MUTATION';
+import jwt_decode from 'jwt-decode';
+import {storeData} from '../../utils/asyncStorage';
+import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from '../../utils/constants';
 
 interface ILogInScreenProps {
   setUserData: Function;
@@ -21,7 +28,7 @@ interface ILoginForm {
   password: string;
 }
 
-const LOGIN_MUTATION = gql`
+const LOGIN = gql`
   mutation LOGIN_MUTATION($email: String!, $password: String!) {
     login(args: {email: $email, password: $password}) {
       ok
@@ -33,10 +40,28 @@ const LOGIN_MUTATION = gql`
 `;
 
 export function LogInScreen({setUserData}: ILogInScreenProps) {
-  const [login, {loading, error, data}] = useMutation(LOGIN_MUTATION);
-  const {register, handleSubmit, formState, control} = useForm<ILoginForm>({
-    mode: 'onBlur',
+  const saveTokens = (data: LOGIN_MUTATION) => {
+    if (data?.login.accessToken && data.login.refreshToken) {
+      const decodedAccessToken = jwt_decode(data?.login.accessToken);
+      storeData({key: USER_ACCESS_TOKEN, value: decodedAccessToken});
+
+      const decodedRefreshToken = jwt_decode(data?.login.refreshToken);
+      storeData({key: USER_REFRESH_TOKEN, value: decodedRefreshToken});
+    }
+  };
+
+  const [login, {loading, error, data}] = useMutation<
+    LOGIN_MUTATION,
+    LOGIN_MUTATIONVariables
+  >(LOGIN, {
+    onCompleted: data => {
+      saveTokens(data);
+    },
   });
+  const {register, handleSubmit, setValue, formState, control} =
+    useForm<ILoginForm>({
+      mode: 'onBlur',
+    });
 
   const onSumbit = ({email, password}: ILoginForm) => {
     console.log(email, password, formState);
@@ -45,9 +70,12 @@ export function LogInScreen({setUserData}: ILogInScreenProps) {
     });
   };
 
+  useEffect(() => {}, [loading]);
+
   useEffect(() => {
-    console.log(data);
-  }, [loading]);
+    setValue('email', '2hakjoon@gmail.com');
+    setValue('password', 'test1234!');
+  }, []);
 
   return (
     <View style={styles.wrapper}>
