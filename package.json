@@ -29,6 +29,7 @@
     "graphql": "^16.3.0",
     "react": "17.0.2",
     "react-devtools": "^4.22.1",
+    "react-hook-form": "^7.26.1",
     "react-native": "0.66.4",
     "react-native-background-timer": "^2.4.1",
     "react-native-maps": "^0.30.1",
