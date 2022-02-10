@@ -168,7 +168,7 @@ const App = () => {
         <SafeAreaView style={{height: '100%'}}>
           <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
 
-          {locationPermission && <GeolocationComponent />}
+          {false && <GeolocationComponent />}
           <NavigationContainer>
             {!userData ? (
               <LogInScreen setUserData={setUserData} />

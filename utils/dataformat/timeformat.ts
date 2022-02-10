@@ -1,6 +1,7 @@
 
 
 export const Oneday = 86400000;
+export const TwoDays = 172800000;
 
 export const timerFormat = (time:number) => {
   let formatedTime = ""
@@ -74,4 +75,8 @@ export const formatWalkingTime = (seconds:number)=>{
     string += `${Math.floor((seconds % 3600)/60)}분)`
     return string
   }
+}
+
+export const trimMilSec = (seconds:number)=>{
+  return Math.floor(seconds/1000)
 }
