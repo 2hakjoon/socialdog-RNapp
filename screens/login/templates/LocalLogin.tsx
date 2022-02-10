@@ -15,7 +15,7 @@ import {getData, storeData} from '../../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from '../../../utils/constants';
 
 interface ILogInScreenProps {
-  setUserData: Function;
+  setAccessToken: Function;
 }
 
 interface ILoginForm {
@@ -34,7 +34,7 @@ const LOGIN = gql`
   }
 `;
 
-function LocalLogin() {
+function LocalLogin({setAccessToken}: ILogInScreenProps) {
   const saveTokens = async ({login}: LOGIN_MUTATION) => {
     if (login.accessToken && login.refreshToken) {
       await storeData({key: USER_ACCESS_TOKEN, value: login.accessToken});
@@ -48,6 +48,7 @@ function LocalLogin() {
   >(LOGIN, {
     onCompleted: async data => {
       await saveTokens(data);
+      setAccessToken(data.login.accessToken);
       console.log(await getData({key: USER_ACCESS_TOKEN}));
     },
   });

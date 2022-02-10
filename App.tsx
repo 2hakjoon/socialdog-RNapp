@@ -38,6 +38,8 @@ import GeolocationComponent from './screens/components/GeolocationComponent';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import WeatherScreen from './screens/weather/WeatherScreen';
 import {ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client';
+import {storeData} from './utils/asyncStorage';
+import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from './utils/constants';
 
 // Initialize Apollo Client
 const client = new ApolloClient({
@@ -134,6 +136,11 @@ const App = () => {
     } else {
       checkIosLocationPermission();
     }
+  }, []);
+
+  useEffect(() => {
+    storeData({key: USER_ACCESS_TOKEN, value: null});
+    storeData({key: USER_REFRESH_TOKEN, value: null});
   }, []);
 
   function Walk() {

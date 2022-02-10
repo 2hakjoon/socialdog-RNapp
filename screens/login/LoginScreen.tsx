@@ -1,16 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {getData, storeData} from '../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from '../../utils/constants';
 import jwt_decode, {JwtPayload} from 'jwt-decode';
-import {Oneday, trimMilSec, TwoDays} from '../../utils/dataformat/timeformat';
-import {gql, useMutation, useQuery} from '@apollo/client';
+import {trimMilSec, TwoDays} from '../../utils/dataformat/timeformat';
+import {gql, useLazyQuery, useMutation} from '@apollo/client';
 import {
   REISSUE_ACCESS_TOKEN_MUTATION,
   REISSUE_ACCESS_TOKEN_MUTATIONVariables,
 } from '../../__generated__/REISSUE_ACCESS_TOKEN_MUTATION';
 import TextComp from '../components/TextComp';
 import LocalLogin from './templates/LocalLogin';
+import {authHeader} from '../../utils/dataformat/graphqlHeader';
 
 interface ILogInScreenProps {
   setUserData: Function;
@@ -31,16 +32,35 @@ const REISSUE_ACCESS_TOKEN = gql`
   }
 `;
 
+const ME = gql`
+  query GET_PROFILE_QUERY {
+    me {
+      ok
+      data {
+        username
+        dogname
+        email
+        id
+      }
+    }
+  }
+`;
+
 export function LogInScreen({setUserData}: ILogInScreenProps) {
   const [accessToken, setAccessToken] = useState<string>();
   const [checkingToken, setCheckingToken] = useState<boolean>(true);
-  const [reissueAccessToken, {loading: reissueLoding}] = useMutation<
+  const [reissueAccessToken, {data: issueData}] = useMutation<
     REISSUE_ACCESS_TOKEN_MUTATION,
     REISSUE_ACCESS_TOKEN_MUTATIONVariables
   >(REISSUE_ACCESS_TOKEN);
 
+  const [meQuery] = useLazyQuery(ME, {
+    ...authHeader(accessToken),
+    onCompleted: data => setUserData(data),
+  });
+
   const getOrReissueToken = async () => {
-    const storeAccessToken = String(await getData({key: USER_ACCESS_TOKEN}));
+    const storeAccessToken = await getData({key: USER_ACCESS_TOKEN});
     console.log(storeAccessToken);
     //저장소에 accessToken이 있을때
     if (storeAccessToken) {
@@ -92,14 +112,18 @@ export function LogInScreen({setUserData}: ILogInScreenProps) {
   };
 
   useEffect(() => {
-    if (!reissueLoding) {
+    if (!issueData) {
       if (!accessToken?.trim()) {
         getOrReissueToken();
       }
     }
-  }, [reissueLoding]);
+  }, [issueData]);
 
-  console.log('최종', accessToken);
+  useEffect(() => {
+    if (accessToken) {
+      meQuery();
+    }
+  }, [accessToken]);
 
   return (
     <>
@@ -111,7 +135,7 @@ export function LogInScreen({setUserData}: ILogInScreenProps) {
         <>
           {!Boolean(accessToken?.length) && (
             <View style={styles.wrapper}>
-              <LocalLogin />
+              <LocalLogin setAccessToken={setAccessToken} />
             </View>
           )}
         </>
