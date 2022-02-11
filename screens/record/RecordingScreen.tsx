@@ -7,15 +7,17 @@ import Geolocation from '@react-native-community/geolocation';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../module';
-import {now_yyyy_mm_dd} from '../../utils/dataformat/dateformat';
-import {recordsCollection, walksCollection} from '../../firebase';
 import BtnRecord from './components/BtnRecord';
 import TimerComp from './components/TimerComp';
 import BtnPause from './components/BtnPause';
-import {timerFormatKor} from '../../utils/dataformat/timeformat';
+import {timerFormatKor, trimMilSec} from '../../utils/dataformat/timeformat';
 import {colors} from '../../utils/colors';
 import {gql, useMutation} from '@apollo/client';
 import {authHeader} from '../../utils/dataformat/graphqlHeader';
+import {
+  M_CREATE_WALK,
+  M_CREATE_WALKVariables,
+} from '../../__generated__/M_CREATE_WALK';
 
 interface latlngObj {
   latitude: number;
@@ -56,27 +58,34 @@ function RecordingScreen() {
     (state: RootState) => state.geolocation.geolocation,
   );
 
-  const [] = useMutation(CREATE_WALK, authHeader(user.));
+  const [createWalk, {error: createWalkError}] = useMutation<
+    M_CREATE_WALK,
+    M_CREATE_WALKVariables
+  >(CREATE_WALK, authHeader(user?.accessToken));
 
   const getLocation = () =>
-    Geolocation.getCurrentPosition(position => {
-      setLocation({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-      });
-      console.log(recording);
-      if (recording) {
-        setLocations(prev =>
-          prev.concat([
-            {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-            },
-          ]),
-        );
-      }
-      console.log(position);
-    });
+    Geolocation.getCurrentPosition(
+      position => {
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+        console.log(recording);
+        if (recording) {
+          setLocations(prev =>
+            prev.concat([
+              {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              },
+            ]),
+          );
+        }
+        console.log(position);
+      },
+      error => {},
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
+    );
 
   const startRecording = () => {
     setRecording(true);
@@ -91,28 +100,17 @@ function RecordingScreen() {
   const saveRecordingAndReset = async () => {
     try {
       const now = Date.now();
-      const walkRecordKey = `${startTime}-${now}-${timer}`;
-      const recordingUid = `${user?.uid}-${walkRecordKey}`;
-      await recordsCollection.doc(recordingUid).set({
-        ...locations,
+      const walkRecord = JSON.stringify(locations);
+      if (!startTime) throw new Error();
+      console.log('힝구');
+      createWalk({
+        variables: {
+          startTime: trimMilSec(startTime),
+          walkingTime: timer + 1,
+          finishTime: trimMilSec(now),
+          walkRecord,
+        },
       });
-
-      const records = await (await walksCollection.doc(user?.uid).get()).data();
-      console.log(records);
-
-      if (records && records[`${now_yyyy_mm_dd()}`]?.length) {
-        walksCollection.doc(user?.uid).update({
-          [`${now_yyyy_mm_dd()}`]: [
-            ...records[`${now_yyyy_mm_dd()}`],
-            walkRecordKey,
-          ],
-        });
-      } else {
-        walksCollection.doc(user?.uid).set({
-          ...records,
-          [`${now_yyyy_mm_dd()}`]: [walkRecordKey],
-        });
-      }
       setRecording(false);
       setPause(false);
       setTimer(0);
@@ -183,7 +181,6 @@ function RecordingScreen() {
       setLocation({...geolocaton});
     }
   }, []);
-
   return (
     <>
       {location ? (
