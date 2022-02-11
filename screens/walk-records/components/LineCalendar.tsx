@@ -36,6 +36,7 @@ function LineCalendar({
   };
 
   const checkWalkDate = (day: string) => {
+    console.log(day, Object.keys(recordDays));
     return Object.keys(recordDays).includes(day);
   };
 

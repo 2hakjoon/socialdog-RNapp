@@ -21,27 +21,90 @@ import {
   formatWalkingTime,
 } from '../../utils/dataformat/timeformat';
 import {colors} from '../../utils/colors';
+import {gql, useQuery} from '@apollo/client';
+import {
+  Q_WALK_RECORDS,
+  Q_WALK_RECORDS_getWalks_data,
+} from '../../__generated__/Q_WALK_RECORDS';
+import {authHeader} from '../../utils/dataformat/graphqlHeader';
+import {now_yyyy_mm_dd} from '../../utils/dataformat/dateformat';
 
 interface latlngObj {
   latitude: number;
   longitude: number;
 }
 
-interface ArrayLikeType {
-  [key: string]: string[];
+interface ReocordType {
+  startTime: number;
+  finishiTime: number;
+  walkingTime: number;
+  id: number;
 }
+
+interface RecordData {
+  [key: string]: [ReocordType];
+}
+
+const GET_WALK_RECORDS = gql`
+  query Q_WALK_RECORDS {
+    getWalks {
+      ok
+      data {
+        walkingTime
+        startTime
+        finishTime
+        id
+      }
+    }
+  }
+`;
 
 function WalkRecordsScreen() {
   const [location, setLocation] = useState<latlngObj | null>(null);
   const [locations, setLocations] = useState<latlngObj[]>([]);
-  const [recordDays, setRecordDays] = useState<ArrayLikeType>({});
+  const [recordDays, setRecordDays] = useState<RecordData>({});
   const [selectedDate, setSelectedDate] = useState<string>('');
-  const [recordList, setRecordList] = useState<string[]>([]);
+  const [recordList, setRecordList] = useState<ReocordType[]>([]);
   const [selectedRecord, setSelectedRecord] = useState<string>('');
   const user = useSelector((state: RootState) => state.auth.user);
   const geolocaton = useSelector(
     (state: RootState) => state.geolocation.geolocation,
   );
+
+  const makeRecordsToDayes = (walkRecords: Q_WALK_RECORDS) => {
+    console.log(walkRecords);
+    let daysObj: RecordData = {};
+    if (walkRecords.getWalks.data) {
+      walkRecords.getWalks.data.forEach(record => {
+        const date = now_yyyy_mm_dd(new Date(record.startTime * 1000));
+        if (daysObj[`${date}`]) {
+          daysObj[`${date}`].push({
+            startTime: record.startTime,
+            walkingTime: record.walkingTime,
+            finishiTime: record.finishTime,
+            id: record.id,
+          });
+        } else {
+          daysObj[`${date}`] = [
+            {
+              startTime: record.startTime,
+              walkingTime: record.walkingTime,
+              finishiTime: record.finishTime,
+              id: record.id,
+            },
+          ];
+        }
+      });
+    }
+    console.log(daysObj);
+    setRecordDays(daysObj);
+  };
+
+  const {data, loading, error} = useQuery<Q_WALK_RECORDS>(GET_WALK_RECORDS, {
+    ...authHeader(user?.accessToken),
+    onCompleted: makeRecordsToDayes,
+  });
+  console.log(data, loading, error);
 
   const getLocation = () =>
     Geolocation.getCurrentPosition(
@@ -55,15 +118,6 @@ function WalkRecordsScreen() {
       error => Alert.alert('Error', JSON.stringify(error)),
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
     );
-
-  const loadRecordedDays = async () => {
-    const recordDayLists = await (
-      await walksCollection.doc(user?.id).get()
-    ).data();
-    if (recordDayLists) {
-      setRecordDays(recordDayLists);
-    }
-  };
 
   const recordToPolyLine = async (key: string) => {
     const record = await (
@@ -99,7 +153,6 @@ function WalkRecordsScreen() {
   useFocusEffect(
     useCallback(() => {
       getLocation();
-      loadRecordedDays();
     }, []),
   );
 
