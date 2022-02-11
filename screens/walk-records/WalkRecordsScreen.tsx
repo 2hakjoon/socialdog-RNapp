@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   Alert,
-  FlatList,
   ScrollView,
   StyleSheet,
   Text,
@@ -10,7 +9,6 @@ import {
 } from 'react-native';
 import RNMapView, {Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import {useSelector} from 'react-redux';
-import {recordsCollection, walksCollection} from '../../firebase';
 import {RootState} from '../../module';
 import Geolocation from '@react-native-community/geolocation';
 import LineCalendar from './components/LineCalendar';
@@ -21,13 +19,14 @@ import {
   formatWalkingTime,
 } from '../../utils/dataformat/timeformat';
 import {colors} from '../../utils/colors';
-import {gql, useQuery} from '@apollo/client';
-import {
-  Q_WALK_RECORDS,
-  Q_WALK_RECORDS_getWalks_data,
-} from '../../__generated__/Q_WALK_RECORDS';
+import {gql, useLazyQuery, useQuery} from '@apollo/client';
+import {Q_WALK_RECORDS} from '../../__generated__/Q_WALK_RECORDS';
 import {authHeader} from '../../utils/dataformat/graphqlHeader';
 import {now_yyyy_mm_dd} from '../../utils/dataformat/dateformat';
+import {
+  Q_WALK_RECORD,
+  Q_WALK_RECORDVariables,
+} from '../../__generated__/Q_WALK_RECORD';
 
 interface latlngObj {
   latitude: number;
@@ -59,13 +58,25 @@ const GET_WALK_RECORDS = gql`
   }
 `;
 
+const GET_WALK_RECORD = gql`
+  query Q_WALK_RECORD($walkId: Int!) {
+    getWalk(args: {walkId: $walkId}) {
+      ok
+      error
+      data {
+        walkRecord
+      }
+    }
+  }
+`;
+
 function WalkRecordsScreen() {
   const [location, setLocation] = useState<latlngObj | null>(null);
   const [locations, setLocations] = useState<latlngObj[]>([]);
   const [recordDays, setRecordDays] = useState<RecordData>({});
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [recordList, setRecordList] = useState<ReocordType[]>([]);
-  const [selectedRecord, setSelectedRecord] = useState<string>('');
+  const [selectedRecord, setSelectedRecord] = useState<number>();
   const user = useSelector((state: RootState) => state.auth.user);
   const geolocaton = useSelector(
     (state: RootState) => state.geolocation.geolocation,
@@ -96,7 +107,6 @@ function WalkRecordsScreen() {
         }
       });
     }
-    console.log(daysObj);
     setRecordDays(daysObj);
   };
 
@@ -104,7 +114,18 @@ function WalkRecordsScreen() {
     ...authHeader(user?.accessToken),
     onCompleted: makeRecordsToDayes,
   });
-  console.log(data, loading, error);
+
+  const [getWalkRecord] = useLazyQuery<Q_WALK_RECORD, Q_WALK_RECORDVariables>(
+    GET_WALK_RECORD,
+    {
+      ...authHeader(user?.accessToken),
+      onCompleted: async data => {
+        if (data.getWalk.data?.walkRecord) {
+          setLocations(JSON.parse(data.getWalk.data?.walkRecord));
+        }
+      },
+    },
+  );
 
   const getLocation = () =>
     Geolocation.getCurrentPosition(
@@ -119,34 +140,25 @@ function WalkRecordsScreen() {
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
     );
 
-  const recordToPolyLine = async (key: string) => {
-    const record = await (
-      await recordsCollection.doc(`${user?.id}-${key}`).get()
-    ).data();
-    if (record) {
-      console.log(Object.values(record));
-      setLocations(Object.values(record));
-    }
-  };
-
   //firbase의 키에 담긴 내용을 포멧팅해서 산책시작시간, 산책시간이 담긴 문자열로 리턴함
-  const formatRcordKeyToTime = (key: string) => {
-    console.log(key);
-    const startTime = new Date(+key.split('-')[0]).getHours();
-    const walkingTime = +key.split('-')[2];
-    return `${formatAmPmHour(startTime)} ${formatWalkingTime(walkingTime)}`;
+  const formatRcordKeyToTime = (startTime: number, walkingtime: number) => {
+    console.log(startTime);
+    const startHour = new Date(startTime).getHours();
+    const walkingTime = walkingtime;
+    return `${formatAmPmHour(startHour)} ${formatWalkingTime(walkingTime)}`;
   };
 
   //날짜를 선택할때마다 해당 날짜의 산책데이터 리스트를 recordList에 넣어줌.
   useEffect(() => {
     if (selectedDate.trim()) {
+      console.log(recordDays, selectedDate);
       setRecordList([...recordDays[selectedDate]]);
     }
   }, [selectedDate]);
 
   useEffect(() => {
-    if (selectedRecord.trim()) {
-      recordToPolyLine(selectedRecord);
+    if (selectedRecord) {
+      getWalkRecord({variables: {walkId: selectedRecord}});
     }
   }, [selectedRecord]);
 
@@ -205,13 +217,16 @@ function WalkRecordsScreen() {
             />
           )}
           <ScrollView style={styles.recordListContainer} horizontal>
-            {recordList.map(key => {
+            {recordList.map(recordObj => {
               return (
                 <TouchableOpacity
-                  onPress={() => setSelectedRecord(key)}
+                  onPress={() => setSelectedRecord(recordObj.id)}
                   style={styles.recordBtn}>
                   <TextComp
-                    text={formatRcordKeyToTime(key)}
+                    text={formatRcordKeyToTime(
+                      recordObj.startTime,
+                      recordObj.walkingTime,
+                    )}
                     color={colors.PWhite}
                   />
                 </TouchableOpacity>
