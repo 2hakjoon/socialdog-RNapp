@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { USER_ACCESS_TOKEN, USER_REFRESH_TOKEN } from './constants';
 
 interface IStoreData {
   key:string
@@ -26,4 +27,10 @@ export const getData = async ({key}:IGetData) => {
   } catch(e) {
     console.log(e)
   }
+}
+
+
+export const deleteTokens = async () => {
+  await storeData({key: USER_ACCESS_TOKEN, value: null});
+  await storeData({key: USER_REFRESH_TOKEN, value: null});
 }

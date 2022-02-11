@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {getData, storeData} from '../../utils/asyncStorage';
+import {deleteTokens, getData, storeData} from '../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from '../../utils/constants';
 import jwt_decode, {JwtPayload} from 'jwt-decode';
 import {trimMilSec, TwoDays} from '../../utils/dataformat/timeformat';
@@ -49,7 +49,8 @@ const ME = gql`
 export function LogInScreen({setUserData}: ILogInScreenProps) {
   const [accessToken, setAccessToken] = useState<string>();
   const [checkingToken, setCheckingToken] = useState<boolean>(true);
-  const [reissueAccessToken, {data: issueData}] = useMutation<
+
+  const [reissueAccessToken] = useMutation<
     REISSUE_ACCESS_TOKEN_MUTATION,
     REISSUE_ACCESS_TOKEN_MUTATIONVariables
   >(REISSUE_ACCESS_TOKEN);
@@ -61,7 +62,6 @@ export function LogInScreen({setUserData}: ILogInScreenProps) {
 
   const getOrReissueToken = async () => {
     const storeAccessToken = await getData({key: USER_ACCESS_TOKEN});
-    console.log(storeAccessToken);
     //저장소에 accessToken이 있을때
     if (storeAccessToken) {
       try {
@@ -86,15 +86,22 @@ export function LogInScreen({setUserData}: ILogInScreenProps) {
                 refreshToken,
               },
             }).then(async data => {
+              console.log('여기는 then', data);
               const newAccessToken = data.data?.reissueAccessToken.accessToken;
-              if (storeAccessToken) {
-                await storeData({
-                  key: USER_ACCESS_TOKEN,
-                  value: newAccessToken,
-                });
+              await storeData({
+                key: USER_ACCESS_TOKEN,
+                value: newAccessToken,
+              });
+              //토큰이 정상적으로 발급되면 token저장 및 checkingToken 상태 해제
+              if (newAccessToken) {
+                setAccessToken(newAccessToken);
                 setCheckingToken(false);
+              } else {
+                throw new Error();
               }
             });
+          } else {
+            throw new Error('리프레시 토큰이 만료됨');
           }
         } else {
           setAccessToken(storeAccessToken);
@@ -102,8 +109,7 @@ export function LogInScreen({setUserData}: ILogInScreenProps) {
         }
       } catch (e) {
         console.log(e);
-        await storeData({key: USER_ACCESS_TOKEN, value: null});
-        await storeData({key: USER_REFRESH_TOKEN, value: null});
+        deleteTokens();
         setCheckingToken(false);
       }
     } else {
@@ -112,12 +118,8 @@ export function LogInScreen({setUserData}: ILogInScreenProps) {
   };
 
   useEffect(() => {
-    if (!issueData) {
-      if (!accessToken?.trim()) {
-        getOrReissueToken();
-      }
-    }
-  }, [issueData]);
+    getOrReissueToken();
+  }, [checkingToken]);
 
   useEffect(() => {
     if (accessToken) {

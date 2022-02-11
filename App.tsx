@@ -138,10 +138,10 @@ const App = () => {
     }
   }, []);
 
-  useEffect(() => {
-    storeData({key: USER_ACCESS_TOKEN, value: null});
-    storeData({key: USER_REFRESH_TOKEN, value: null});
-  }, []);
+  // useEffect(() => {
+  //   storeData({key: USER_ACCESS_TOKEN, value: null});
+  //   storeData({key: USER_REFRESH_TOKEN, value: null});
+  // }, []);
 
   function Walk() {
     return (
@@ -175,7 +175,7 @@ const App = () => {
         <SafeAreaView style={{height: '100%'}}>
           <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
 
-          {false && <GeolocationComponent />}
+          {locationPermission && <GeolocationComponent />}
           <NavigationContainer>
             {!userData ? (
               <LogInScreen setUserData={setUserData} />
