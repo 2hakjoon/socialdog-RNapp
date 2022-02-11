@@ -9,7 +9,7 @@ interface IBtnRecordProps {
   recording: boolean;
   pause: boolean;
   startRecording: () => void;
-  stopRecording: () => Promise<void>;
+  stopRecording: () => void;
 }
 
 function BtnRecord({

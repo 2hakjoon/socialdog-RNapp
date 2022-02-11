@@ -70,8 +70,8 @@ function RecordingScreen() {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         });
-        console.log(recording);
-        if (recording) {
+        console.log(!pause);
+        if (!pause) {
           setLocations(prev =>
             prev.concat([
               {
@@ -94,7 +94,6 @@ function RecordingScreen() {
 
   const toggleRecording = () => {
     setPause(prev => !prev);
-    setRecording(prev => !prev);
   };
 
   const saveRecordingAndReset = async () => {
@@ -120,7 +119,8 @@ function RecordingScreen() {
     }
   };
 
-  const createSaveAlert = () =>
+  const stopRecording = () => {
+    setPause(true);
     Alert.alert(
       '산책이 끝났나요?',
       `${timerFormatKor(timer + 1)} 동안 산책했어요.`,
@@ -135,10 +135,6 @@ function RecordingScreen() {
         {text: '끝났어요', onPress: () => saveRecordingAndReset()},
       ],
     );
-
-  const stopRecording = async () => {
-    setPause(true);
-    createSaveAlert();
   };
 
   const watchUserLocation = () => {
@@ -161,12 +157,16 @@ function RecordingScreen() {
     useCallback(() => {
       if (recording) {
         getLocation();
+        watchUserLocation();
       }
-      watchUserLocation();
       if (!recording) {
         getLocation();
       }
-    }, [recording]),
+
+      return () => {
+        BackgroundTimer.clearInterval(recordingId);
+      };
+    }, [recording, pause]),
   );
 
   useFocusEffect(
