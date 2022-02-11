@@ -14,11 +14,34 @@ import TimerComp from './components/TimerComp';
 import BtnPause from './components/BtnPause';
 import {timerFormatKor} from '../../utils/dataformat/timeformat';
 import {colors} from '../../utils/colors';
+import {gql, useMutation} from '@apollo/client';
+import {authHeader} from '../../utils/dataformat/graphqlHeader';
 
 interface latlngObj {
   latitude: number;
   longitude: number;
 }
+
+const CREATE_WALK = gql`
+  mutation M_CREATE_WALK(
+    $walkingTime: Int!
+    $startTime: Int!
+    $finishTime: Int!
+    $walkRecord: String!
+  ) {
+    createWalk(
+      args: {
+        walkingTime: $walkingTime
+        startTime: $startTime
+        finishTime: $finishTime
+        walkRecord: $walkRecord
+      }
+    ) {
+      ok
+      error
+    }
+  }
+`;
 
 function RecordingScreen() {
   const [location, setLocation] = useState<latlngObj | null>(null);
@@ -33,29 +56,27 @@ function RecordingScreen() {
     (state: RootState) => state.geolocation.geolocation,
   );
 
+  const [] = useMutation(CREATE_WALK, {...authHeader()});
+
   const getLocation = () =>
-    Geolocation.getCurrentPosition(
-      position => {
-        setLocation({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        });
-        console.log(recording);
-        if (recording) {
-          setLocations(prev =>
-            prev.concat([
-              {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-              },
-            ]),
-          );
-        }
-        console.log(position);
-      },
-      error => Alert.alert('Error', JSON.stringify(error)),
-      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
-    );
+    Geolocation.getCurrentPosition(position => {
+      setLocation({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      });
+      console.log(recording);
+      if (recording) {
+        setLocations(prev =>
+          prev.concat([
+            {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            },
+          ]),
+        );
+      }
+      console.log(position);
+    });
 
   const startRecording = () => {
     setRecording(true);

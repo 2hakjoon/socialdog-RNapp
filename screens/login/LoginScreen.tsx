@@ -12,9 +12,12 @@ import {
 import TextComp from '../components/TextComp';
 import LocalLogin from './templates/LocalLogin';
 import {authHeader} from '../../utils/dataformat/graphqlHeader';
+import {useDispatch} from 'react-redux';
+import {authorize} from '../../module/auth';
+import {GET_PROFILE_QUERY} from '../../__generated__/GET_PROFILE_QUERY';
 
 interface ILogInScreenProps {
-  setUserData: Function;
+  setLoginState: Function;
 }
 
 const REISSUE_ACCESS_TOKEN = gql`
@@ -46,7 +49,8 @@ const ME = gql`
   }
 `;
 
-export function LogInScreen({setUserData}: ILogInScreenProps) {
+export function LogInScreen({setLoginState}: ILogInScreenProps) {
+  const dispatch = useDispatch();
   const [accessToken, setAccessToken] = useState<string>();
   const [checkingToken, setCheckingToken] = useState<boolean>(true);
 
@@ -55,10 +59,10 @@ export function LogInScreen({setUserData}: ILogInScreenProps) {
     REISSUE_ACCESS_TOKEN_MUTATIONVariables
   >(REISSUE_ACCESS_TOKEN);
 
-  const [meQuery] = useLazyQuery(ME, {
-    ...authHeader(accessToken),
-    onCompleted: data => setUserData(data),
-  });
+  const [meQuery] = useLazyQuery<GET_PROFILE_QUERY>(
+    ME,
+    authHeader(accessToken),
+  );
 
   const getOrReissueToken = async () => {
     const storeAccessToken = await getData({key: USER_ACCESS_TOKEN});
@@ -123,7 +127,12 @@ export function LogInScreen({setUserData}: ILogInScreenProps) {
 
   useEffect(() => {
     if (accessToken) {
-      meQuery();
+      meQuery().then(data => {
+        if (data.data?.me.data) {
+          setLoginState(true);
+          dispatch(authorize(data.data?.me.data));
+        }
+      });
     }
   }, [accessToken]);
 

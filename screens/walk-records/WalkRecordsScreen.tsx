@@ -58,7 +58,7 @@ function WalkRecordsScreen() {
 
   const loadRecordedDays = async () => {
     const recordDayLists = await (
-      await walksCollection.doc(user?.uid).get()
+      await walksCollection.doc(user?.id).get()
     ).data();
     if (recordDayLists) {
       setRecordDays(recordDayLists);
@@ -67,7 +67,7 @@ function WalkRecordsScreen() {
 
   const recordToPolyLine = async (key: string) => {
     const record = await (
-      await recordsCollection.doc(`${user?.uid}-${key}`).get()
+      await recordsCollection.doc(`${user?.id}-${key}`).get()
     ).data();
     if (record) {
       console.log(Object.values(record));

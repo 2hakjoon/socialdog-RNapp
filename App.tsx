@@ -8,10 +8,9 @@
  * @format
  */
 
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
-  AppRegistry,
   Linking,
   PermissionsAndroid,
   Platform,
@@ -19,11 +18,11 @@ import {
   useColorScheme,
 } from 'react-native';
 import RecordingScreen from './screens/record/RecordingScreen';
-import {NavigationContainer, useFocusEffect} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {LogInScreen} from './screens/login/LoginScreen';
-import {Provider} from 'react-redux';
+import {Provider, useDispatch} from 'react-redux';
 import {applyMiddleware, createStore} from 'redux';
 import rootReducer from './module';
 import {routes} from './routes';
@@ -38,8 +37,6 @@ import GeolocationComponent from './screens/components/GeolocationComponent';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import WeatherScreen from './screens/weather/WeatherScreen';
 import {ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client';
-import {storeData} from './utils/asyncStorage';
-import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from './utils/constants';
 
 // Initialize Apollo Client
 const client = new ApolloClient({
@@ -53,7 +50,7 @@ const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
-  const [userData, setUserData] = useState<User>();
+  const [loginState, setLoginState] = useState(false);
   const [locationPermission, setLocationPermission] = useState(false);
 
   const androidHasPermission = async () => {
@@ -138,11 +135,6 @@ const App = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   storeData({key: USER_ACCESS_TOKEN, value: null});
-  //   storeData({key: USER_REFRESH_TOKEN, value: null});
-  // }, []);
-
   function Walk() {
     return (
       <Stack.Navigator>
@@ -177,8 +169,8 @@ const App = () => {
 
           {locationPermission && <GeolocationComponent />}
           <NavigationContainer>
-            {!userData ? (
-              <LogInScreen setUserData={setUserData} />
+            {!loginState ? (
+              <LogInScreen setLoginState={setLoginState} />
             ) : (
               <Tab.Navigator>
                 <Tab.Screen
