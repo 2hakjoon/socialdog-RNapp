@@ -4,7 +4,8 @@ export interface User {
   id: number;
   username: string;
   dogName?: string;
-  email:string
+  email:string;
+  accessToken:string;
 }
 
 export interface AuthState {

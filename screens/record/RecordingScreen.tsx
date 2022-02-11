@@ -56,7 +56,7 @@ function RecordingScreen() {
     (state: RootState) => state.geolocation.geolocation,
   );
 
-  const [] = useMutation(CREATE_WALK, {...authHeader()});
+  const [] = useMutation(CREATE_WALK, authHeader(user.));
 
   const getLocation = () =>
     Geolocation.getCurrentPosition(position => {

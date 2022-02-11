@@ -128,9 +128,10 @@ export function LogInScreen({setLoginState}: ILogInScreenProps) {
   useEffect(() => {
     if (accessToken) {
       meQuery().then(data => {
-        if (data.data?.me.data) {
+        const user = data.data?.me.data;
+        if (user) {
           setLoginState(true);
-          dispatch(authorize(data.data?.me.data));
+          dispatch(authorize({...user, accessToken}));
         }
       });
     }
