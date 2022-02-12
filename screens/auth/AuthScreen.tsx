@@ -85,14 +85,16 @@ export function LogInScreen({setLoginState}: ILogInScreenProps) {
             decodedRefreshToken.exp > trimMilSec(Date.now())
           ) {
             //토큰 재발급
-            reissueAccessToken({
+            const reIssueResult = await reissueAccessToken({
               variables: {
                 accessToken: storeAccessToken,
                 refreshToken,
               },
-            }).then(async data => {
-              console.log('여기는 then', data);
-              const newAccessToken = data.data?.reissueAccessToken.accessToken;
+            });
+            if (reIssueResult.data?.reissueAccessToken.ok) {
+              const newAccessToken =
+                reIssueResult.data?.reissueAccessToken.accessToken;
+              console.log('여기는 then', newAccessToken);
               await storeData({
                 key: USER_ACCESS_TOKEN,
                 value: newAccessToken,
@@ -104,7 +106,7 @@ export function LogInScreen({setLoginState}: ILogInScreenProps) {
               } else {
                 throw new Error();
               }
-            });
+            }
           } else {
             throw new Error('리프레시 토큰이 만료됨');
           }
