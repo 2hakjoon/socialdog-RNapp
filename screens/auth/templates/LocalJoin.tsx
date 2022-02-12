@@ -138,7 +138,7 @@ function LocalJoin() {
           {
             text: '로그인 하러가기',
             onPress: () => {
-              navigation.navigate('Login', {email, password: password1});
+              navigation.replace('Login', {email, password: password1});
             },
           },
         ]);

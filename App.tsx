@@ -24,9 +24,14 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Provider} from 'react-redux';
 import {applyMiddleware, createStore} from 'redux';
 import rootReducer from './module';
-import {RootStackList, RootTabNavigator} from './routes';
+import {
+  ProfileStackList,
+  RootStackList,
+  RootTabNavigator,
+  SnsStackList,
+  WalkStackList,
+} from './routes';
 import WalkRecordsScreen from './screens/walk-records/WalkRecordsScreen';
-import Social from './screens/social/Social';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
@@ -37,6 +42,9 @@ import WeatherScreen from './screens/weather/WeatherScreen';
 import {ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client';
 import {deleteTokens} from './utils/asyncStorage';
 import AuthScreen from './screens/auth/AuthScreen';
+import TextComp from './screens/components/TextComp';
+import SocialScreen from './screens/social/SocialScreen';
+import ProfileScreen from './screens/profile/ProfileScreen';
 
 // Initialize Apollo Client
 const client = new ApolloClient({
@@ -46,6 +54,9 @@ const client = new ApolloClient({
 
 const RootTab = createBottomTabNavigator<RootTabNavigator>();
 const RootStack = createNativeStackNavigator<RootStackList>();
+const WalkStack = createNativeStackNavigator<WalkStackList>();
+const SnsStack = createNativeStackNavigator<SnsStackList>();
+const ProfileStack = createNativeStackNavigator<ProfileStackList>();
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
 
 const App = () => {
@@ -138,28 +149,32 @@ const App = () => {
 
   function Walk() {
     return (
-      <RootStack.Navigator>
-        <RootStack.Screen name={'Walk'} component={WeatherScreen} />
-        <RootStack.Screen name={'WalkRecords'} component={WalkRecordsScreen} />
-        <RootStack.Screen name={'Record'} component={RecordingScreen} />
-      </RootStack.Navigator>
+      <WalkStack.Navigator>
+        <WalkStack.Screen name={'Weather'} component={WeatherScreen} />
+        <WalkStack.Screen name={'WalkRecords'} component={WalkRecordsScreen} />
+        <WalkStack.Screen name={'Record'} component={RecordingScreen} />
+      </WalkStack.Navigator>
     );
   }
 
   function Sns() {
     return (
-      <RootStack.Navigator>
-        <RootStack.Screen name={'Social'} component={Social} />
-      </RootStack.Navigator>
+      <SnsStack.Navigator>
+        <SnsStack.Screen name={'Social'} component={SocialScreen} />
+      </SnsStack.Navigator>
     );
   }
 
   function Profile() {
     return (
-      <RootStack.Navigator>
-        <RootStack.Screen name={'Profile'} component={Profile} />
-      </RootStack.Navigator>
+      <ProfileStack.Navigator>
+        <ProfileStack.Screen name={'Profile'} component={ProfileScreen} />
+      </ProfileStack.Navigator>
     );
+  }
+
+  function Temp() {
+    return <TextComp text={'힝구'} />;
   }
 
   return (
@@ -183,7 +198,8 @@ const App = () => {
                     tabBarIcon: ({color, size}) => (
                       <FAIcon name="dog" color={color} size={size} />
                     ),
-                  }}></RootTab.Screen>
+                  }}
+                />
 
                 <RootTab.Screen
                   name={'SocialTab'}
@@ -194,7 +210,8 @@ const App = () => {
                     tabBarIcon: ({color, size}) => (
                       <MIcon name="nature-people" color={color} size={size} />
                     ),
-                  }}></RootTab.Screen>
+                  }}
+                />
 
                 <RootTab.Screen
                   name={'ProfileTab'}
@@ -205,7 +222,8 @@ const App = () => {
                     tabBarIcon: ({color, size}) => (
                       <MIcon name="face" color={color} size={size} />
                     ),
-                  }}></RootTab.Screen>
+                  }}
+                />
               </RootTab.Navigator>
             )}
           </NavigationContainer>

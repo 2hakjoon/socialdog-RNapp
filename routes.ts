@@ -10,13 +10,27 @@ export type AuthStackList = {
 
 
 export type RootStackList = {
-  Auth: undefined;
   Record: undefined
   WalkRecords: undefined
-  Walk: undefined
+  Weather: undefined
   Profile: undefined
   Social: undefined
 };
+
+export type WalkStackList={
+  Record: undefined
+  WalkRecords: undefined
+  Weather: undefined
+}
+
+export type SnsStackList ={
+  Social: undefined
+}
+
+export type ProfileStackList = {
+  Profile: undefined
+}
+
 
 export type RootTabNavigator = {
   WalkTab: undefined
