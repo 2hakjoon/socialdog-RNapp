@@ -146,16 +146,17 @@ export function LogInScreen({setLoginState}: ILogInScreenProps) {
         </View>
       ) : (
         <>
-          {!Boolean(accessToken?.length) && (
+          {/* {!Boolean(accessToken?.length) && ( */}
+          {false && (
             <View style={styles.wrapper}>
               <LocalLogin setAccessToken={setAccessToken} />
             </View>
           )}
-          {/* {
+          {
             <View>
               <LocalJoin />
             </View>
-          } */}
+          }
         </>
       )}
     </>

@@ -8,6 +8,10 @@ import {M_CREATE_ACCOUNT} from '../../../__generated__/M_CREATE_ACCOUNT';
 import {M_CREATE_WALKVariables} from '../../../__generated__/M_CREATE_WALK';
 import TextComp from '../../components/TextComp';
 import BasicButton from '../../components/BasicButton';
+import {
+  M_CREATE_VERIFICATON,
+  M_CREATE_VERIFICATONVariables,
+} from '../../../__generated__/M_CREATE_VERIFICATON';
 
 interface IJoinForm {
   email: string;
@@ -38,6 +42,15 @@ const JOIN = gql`
   }
 `;
 
+const CREATE_VERIFICATION = gql`
+  mutation M_CREATE_VERIFICATON($email: String!) {
+    createVerification(args: {email: $email}) {
+      ok
+      error
+    }
+  }
+`;
+
 function LocalJoin() {
   const saveTokens = async ({createAccount}: M_CREATE_ACCOUNT) => {};
 
@@ -45,10 +58,25 @@ function LocalJoin() {
     M_CREATE_ACCOUNT,
     M_CREATE_WALKVariables
   >(JOIN);
+
+  const [createVerification, {}] = useMutation<
+    M_CREATE_VERIFICATON,
+    M_CREATE_VERIFICATONVariables
+  >(CREATE_VERIFICATION);
+
   const {handleSubmit, setValue, getValues, setError, formState, control} =
     useForm<IJoinForm>({
       mode: 'onBlur',
     });
+
+  const sendVerifyCode = async () => {
+    const result = await createVerification({
+      variables: {email: getValues('email')},
+    });
+    if (result.data?.createVerification.ok) {
+      console.log('email sended');
+    }
+  };
 
   const onSumbit = ({email, password1, password2, code}: IJoinForm) => {};
 
@@ -82,7 +110,7 @@ function LocalJoin() {
             />
           )}
         />
-        <BasicButton title="인증번호 발송" onPress={() => {}} />
+        <BasicButton title="인증번호 발송" onPress={sendVerifyCode} />
       </View>
       {formState.errors.email?.message && (
         <TextComp text={formState.errors.email.message} />

@@ -113,6 +113,8 @@ function WalkRecordsScreen() {
   const {data, loading, error} = useQuery<Q_WALK_RECORDS>(GET_WALK_RECORDS, {
     ...authHeader(user?.accessToken),
     onCompleted: makeRecordsToDayes,
+    fetchPolicy: 'network-only',
+    nextFetchPolicy: 'cache-first',
   });
 
   const [getWalkRecord] = useLazyQuery<Q_WALK_RECORD, Q_WALK_RECORDVariables>(
