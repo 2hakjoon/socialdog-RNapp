@@ -173,10 +173,6 @@ const App = () => {
     );
   }
 
-  function Temp() {
-    return <TextComp text={'힝구'} />;
-  }
-
   return (
     <ApolloProvider client={client}>
       <Provider store={store}>
