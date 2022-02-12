@@ -90,10 +90,17 @@ function LocalJoin() {
     Q_CHECK_VERIFICATIONVariables
   >(CHECK_VERIFICATION);
 
-  const {handleSubmit, getValues, watch, setValue, formState, control} =
-    useForm<IJoinForm>({
-      mode: 'onChange',
-    });
+  const {
+    handleSubmit,
+    getValues,
+    watch,
+    trigger,
+    setValue,
+    formState,
+    control,
+  } = useForm<IJoinForm>({
+    mode: 'onChange',
+  });
 
   const sendVerifyCode = async () => {
     const result = await createVerification({
@@ -245,6 +252,10 @@ function LocalJoin() {
             message:
               '비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 입니다.',
           },
+          validate: async () => {
+            trigger('password2');
+            return undefined;
+          },
         }}
         render={({field: {onChange, onBlur, value}}) => (
           <TextInput
@@ -254,7 +265,6 @@ function LocalJoin() {
             value={value}
             maxLength={20}
             secureTextEntry={true}
-            onChange={() => {}}
           />
         )}
       />
@@ -282,7 +292,9 @@ function LocalJoin() {
           />
         )}
       />
-      {paswordError && <TextComp text={'시발 좀 되라'} />}
+      {paswordError && Boolean(getValues('password2')) && (
+        <TextComp text={'비밀번호가 일치하지 않습니다.'} />
+      )}
       {formState.errors.password2?.message && (
         <TextComp text={formState.errors.password2.message} />
       )}
@@ -308,6 +320,7 @@ function LocalJoin() {
           !(
             Boolean(getValues('email')) &&
             Boolean(getValues('password1')) &&
+            Boolean(getValues('password2')) &&
             Boolean(getValues('username')) &&
             Boolean(getValues('code')) &&
             !paswordError
