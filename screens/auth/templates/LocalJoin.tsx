@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {colors} from '../../../utils/colors';
-import {gql, useLazyQuery, useMutation, useQuery} from '@apollo/client';
+import {gql, useLazyQuery, useMutation} from '@apollo/client';
 import {regexEmail, regexPassword, regexVerifyCode} from '../../../utils/regex';
-import {StyleSheet, TextInput, View} from 'react-native';
+import {Alert, StyleSheet, TextInput, View} from 'react-native';
 import {useForm, Controller} from 'react-hook-form';
-import {M_CREATE_ACCOUNT} from '../../../__generated__/M_CREATE_ACCOUNT';
-import {M_CREATE_WALKVariables} from '../../../__generated__/M_CREATE_WALK';
+import {
+  M_CREATE_ACCOUNT,
+  M_CREATE_ACCOUNTVariables,
+} from '../../../__generated__/M_CREATE_ACCOUNT';
 import TextComp from '../../components/TextComp';
 import BasicButton from '../../components/BasicButton';
 import {
@@ -16,6 +18,7 @@ import {
   Q_CHECK_VERIFICATION,
   Q_CHECK_VERIFICATIONVariables,
 } from '../../../__generated__/Q_CHECK_VERIFICATION';
+import SmallButton from '../../components/SmallButton';
 
 interface IJoinForm {
   email: string;
@@ -66,9 +69,12 @@ const CHECK_VERIFICATION = gql`
 
 function LocalJoin() {
   const [enableVerify, setEnableVerify] = useState(false);
+  const [enableEmail, setEnableEmail] = useState(true);
+  const [verifyDone, setVerifyDone] = useState(false);
+  const [paswordError, setPasswordError] = useState(false);
   const [createAccount, {loading, error, data}] = useMutation<
     M_CREATE_ACCOUNT,
-    M_CREATE_WALKVariables
+    M_CREATE_ACCOUNTVariables
   >(JOIN);
 
   const [createVerification, {}] = useMutation<
@@ -81,9 +87,9 @@ function LocalJoin() {
     Q_CHECK_VERIFICATIONVariables
   >(CHECK_VERIFICATION);
 
-  const {handleSubmit, setValue, getValues, setError, formState, control} =
+  const {handleSubmit, getValues, watch, setValue, formState, control} =
     useForm<IJoinForm>({
-      mode: 'onBlur',
+      mode: 'onChange',
     });
 
   const sendVerifyCode = async () => {
@@ -92,6 +98,16 @@ function LocalJoin() {
     });
     if (result.data?.createVerification.ok) {
       setEnableVerify(true);
+      setEnableEmail(false);
+      Alert.alert(
+        '이메일 발송 안료.',
+        '메일이 도착하지 않으셨다면, 스팸 메일함을 확인해보세요.',
+      );
+    } else {
+      Alert.alert(
+        '이메일 발송 실패',
+        `${result.data?.createVerification.error}`,
+      );
     }
   };
 
@@ -100,14 +116,30 @@ function LocalJoin() {
       variables: {email: getValues('email'), code: getValues('code')},
     });
     if (result.data?.verifyEmailAndCode.ok) {
-      console.log('인증완료');
+      setEnableVerify(false);
+      setVerifyDone(true);
+
+      Alert.alert('인증 완료.', '인증이 완료되었습니다.');
     } else {
       console.log(result.error);
       console.log(result.data?.verifyEmailAndCode.error);
     }
   };
 
-  const onSumbit = ({email, password1, password2, code}: IJoinForm) => {};
+  const onSumbit = async ({email, password1, code, username}: IJoinForm) => {
+    const result = await createAccount({
+      variables: {email: email, password: password1, code, username},
+    });
+    if (result.data?.createAccount.ok) {
+      Alert.alert('회원가입완료', '가입이 완료되었습니다.');
+    } else {
+      console.log(result.errors);
+      Alert.alert(
+        '회원가입 오류',
+        result?.data?.createAccount?.error || '회원가입에 실패했습니다.',
+      );
+    }
+  };
 
   useEffect(() => {}, [loading]);
 
@@ -115,8 +147,10 @@ function LocalJoin() {
     setValue('email', 'dlgkrwns1021@naver.com');
     setValue('password1', 'test1234!');
     setValue('password2', 'test1234!');
+    setValue('code', '491012');
     setValue('username', '이학준');
   }, []);
+
   return (
     <View style={styles.wrapper}>
       <View style={styles.rowBox}>
@@ -132,14 +166,26 @@ function LocalJoin() {
           }}
           render={({field: {onChange, onBlur, value}}) => (
             <TextInput
-              style={styles.input}
+              editable={enableEmail && !verifyDone}
+              style={
+                enableEmail && !verifyDone ? styles.input : styles.disableInput
+              }
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
+              autoCapitalize={'none'}
             />
           )}
         />
-        <BasicButton title="인증번호 발송" onPress={sendVerifyCode} />
+        <SmallButton
+          disable={
+            Boolean(formState?.errors?.email?.message) ||
+            !Boolean(getValues('email')) ||
+            verifyDone
+          }
+          title="인증번호 발송"
+          onPress={sendVerifyCode}
+        />
       </View>
       {formState.errors.email?.message && (
         <TextComp text={formState.errors.email.message} />
@@ -156,15 +202,26 @@ function LocalJoin() {
           }}
           render={({field: {onChange, onBlur, value}}) => (
             <TextInput
-              editable={true}
-              style={enableVerify ? styles.input : styles.disableInput}
+              editable={enableVerify && !verifyDone}
+              style={
+                enableVerify && !verifyDone ? styles.input : styles.disableInput
+              }
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
             />
           )}
         />
-        <BasicButton title="인증" onPress={checkVerifyCode} />
+        <SmallButton
+          disable={
+            (!enableVerify &&
+              (Boolean(formState?.errors?.code?.message) ||
+                !Boolean(getValues('code')))) ||
+            verifyDone
+          }
+          title="인증"
+          onPress={checkVerifyCode}
+        />
       </View>
       {formState.errors.code?.message && (
         <TextComp text={formState.errors.code.message} />
@@ -188,6 +245,7 @@ function LocalJoin() {
             value={value}
             maxLength={20}
             secureTextEntry={true}
+            onChange={() => {}}
           />
         )}
       />
@@ -199,6 +257,10 @@ function LocalJoin() {
         control={control}
         rules={{
           required: '비밀번호를 입력해주세요',
+          validate: value => {
+            setPasswordError(watch('password1') !== value);
+            return undefined;
+          },
         }}
         render={({field: {onChange, onBlur, value}}) => (
           <TextInput
@@ -208,25 +270,43 @@ function LocalJoin() {
             value={value}
             maxLength={20}
             secureTextEntry={true}
-            onChange={e => {
-              console.log(getValues('password1'), getValues('password2'));
-              if (getValues('password1') !== getValues('password2')) {
-                setError('password2', {
-                  type: 'notMatch',
-                  message: '비밀번호가 다릅니다.',
-                });
-
-                onChange(e);
-              }
-            }}
           />
         )}
       />
-
+      {paswordError && <TextComp text={'시발 좀 되라'} />}
       {formState.errors.password2?.message && (
         <TextComp text={formState.errors.password2.message} />
       )}
-      <BasicButton title="회원가입" onPress={handleSubmit(onSumbit)} />
+
+      <Controller
+        name="username"
+        control={control}
+        rules={{
+          required: '사용자 이름을 입력해주세요',
+        }}
+        render={({field: {onChange, onBlur, value}}) => (
+          <TextInput
+            style={styles.input}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            maxLength={20}
+          />
+        )}
+      />
+      <BasicButton
+        disable={
+          !(
+            Boolean(getValues('email')) &&
+            Boolean(getValues('password1')) &&
+            Boolean(getValues('username')) &&
+            Boolean(getValues('code')) &&
+            !paswordError
+          )
+        }
+        title="회원가입"
+        onPress={handleSubmit(onSumbit)}
+      />
     </View>
   );
 }

@@ -3,19 +3,19 @@ import {StyleSheet, TouchableOpacity} from 'react-native';
 import {colors} from '../../utils/colors';
 import TextComp from './TextComp';
 
-interface IBasicButton {
+interface ISmallButton {
   title: string;
   onPress: () => void;
   disable?: boolean;
 }
 
-function BasicButton({title, onPress, disable = false}: IBasicButton) {
+function SmallButton({title, onPress, disable = false}: ISmallButton) {
   return (
     <TouchableOpacity
       style={disable ? styles.disabledButton : styles.button}
       onPress={onPress}
       disabled={disable}>
-      <TextComp text={title} color="white" size={20} />
+      <TextComp text={title} color="white" size={15} />
     </TouchableOpacity>
   );
 }
@@ -23,20 +23,20 @@ function BasicButton({title, onPress, disable = false}: IBasicButton) {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: colors.PBlue,
-    alignSelf: 'stretch',
-    height: 50,
-    borderRadius: 25,
+    width: 40,
+    height: 30,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
   disabledButton: {
     backgroundColor: colors.PLightGray,
-    alignSelf: 'stretch',
-    height: 50,
-    borderRadius: 25,
+    width: 40,
+    height: 30,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
 });
 
-export default BasicButton;
+export default SmallButton;
