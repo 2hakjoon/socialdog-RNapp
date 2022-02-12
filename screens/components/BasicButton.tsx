@@ -19,7 +19,7 @@ function BasicButton({title, onPress}: IBasicButton) {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: colors.PBlue,
-    width: '100%',
+    alignSelf: 'stretch',
     height: 50,
     borderRadius: 25,
     alignItems: 'center',

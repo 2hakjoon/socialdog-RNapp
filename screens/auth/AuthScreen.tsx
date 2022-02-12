@@ -15,6 +15,7 @@ import {authHeader} from '../../utils/dataformat/graphqlHeader';
 import {useDispatch} from 'react-redux';
 import {authorize} from '../../module/auth';
 import {GET_PROFILE_QUERY} from '../../__generated__/GET_PROFILE_QUERY';
+import LocalJoin from './templates/LocalJoin';
 
 interface ILogInScreenProps {
   setLoginState: Function;
@@ -150,6 +151,11 @@ export function LogInScreen({setLoginState}: ILogInScreenProps) {
               <LocalLogin setAccessToken={setAccessToken} />
             </View>
           )}
+          {/* {
+            <View>
+              <LocalJoin />
+            </View>
+          } */}
         </>
       )}
     </>

@@ -21,7 +21,7 @@ import RecordingScreen from './screens/record/RecordingScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {LogInScreen} from './screens/login/LoginScreen';
+import {LogInScreen} from './screens/auth/AuthScreen';
 import {Provider, useDispatch} from 'react-redux';
 import {applyMiddleware, createStore} from 'redux';
 import rootReducer from './module';
@@ -37,6 +37,7 @@ import GeolocationComponent from './screens/components/GeolocationComponent';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import WeatherScreen from './screens/weather/WeatherScreen';
 import {ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client';
+import {deleteTokens} from './utils/asyncStorage';
 
 // Initialize Apollo Client
 const client = new ApolloClient({
@@ -133,6 +134,7 @@ const App = () => {
     } else {
       checkIosLocationPermission();
     }
+    //deleteTokens();
   }, []);
 
   function Walk() {

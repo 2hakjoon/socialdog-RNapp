@@ -70,8 +70,8 @@ function RecordingScreen() {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         });
-        console.log(!pause);
-        if (!pause) {
+        console.log(!pause && recording);
+        if (!pause && recording) {
           setLocations(prev =>
             prev.concat([
               {
@@ -157,8 +157,8 @@ function RecordingScreen() {
     useCallback(() => {
       if (recording) {
         getLocation();
-        watchUserLocation();
       }
+      watchUserLocation();
       if (!recording) {
         getLocation();
       }
