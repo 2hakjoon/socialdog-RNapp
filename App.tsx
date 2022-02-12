@@ -24,7 +24,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Provider} from 'react-redux';
 import {applyMiddleware, createStore} from 'redux';
 import rootReducer from './module';
-import {routes} from './routes';
+import {RootStackParamList, RootTabNavigator, routes} from './routes';
 import WalkRecordsScreen from './screens/walk-records/WalkRecordsScreen';
 import Social from './screens/social/Social';
 import {composeWithDevTools} from 'redux-devtools-extension';
@@ -44,8 +44,8 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
+const RootTab = createBottomTabNavigator<RootTabNavigator>();
+const RootStack = createNativeStackNavigator<RootStackParamList>();
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
 
 const App = () => {
@@ -138,27 +138,27 @@ const App = () => {
 
   function Walk() {
     return (
-      <Stack.Navigator>
-        <Stack.Screen name={routes.Weather} component={WeatherScreen} />
-        <Stack.Screen name={routes.walkRecords} component={WalkRecordsScreen} />
-        <Stack.Screen name={routes.record} component={RecordingScreen} />
-      </Stack.Navigator>
+      <RootStack.Navigator>
+        <RootStack.Screen name={'Weather'} component={WeatherScreen} />
+        <RootStack.Screen name={'WalkRecord'} component={WalkRecordsScreen} />
+        <RootStack.Screen name={'Record'} component={RecordingScreen} />
+      </RootStack.Navigator>
     );
   }
 
   function Sns() {
     return (
-      <Stack.Navigator>
-        <Stack.Screen name={routes.Social} component={Social} />
-      </Stack.Navigator>
+      <RootStack.Navigator>
+        <RootStack.Screen name={'Social'} component={Social} />
+      </RootStack.Navigator>
     );
   }
 
   function Profile() {
     return (
-      <Stack.Navigator>
-        <Stack.Screen name={routes.Profile} component={Profile} />
-      </Stack.Navigator>
+      <RootStack.Navigator>
+        <RootStack.Screen name={'Profile'} component={Profile} />
+      </RootStack.Navigator>
     );
   }
 
@@ -173,9 +173,9 @@ const App = () => {
             {!loginState ? (
               <AuthScreen setLoginState={setLoginState} />
             ) : (
-              <Tab.Navigator>
-                <Tab.Screen
-                  name={routes.Weather}
+              <RootTab.Navigator>
+                <RootTab.Screen
+                  name={'WeatherTab'}
                   component={Walk}
                   options={{
                     headerShown: false,
@@ -183,10 +183,10 @@ const App = () => {
                     tabBarIcon: ({color, size}) => (
                       <FAIcon name="dog" color={color} size={size} />
                     ),
-                  }}></Tab.Screen>
+                  }}></RootTab.Screen>
 
-                <Tab.Screen
-                  name={routes.Social}
+                <RootTab.Screen
+                  name={'SocialTab'}
                   component={Sns}
                   options={{
                     headerShown: false,
@@ -194,10 +194,10 @@ const App = () => {
                     tabBarIcon: ({color, size}) => (
                       <MIcon name="nature-people" color={color} size={size} />
                     ),
-                  }}></Tab.Screen>
+                  }}></RootTab.Screen>
 
-                <Tab.Screen
-                  name={routes.Profile}
+                <RootTab.Screen
+                  name={'ProfileTab'}
                   component={Profile}
                   options={{
                     headerShown: false,
@@ -205,8 +205,8 @@ const App = () => {
                     tabBarIcon: ({color, size}) => (
                       <MIcon name="face" color={color} size={size} />
                     ),
-                  }}></Tab.Screen>
-              </Tab.Navigator>
+                  }}></RootTab.Screen>
+              </RootTab.Navigator>
             )}
           </NavigationContainer>
         </SafeAreaView>

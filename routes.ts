@@ -20,10 +20,17 @@ export type RootStackParamList = {
   Join: undefined
   Record: undefined
   WalkRecord: undefined
+  Weather: undefined
   Profile: undefined
   Social: undefined
-  Weather: undefined
 };
+
+export type RootTabNavigator = {
+  WeatherTab: undefined
+  ProfileTab: undefined
+  SocialTab: undefined
+}
+
 
 export type RootRouteProps<RouteName extends keyof RootStackParamList> = RouteProp<
   RootStackParamList,
