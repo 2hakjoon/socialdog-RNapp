@@ -1,7 +1,7 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {colors} from '../../../utils/colors';
-import {gql, useMutation} from '@apollo/client';
-import {regexEmail, regexPassword} from '../../../utils/regex';
+import {gql, useLazyQuery, useMutation, useQuery} from '@apollo/client';
+import {regexEmail, regexPassword, regexVerifyCode} from '../../../utils/regex';
 import {StyleSheet, TextInput, View} from 'react-native';
 import {useForm, Controller} from 'react-hook-form';
 import {M_CREATE_ACCOUNT} from '../../../__generated__/M_CREATE_ACCOUNT';
@@ -12,6 +12,10 @@ import {
   M_CREATE_VERIFICATON,
   M_CREATE_VERIFICATONVariables,
 } from '../../../__generated__/M_CREATE_VERIFICATON';
+import {
+  Q_CHECK_VERIFICATION,
+  Q_CHECK_VERIFICATIONVariables,
+} from '../../../__generated__/Q_CHECK_VERIFICATION';
 
 interface IJoinForm {
   email: string;
@@ -51,9 +55,17 @@ const CREATE_VERIFICATION = gql`
   }
 `;
 
-function LocalJoin() {
-  const saveTokens = async ({createAccount}: M_CREATE_ACCOUNT) => {};
+const CHECK_VERIFICATION = gql`
+  query Q_CHECK_VERIFICATION($email: String!, $code: String!) {
+    verifyEmailAndCode(args: {email: $email, code: $code}) {
+      ok
+      error
+    }
+  }
+`;
 
+function LocalJoin() {
+  const [enableVerify, setEnableVerify] = useState(false);
   const [createAccount, {loading, error, data}] = useMutation<
     M_CREATE_ACCOUNT,
     M_CREATE_WALKVariables
@@ -63,6 +75,11 @@ function LocalJoin() {
     M_CREATE_VERIFICATON,
     M_CREATE_VERIFICATONVariables
   >(CREATE_VERIFICATION);
+
+  const [verifyEmailandCode] = useLazyQuery<
+    Q_CHECK_VERIFICATION,
+    Q_CHECK_VERIFICATIONVariables
+  >(CHECK_VERIFICATION);
 
   const {handleSubmit, setValue, getValues, setError, formState, control} =
     useForm<IJoinForm>({
@@ -74,7 +91,19 @@ function LocalJoin() {
       variables: {email: getValues('email')},
     });
     if (result.data?.createVerification.ok) {
-      console.log('email sended');
+      setEnableVerify(true);
+    }
+  };
+
+  const checkVerifyCode = async () => {
+    const result = await verifyEmailandCode({
+      variables: {email: getValues('email'), code: getValues('code')},
+    });
+    if (result.data?.verifyEmailAndCode.ok) {
+      console.log('인증완료');
+    } else {
+      console.log(result.error);
+      console.log(result.data?.verifyEmailAndCode.error);
     }
   };
 
@@ -119,18 +148,27 @@ function LocalJoin() {
         <Controller
           name="code"
           control={control}
-          rules={{}}
+          rules={{
+            pattern: {
+              value: regexVerifyCode,
+              message: '인증코드는 6자리입니다.',
+            },
+          }}
           render={({field: {onChange, onBlur, value}}) => (
             <TextInput
-              style={styles.input}
+              editable={true}
+              style={enableVerify ? styles.input : styles.disableInput}
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
             />
           )}
         />
-        <BasicButton title="인증" onPress={() => {}} />
+        <BasicButton title="인증" onPress={checkVerifyCode} />
       </View>
+      {formState.errors.code?.message && (
+        <TextComp text={formState.errors.code.message} />
+      )}
       <Controller
         name="password1"
         control={control}
@@ -207,7 +245,15 @@ const styles = StyleSheet.create({
     width: '60%',
     height: 40,
     borderWidth: 2,
-    borderColor: colors.PBlue,
+    borderColor: colors.PLightGray,
+    marginBottom: 10,
+  },
+  disableInput: {
+    width: '60%',
+    height: 40,
+    borderWidth: 2,
+    borderColor: colors.PDarkGray,
+    backgroundColor: colors.PDarkGray,
     marginBottom: 10,
   },
 });
