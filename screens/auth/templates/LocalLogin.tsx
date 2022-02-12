@@ -10,9 +10,10 @@ import {
   LOGIN_MUTATION,
   LOGIN_MUTATIONVariables,
 } from '../../../__generated__/LOGIN_MUTATION';
-import jwt_decode from 'jwt-decode';
 import {getData, storeData} from '../../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from '../../../utils/constants';
+import {useRoute} from '@react-navigation/native';
+import {RootRouteProps, routes} from '../../../routes';
 
 interface ILogInScreenProps {
   setAccessToken: Function;
@@ -35,6 +36,7 @@ const LOGIN = gql`
 `;
 
 function LocalLogin({setAccessToken}: ILogInScreenProps) {
+  const route = useRoute<RootRouteProps<'login'>>();
   const saveTokens = async ({login}: LOGIN_MUTATION) => {
     if (login.accessToken && login.refreshToken) {
       await storeData({key: USER_ACCESS_TOKEN, value: login.accessToken});
@@ -63,11 +65,18 @@ function LocalLogin({setAccessToken}: ILogInScreenProps) {
     });
   };
 
-  useEffect(() => {}, [loading]);
+  useEffect(() => {
+    console.log(route.params, routes);
+    if (route.params.email && route.params.password) {
+      console.log(route.params);
+      setValue('email', route.params.email);
+      setValue('password', route.params.password);
+    }
+  }, [route]);
 
   useEffect(() => {
-    setValue('email', '2hakjoon@gmail.com');
-    setValue('password', 'test1234!');
+    // setValue('email', '2hakjoon@gmail.com');
+    // setValue('password', 'test1234!');
   }, []);
 
   return (

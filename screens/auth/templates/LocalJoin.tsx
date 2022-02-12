@@ -19,6 +19,8 @@ import {
   Q_CHECK_VERIFICATIONVariables,
 } from '../../../__generated__/Q_CHECK_VERIFICATION';
 import SmallButton from '../../components/SmallButton';
+import {useNavigation} from '@react-navigation/native';
+import {routes} from '../../../routes';
 
 interface IJoinForm {
   email: string;
@@ -68,6 +70,7 @@ const CHECK_VERIFICATION = gql`
 `;
 
 function LocalJoin() {
+  const navigation = useNavigation();
   const [enableVerify, setEnableVerify] = useState(false);
   const [enableEmail, setEnableEmail] = useState(true);
   const [verifyDone, setVerifyDone] = useState(false);
@@ -127,21 +130,28 @@ function LocalJoin() {
   };
 
   const onSumbit = async ({email, password1, code, username}: IJoinForm) => {
-    const result = await createAccount({
-      variables: {email: email, password: password1, code, username},
-    });
-    if (result.data?.createAccount.ok) {
-      Alert.alert('회원가입완료', '가입이 완료되었습니다.');
-    } else {
-      console.log(result.errors);
-      Alert.alert(
-        '회원가입 오류',
-        result?.data?.createAccount?.error || '회원가입에 실패했습니다.',
-      );
+    if (email && password1 && code && username) {
+      const result = await createAccount({
+        variables: {email: email, password: password1, code, username},
+      });
+      if (result.data?.createAccount.ok) {
+        await Alert.alert('회원가입완료', '가입이 완료되었습니다.', [
+          {
+            text: '로그인 하러가기',
+            onPress: () => {
+              navigation.navigate('login', {email, password: password1});
+            },
+          },
+        ]);
+      } else {
+        console.log(result.errors);
+        Alert.alert(
+          '회원가입 오류',
+          result?.data?.createAccount?.error || '회원가입에 실패했습니다.',
+        );
+      }
     }
   };
-
-  useEffect(() => {}, [loading]);
 
   useEffect(() => {
     setValue('email', 'dlgkrwns1021@naver.com');

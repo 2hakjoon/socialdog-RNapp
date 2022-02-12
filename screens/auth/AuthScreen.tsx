@@ -16,6 +16,9 @@ import {useDispatch} from 'react-redux';
 import {authorize} from '../../module/auth';
 import {GET_PROFILE_QUERY} from '../../__generated__/GET_PROFILE_QUERY';
 import LocalJoin from './templates/LocalJoin';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import AuthHome from './templates/LoginHome';
+import {RootStackParamList, routes} from '../../routes';
 
 interface ILogInScreenProps {
   setLoginState: Function;
@@ -49,6 +52,8 @@ const ME = gql`
     }
   }
 `;
+
+const LoginStack = createNativeStackNavigator<RootStackParamList>();
 
 export function LogInScreen({setLoginState}: ILogInScreenProps) {
   const dispatch = useDispatch();
@@ -148,17 +153,13 @@ export function LogInScreen({setLoginState}: ILogInScreenProps) {
         </View>
       ) : (
         <>
-          {/* {!Boolean(accessToken?.length) && ( */}
-          {false && (
-            <View style={styles.wrapper}>
-              <LocalLogin setAccessToken={setAccessToken} />
-            </View>
-          )}
-          {
-            <View>
-              <LocalJoin />
-            </View>
-          }
+          <LoginStack.Navigator initialRouteName="auth">
+            <LoginStack.Screen name={routes.auth} component={AuthHome} />
+            <LoginStack.Screen name={routes.login}>
+              {() => <LocalLogin setAccessToken={setAccessToken} />}
+            </LoginStack.Screen>
+            <LoginStack.Screen name={routes.join} component={LocalJoin} />
+          </LoginStack.Navigator>
         </>
       )}
     </>
