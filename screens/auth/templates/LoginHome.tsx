@@ -9,13 +9,13 @@ function AuthHome() {
       <Button
         title="로그인"
         onPress={() => {
-          navigation.navigate('login');
+          navigation.navigate('Login');
         }}
       />
       <Button
         title="회원가입"
         onPress={() => {
-          navigation.navigate('join');
+          navigation.navigate('Join');
         }}
       />
     </View>

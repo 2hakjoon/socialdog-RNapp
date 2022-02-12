@@ -1,20 +1,28 @@
 import { RouteProp } from "@react-navigation/native";
 
 
-const login = 'login'
 export const routes = {
-  auth: 'auth',
-  login: login,
-  join:'join',
+  Auth: 'Auth',
+  AuthSelect : 'AuthSelect',
+  Login: 'Login',
+  Join:'Join',
   record: 'record',
   walkRecords: 'walkRecords',
-  profile: 'profile',
-  social: 'social',
-  weather: 'weather',
+  Profile: 'Profile',
+  Social: 'Social',
+  Weather: 'Weather',
 };
 
 export type RootStackParamList = {
-  login: {email:string,password:string};
+  Auth: undefined;
+  AuthSelect: undefined;
+  Login: {email:string,password:string};
+  Join: undefined
+  Record: undefined
+  WalkRecord: undefined
+  Profile: undefined
+  Social: undefined
+  Weather: undefined
 };
 
 export type RootRouteProps<RouteName extends keyof RootStackParamList> = RouteProp<

@@ -21,13 +21,11 @@ import RecordingScreen from './screens/record/RecordingScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {LogInScreen} from './screens/auth/AuthScreen';
-import {Provider, useDispatch} from 'react-redux';
+import {Provider} from 'react-redux';
 import {applyMiddleware, createStore} from 'redux';
 import rootReducer from './module';
 import {routes} from './routes';
 import WalkRecordsScreen from './screens/walk-records/WalkRecordsScreen';
-import {User} from './module/auth';
 import Social from './screens/social/Social';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
@@ -38,6 +36,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import WeatherScreen from './screens/weather/WeatherScreen';
 import {ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client';
 import {deleteTokens} from './utils/asyncStorage';
+import AuthScreen from './screens/auth/AuthScreen';
 
 // Initialize Apollo Client
 const client = new ApolloClient({
@@ -140,7 +139,7 @@ const App = () => {
   function Walk() {
     return (
       <Stack.Navigator>
-        <Stack.Screen name={routes.weather} component={WeatherScreen} />
+        <Stack.Screen name={routes.Weather} component={WeatherScreen} />
         <Stack.Screen name={routes.walkRecords} component={WalkRecordsScreen} />
         <Stack.Screen name={routes.record} component={RecordingScreen} />
       </Stack.Navigator>
@@ -150,7 +149,7 @@ const App = () => {
   function Sns() {
     return (
       <Stack.Navigator>
-        <Stack.Screen name={routes.social} component={Social} />
+        <Stack.Screen name={routes.Social} component={Social} />
       </Stack.Navigator>
     );
   }
@@ -158,7 +157,7 @@ const App = () => {
   function Profile() {
     return (
       <Stack.Navigator>
-        <Stack.Screen name={routes.profile} component={Profile} />
+        <Stack.Screen name={routes.Profile} component={Profile} />
       </Stack.Navigator>
     );
   }
@@ -172,11 +171,11 @@ const App = () => {
           {locationPermission && <GeolocationComponent />}
           <NavigationContainer>
             {!loginState ? (
-              <LogInScreen setLoginState={setLoginState} />
+              <AuthScreen setLoginState={setLoginState} />
             ) : (
               <Tab.Navigator>
                 <Tab.Screen
-                  name={routes.weather}
+                  name={routes.Weather}
                   component={Walk}
                   options={{
                     headerShown: false,
@@ -187,7 +186,7 @@ const App = () => {
                   }}></Tab.Screen>
 
                 <Tab.Screen
-                  name={routes.social}
+                  name={routes.Social}
                   component={Sns}
                   options={{
                     headerShown: false,
@@ -198,7 +197,7 @@ const App = () => {
                   }}></Tab.Screen>
 
                 <Tab.Screen
-                  name={routes.profile}
+                  name={routes.Profile}
                   component={Profile}
                   options={{
                     headerShown: false,

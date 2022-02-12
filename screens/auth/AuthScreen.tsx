@@ -20,7 +20,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import AuthHome from './templates/LoginHome';
 import {RootStackParamList, routes} from '../../routes';
 
-interface ILogInScreenProps {
+interface IAuthScreenProps {
   setLoginState: Function;
 }
 
@@ -55,7 +55,7 @@ const ME = gql`
 
 const LoginStack = createNativeStackNavigator<RootStackParamList>();
 
-export function LogInScreen({setLoginState}: ILogInScreenProps) {
+function AuthScreen({setLoginState}: IAuthScreenProps) {
   const dispatch = useDispatch();
   const [accessToken, setAccessToken] = useState<string>();
   const [checkingToken, setCheckingToken] = useState<boolean>(true);
@@ -153,12 +153,12 @@ export function LogInScreen({setLoginState}: ILogInScreenProps) {
         </View>
       ) : (
         <>
-          <LoginStack.Navigator initialRouteName="auth">
-            <LoginStack.Screen name={routes.auth} component={AuthHome} />
-            <LoginStack.Screen name={routes.login}>
+          <LoginStack.Navigator>
+            <LoginStack.Screen name={routes.AuthSelect} component={AuthHome} />
+            <LoginStack.Screen name={routes.Login}>
               {() => <LocalLogin setAccessToken={setAccessToken} />}
             </LoginStack.Screen>
-            <LoginStack.Screen name={routes.join} component={LocalJoin} />
+            <LoginStack.Screen name={routes.Join} component={LocalJoin} />
           </LoginStack.Navigator>
         </>
       )}
@@ -174,3 +174,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+export default AuthScreen;

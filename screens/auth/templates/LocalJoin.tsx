@@ -121,7 +121,6 @@ function LocalJoin() {
     if (result.data?.verifyEmailAndCode.ok) {
       setEnableVerify(false);
       setVerifyDone(true);
-
       Alert.alert('인증 완료.', '인증이 완료되었습니다.');
     } else {
       console.log(result.error);
@@ -139,7 +138,7 @@ function LocalJoin() {
           {
             text: '로그인 하러가기',
             onPress: () => {
-              navigation.navigate('login', {email, password: password1});
+              navigation.navigate(routes.Login, {email, password: password1});
             },
           },
         ]);

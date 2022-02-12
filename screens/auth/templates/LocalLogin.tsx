@@ -36,7 +36,12 @@ const LOGIN = gql`
 `;
 
 function LocalLogin({setAccessToken}: ILogInScreenProps) {
-  const route = useRoute<RootRouteProps<'login'>>();
+  const route = useRoute<RootRouteProps<'Login'>>();
+  const [login] = useMutation<LOGIN_MUTATION, LOGIN_MUTATIONVariables>(LOGIN);
+  const {handleSubmit, setValue, formState, control} = useForm<ILoginForm>({
+    mode: 'onBlur',
+  });
+
   const saveTokens = async ({login}: LOGIN_MUTATION) => {
     if (login.accessToken && login.refreshToken) {
       await storeData({key: USER_ACCESS_TOKEN, value: login.accessToken});
@@ -44,30 +49,18 @@ function LocalLogin({setAccessToken}: ILogInScreenProps) {
     }
   };
 
-  const [login, {loading, error, data}] = useMutation<
-    LOGIN_MUTATION,
-    LOGIN_MUTATIONVariables
-  >(LOGIN, {
-    onCompleted: async data => {
-      await saveTokens(data);
-      setAccessToken(data.login.accessToken);
-      console.log(await getData({key: USER_ACCESS_TOKEN}));
-    },
-  });
-  const {handleSubmit, setValue, formState, control} = useForm<ILoginForm>({
-    mode: 'onBlur',
-  });
-
-  const onSumbit = ({email, password}: ILoginForm) => {
-    console.log(email, password, formState);
-    login({
+  const onSumbit = async ({email, password}: ILoginForm) => {
+    const {data} = await login({
       variables: {email, password: password},
     });
+    if (data?.login.ok && data.login.accessToken) {
+      await saveTokens(data);
+      setAccessToken(data.login.accessToken);
+    }
   };
 
   useEffect(() => {
-    console.log(route.params, routes);
-    if (route.params.email && route.params.password) {
+    if (route?.params?.email && route?.params?.password) {
       console.log(route.params);
       setValue('email', route.params.email);
       setValue('password', route.params.password);
@@ -97,6 +90,7 @@ function LocalLogin({setAccessToken}: ILogInScreenProps) {
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
+            autoCapitalize="none"
           />
         )}
       />
