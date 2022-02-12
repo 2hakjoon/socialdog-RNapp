@@ -24,7 +24,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Provider} from 'react-redux';
 import {applyMiddleware, createStore} from 'redux';
 import rootReducer from './module';
-import {RootStackParamList, RootTabNavigator, routes} from './routes';
+import {RootStackList, RootTabNavigator} from './routes';
 import WalkRecordsScreen from './screens/walk-records/WalkRecordsScreen';
 import Social from './screens/social/Social';
 import {composeWithDevTools} from 'redux-devtools-extension';
@@ -45,7 +45,7 @@ const client = new ApolloClient({
 });
 
 const RootTab = createBottomTabNavigator<RootTabNavigator>();
-const RootStack = createNativeStackNavigator<RootStackParamList>();
+const RootStack = createNativeStackNavigator<RootStackList>();
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
 
 const App = () => {
@@ -139,8 +139,8 @@ const App = () => {
   function Walk() {
     return (
       <RootStack.Navigator>
-        <RootStack.Screen name={'Weather'} component={WeatherScreen} />
-        <RootStack.Screen name={'WalkRecord'} component={WalkRecordsScreen} />
+        <RootStack.Screen name={'Walk'} component={WeatherScreen} />
+        <RootStack.Screen name={'WalkRecords'} component={WalkRecordsScreen} />
         <RootStack.Screen name={'Record'} component={RecordingScreen} />
       </RootStack.Navigator>
     );
@@ -175,7 +175,7 @@ const App = () => {
             ) : (
               <RootTab.Navigator>
                 <RootTab.Screen
-                  name={'WeatherTab'}
+                  name={'WalkTab'}
                   component={Walk}
                   options={{
                     headerShown: false,

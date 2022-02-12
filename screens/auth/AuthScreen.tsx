@@ -17,8 +17,8 @@ import {authorize} from '../../module/auth';
 import {GET_PROFILE_QUERY} from '../../__generated__/GET_PROFILE_QUERY';
 import LocalJoin from './templates/LocalJoin';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import AuthHome from './templates/LoginHome';
-import {RootStackParamList, routes} from '../../routes';
+import AuthHome from './templates/AuthHome';
+import {AuthStackList} from '../../routes';
 
 interface IAuthScreenProps {
   setLoginState: Function;
@@ -53,7 +53,7 @@ const ME = gql`
   }
 `;
 
-const LoginStack = createNativeStackNavigator<RootStackParamList>();
+const LoginStack = createNativeStackNavigator<AuthStackList>();
 
 function AuthScreen({setLoginState}: IAuthScreenProps) {
   const dispatch = useDispatch();
@@ -154,11 +154,11 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
       ) : (
         <>
           <LoginStack.Navigator>
-            <LoginStack.Screen name={routes.AuthSelect} component={AuthHome} />
-            <LoginStack.Screen name={routes.Login}>
+            <LoginStack.Screen name={'AuthSelect'} component={AuthHome} />
+            <LoginStack.Screen name={'Login'}>
               {() => <LocalLogin setAccessToken={setAccessToken} />}
             </LoginStack.Screen>
-            <LoginStack.Screen name={routes.Join} component={LocalJoin} />
+            <LoginStack.Screen name={'Join'} component={LocalJoin} />
           </LoginStack.Navigator>
         </>
       )}

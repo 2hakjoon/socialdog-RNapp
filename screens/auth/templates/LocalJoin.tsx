@@ -20,7 +20,7 @@ import {
 } from '../../../__generated__/Q_CHECK_VERIFICATION';
 import SmallButton from '../../components/SmallButton';
 import {useNavigation} from '@react-navigation/native';
-import {routes} from '../../../routes';
+import {AuthNavigationProp} from '../../../routes';
 
 interface IJoinForm {
   email: string;
@@ -70,7 +70,7 @@ const CHECK_VERIFICATION = gql`
 `;
 
 function LocalJoin() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<AuthNavigationProp>();
   const [enableVerify, setEnableVerify] = useState(false);
   const [enableEmail, setEnableEmail] = useState(true);
   const [verifyDone, setVerifyDone] = useState(false);
@@ -138,7 +138,7 @@ function LocalJoin() {
           {
             text: '로그인 하러가기',
             onPress: () => {
-              navigation.navigate(routes.Login, {email, password: password1});
+              navigation.navigate('Login', {email, password: password1});
             },
           },
         ]);

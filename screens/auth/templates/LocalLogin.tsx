@@ -10,10 +10,10 @@ import {
   LOGIN_MUTATION,
   LOGIN_MUTATIONVariables,
 } from '../../../__generated__/LOGIN_MUTATION';
-import {getData, storeData} from '../../../utils/asyncStorage';
+import {storeData} from '../../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from '../../../utils/constants';
 import {useRoute} from '@react-navigation/native';
-import {RootRouteProps, routes} from '../../../routes';
+import {AuthRoutProp} from '../../../routes';
 
 interface ILogInScreenProps {
   setAccessToken: Function;
@@ -36,7 +36,7 @@ const LOGIN = gql`
 `;
 
 function LocalLogin({setAccessToken}: ILogInScreenProps) {
-  const route = useRoute<RootRouteProps<'Login'>>();
+  const route = useRoute<AuthRoutProp<'Login'>>();
   const [login] = useMutation<LOGIN_MUTATION, LOGIN_MUTATIONVariables>(LOGIN);
   const {handleSubmit, setValue, formState, control} = useForm<ILoginForm>({
     mode: 'onBlur',
@@ -68,8 +68,8 @@ function LocalLogin({setAccessToken}: ILogInScreenProps) {
   }, [route]);
 
   useEffect(() => {
-    // setValue('email', '2hakjoon@gmail.com');
-    // setValue('password', 'test1234!');
+    setValue('email', '2hakjoon@gmail.com');
+    setValue('password', 'test1234!');
   }, []);
 
   return (

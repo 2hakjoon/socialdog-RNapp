@@ -1,38 +1,40 @@
-import { RouteProp } from "@react-navigation/native";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from '@react-navigation/stack';
 
-
-export const routes = {
-  Auth: 'Auth',
-  AuthSelect : 'AuthSelect',
-  Login: 'Login',
-  Join:'Join',
-  record: 'record',
-  walkRecords: 'walkRecords',
-  Profile: 'Profile',
-  Social: 'Social',
-  Weather: 'Weather',
-};
-
-export type RootStackParamList = {
-  Auth: undefined;
-  AuthSelect: undefined;
-  Login: {email:string,password:string};
+export type AuthStackList = {
+  AuthSelect:undefined
+  Login: {email: string | undefined ,password: string | undefined};
   Join: undefined
+}
+
+
+export type RootStackList = {
+  Auth: undefined;
   Record: undefined
-  WalkRecord: undefined
-  Weather: undefined
+  WalkRecords: undefined
+  Walk: undefined
   Profile: undefined
   Social: undefined
 };
 
 export type RootTabNavigator = {
-  WeatherTab: undefined
+  WalkTab: undefined
   ProfileTab: undefined
   SocialTab: undefined
 }
 
-
-export type RootRouteProps<RouteName extends keyof RootStackParamList> = RouteProp<
-  RootStackParamList,
-  RouteName
+export type UseNavigationProp<TabName extends keyof RootTabNavigator> = CompositeNavigationProp<
+  BottomTabNavigationProp<RootTabNavigator, TabName>,
+  StackNavigationProp<RootStackList>
 >;
+
+
+export type RootRouteProps<RouteName extends keyof RootStackList> = RouteProp<
+RootStackList,
+RouteName
+>;
+
+export type AuthNavigationProp= StackNavigationProp<AuthStackList>
+
+export  type AuthRoutProp<RouteName extends keyof AuthStackList> = RouteProp<AuthStackList, RouteName>

@@ -8,9 +8,7 @@ import {
 } from 'react-native';
 import EvIcon from 'react-native-vector-icons/EvilIcons';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import {useNavigation} from '@react-navigation/native';
-import {routes} from '../../routes';
 import WeatherIcon from './components/WeatherIcon';
 import {getAddressFromLatLng} from '../../utils/googlemaps/geocoding';
 import {openAqi, openWeather} from '../../utils/types/openWeatherMap.types';
@@ -20,6 +18,7 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../module';
 import {Geolocation} from '../../module/geolocation';
 import {colors} from '../../utils/colors';
+import {UseNavigationProp} from '../../routes';
 
 function WeatherScreen() {
   //0:onecall날씨정보, 1:미세먼지 2:주소
@@ -31,7 +30,7 @@ function WeatherScreen() {
   );
   const APIkey = 'c426ab12a65113b5edf8fa2bc8bf914f';
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<UseNavigationProp<'WalkTab'>>();
 
   const getWeather = async ({latitude, longitude}: Geolocation) => {
     try {
@@ -177,13 +176,13 @@ function WeatherScreen() {
           <Button
             title="산책하러가기"
             onPress={() => {
-              navigation.navigate(routes.record);
+              navigation.navigate('Record');
             }}
           />
           <Button
             title="산책 기록 보기"
             onPress={() => {
-              navigation.navigate(routes.walkRecords);
+              navigation.navigate('WalkRecords');
             }}
           />
         </View>
