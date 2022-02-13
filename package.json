@@ -8,6 +8,7 @@
     "start": "react-native start",
     "test": "jest",
     "codegen": "sudo apollo client:codegen __generated__ --target=typescript --outputFlat",
+    "podinstall": "cd ios && arch -x86_64 pod install && cd ..",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
@@ -19,6 +20,7 @@
     "@react-native-firebase/firestore": "^14.2.2",
     "@react-native-firebase/storage": "^14.2.2",
     "@react-native-google-signin/google-signin": "^7.0.4",
+    "@react-native-seoul/kakao-login": "^3.4.3",
     "@react-navigation/bottom-tabs": "^6.0.9",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",

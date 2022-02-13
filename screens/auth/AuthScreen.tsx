@@ -19,6 +19,7 @@ import LocalJoin from './templates/LocalJoin';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import AuthHome from './templates/AuthHome';
 import {AuthStackList} from '../../routes';
+import Kakao from './templates/Kakao';
 
 interface IAuthScreenProps {
   setLoginState: Function;
@@ -147,6 +148,7 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
 
   return (
     <>
+      <Kakao />
       {checkingToken ? (
         <View>
           <TextComp text={'로그인 정보 확인중 ...'} />
