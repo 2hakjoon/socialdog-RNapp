@@ -1,18 +1,23 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from 'react-native';
 import {colors} from '../../utils/colors';
 import TextComp from './TextComp';
 
-interface IBasicButton {
+interface IBasicButton extends TouchableOpacityProps {
   title: string;
   onPress: () => void;
   disable?: boolean;
+  style?: {};
 }
 
-function BasicButton({title, onPress, disable = false}: IBasicButton) {
+function BasicButton({title, onPress, disable = false, style}: IBasicButton) {
   return (
     <TouchableOpacity
-      style={disable ? styles.disabledButton : styles.button}
+      style={{...(disable ? styles.disabledButton : styles.button), ...style}}
       onPress={onPress}
       disabled={disable}>
       <TextComp text={title} color="white" size={20} />

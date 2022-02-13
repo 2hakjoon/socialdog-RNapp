@@ -1,18 +1,27 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from 'react-native';
 import {colors} from '../../utils/colors';
 import TextComp from './TextComp';
 
-interface ISmallButton {
+interface ISmallButton extends TouchableOpacityProps {
   title: string;
-  onPress: () => void;
-  disable?: boolean;
+  disable?: boolean | undefined;
+  style?: {};
 }
 
-function SmallButton({title, onPress, disable = false}: ISmallButton) {
+function SmallButton({
+  title,
+  onPress,
+  disable = false,
+  style = {},
+}: ISmallButton) {
   return (
     <TouchableOpacity
-      style={disable ? styles.disabledButton : styles.button}
+      style={{...styles.default, ...(!disable && styles.disable), ...style}}
       onPress={onPress}
       disabled={disable}>
       <TextComp text={title} color="white" size={15} />
@@ -21,21 +30,16 @@ function SmallButton({title, onPress, disable = false}: ISmallButton) {
 }
 
 const styles = StyleSheet.create({
-  button: {
+  default: {
+    height: 40,
+    borderRadius: 10,
+    paddingHorizontal: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: colors.PBlue,
-    width: 40,
-    height: 30,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-  disabledButton: {
+  disable: {
     backgroundColor: colors.PLightGray,
-    width: 40,
-    height: 30,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
 

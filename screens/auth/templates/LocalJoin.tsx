@@ -21,6 +21,7 @@ import {
 import SmallButton from '../../components/SmallButton';
 import {useNavigation} from '@react-navigation/native';
 import {AuthNavigationProp} from '../../../routes';
+import FormInput from '../../components/FormInput';
 
 interface IJoinForm {
   email: string;
@@ -169,153 +170,167 @@ function LocalJoin() {
 
   return (
     <View style={styles.wrapper}>
-      <View style={styles.rowBox}>
+      <View style={styles.InputBox}>
+        <TextComp text={'이메일'} size={14} style={styles.sectionTitle} />
+        <View style={styles.rowBox}>
+          <Controller
+            name="email"
+            control={control}
+            rules={{
+              required: '이메일을 입력해주세요.',
+              pattern: {
+                value: regexEmail,
+                message: '이메일 형식으로 입력해주세요.',
+              },
+            }}
+            render={({field: {onChange, onBlur, value}}) => (
+              <FormInput
+                editable={enableEmail && !verifyDone}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                autoCapitalize={'none'}
+                style={styles.shortInput}
+              />
+            )}
+          />
+          <SmallButton
+            style={styles.smallBtn}
+            disable={
+              Boolean(formState?.errors?.email?.message) ||
+              !Boolean(getValues('email')) ||
+              verifyDone
+            }
+            title="이메일 인증"
+            onPress={sendVerifyCode}
+          />
+        </View>
+        {formState.errors.email?.message && (
+          <TextComp text={formState.errors.email.message} />
+        )}
+      </View>
+      <View style={styles.InputBox}>
+        <TextComp text={'인증번호'} size={14} style={styles.sectionTitle} />
+        <View style={styles.rowBox}>
+          <Controller
+            name="code"
+            control={control}
+            rules={{
+              pattern: {
+                value: regexVerifyCode,
+                message: '인증코드는 6자리입니다.',
+              },
+            }}
+            render={({field: {onChange, onBlur, value}}) => (
+              <FormInput
+                editable={enableVerify && !verifyDone}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                style={styles.shortInput}
+              />
+            )}
+          />
+          <SmallButton
+            style={styles.smallBtn}
+            disable={
+              (!enableVerify &&
+                (Boolean(formState?.errors?.code?.message) ||
+                  !Boolean(getValues('code')))) ||
+              verifyDone
+            }
+            title="번호 확인"
+            onPress={checkVerifyCode}
+          />
+        </View>
+        {formState.errors.code?.message && (
+          <TextComp text={formState.errors.code.message} />
+        )}
+      </View>
+      <View style={styles.InputBox}>
+        <TextComp text={'비밀번호'} size={14} style={styles.sectionTitle} />
         <Controller
-          name="email"
+          name="password1"
           control={control}
           rules={{
-            required: '이메일을 입력해주세요.',
+            required: '비밀번호를 입력해주세요',
             pattern: {
-              value: regexEmail,
-              message: '이메일 형식으로 입력해주세요.',
+              value: regexPassword,
+              message:
+                '비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 입니다.',
+            },
+            validate: async () => {
+              trigger('password2');
+              return undefined;
             },
           }}
           render={({field: {onChange, onBlur, value}}) => (
-            <TextInput
-              editable={enableEmail && !verifyDone}
-              style={
-                enableEmail && !verifyDone ? styles.input : styles.disableInput
-              }
+            <FormInput
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
-              autoCapitalize={'none'}
+              maxLength={20}
+              secureTextEntry={true}
             />
           )}
         />
-        <SmallButton
-          disable={
-            Boolean(formState?.errors?.email?.message) ||
-            !Boolean(getValues('email')) ||
-            verifyDone
-          }
-          title="인증번호 발송"
-          onPress={sendVerifyCode}
-        />
+        {formState.errors.password1?.message && (
+          <TextComp text={formState.errors.password1.message} />
+        )}
       </View>
-      {formState.errors.email?.message && (
-        <TextComp text={formState.errors.email.message} />
-      )}
-      <View style={styles.rowBox}>
+      <View style={styles.InputBox}>
+        <TextComp
+          text={'비밀번호 확인'}
+          size={14}
+          style={styles.sectionTitle}
+        />
         <Controller
-          name="code"
+          name="password2"
           control={control}
           rules={{
-            pattern: {
-              value: regexVerifyCode,
-              message: '인증코드는 6자리입니다.',
+            required: '비밀번호를 입력해주세요',
+            validate: value => {
+              setPasswordError(watch('password1') !== value);
+              return undefined;
             },
           }}
           render={({field: {onChange, onBlur, value}}) => (
-            <TextInput
-              editable={enableVerify && !verifyDone}
-              style={
-                enableVerify && !verifyDone ? styles.input : styles.disableInput
-              }
+            <FormInput
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
+              maxLength={20}
+              secureTextEntry={true}
             />
           )}
         />
-        <SmallButton
-          disable={
-            (!enableVerify &&
-              (Boolean(formState?.errors?.code?.message) ||
-                !Boolean(getValues('code')))) ||
-            verifyDone
-          }
-          title="인증"
-          onPress={checkVerifyCode}
+        {paswordError && Boolean(getValues('password2')) && (
+          <TextComp text={'비밀번호가 일치하지 않습니다.'} />
+        )}
+        {formState.errors.password2?.message && (
+          <TextComp text={formState.errors.password2.message} />
+        )}
+      </View>
+      <View style={styles.InputBox}>
+        <TextComp text={'사용자 이름'} size={14} style={styles.sectionTitle} />
+        <Controller
+          name="username"
+          control={control}
+          rules={{
+            required: '사용자 이름을 입력해주세요',
+          }}
+          render={({field: {onChange, onBlur, value}}) => (
+            <FormInput
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              maxLength={20}
+            />
+          )}
         />
       </View>
-      {formState.errors.code?.message && (
-        <TextComp text={formState.errors.code.message} />
-      )}
-      <Controller
-        name="password1"
-        control={control}
-        rules={{
-          required: '비밀번호를 입력해주세요',
-          pattern: {
-            value: regexPassword,
-            message:
-              '비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 입니다.',
-          },
-          validate: async () => {
-            trigger('password2');
-            return undefined;
-          },
-        }}
-        render={({field: {onChange, onBlur, value}}) => (
-          <TextInput
-            style={styles.input}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            maxLength={20}
-            secureTextEntry={true}
-          />
-        )}
-      />
-      {formState.errors.password1?.message && (
-        <TextComp text={formState.errors.password1.message} />
-      )}
-      <Controller
-        name="password2"
-        control={control}
-        rules={{
-          required: '비밀번호를 입력해주세요',
-          validate: value => {
-            setPasswordError(watch('password1') !== value);
-            return undefined;
-          },
-        }}
-        render={({field: {onChange, onBlur, value}}) => (
-          <TextInput
-            style={styles.input}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            maxLength={20}
-            secureTextEntry={true}
-          />
-        )}
-      />
-      {paswordError && Boolean(getValues('password2')) && (
-        <TextComp text={'비밀번호가 일치하지 않습니다.'} />
-      )}
-      {formState.errors.password2?.message && (
-        <TextComp text={formState.errors.password2.message} />
-      )}
-
-      <Controller
-        name="username"
-        control={control}
-        rules={{
-          required: '사용자 이름을 입력해주세요',
-        }}
-        render={({field: {onChange, onBlur, value}}) => (
-          <TextInput
-            style={styles.input}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            maxLength={20}
-          />
-        )}
-      />
       <BasicButton
+        style={styles.btnWrapper}
         disable={
           !(
             Boolean(getValues('email')) &&
@@ -335,28 +350,31 @@ function LocalJoin() {
 
 const styles = StyleSheet.create({
   wrapper: {
-    width: '90%',
+    paddingHorizontal: '10%',
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
   rowBox: {
+    width: '100%',
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  input: {
-    width: '60%',
-    height: 40,
-    borderWidth: 2,
-    borderColor: colors.PLightGray,
-    marginBottom: 10,
+  InputBox: {
+    width: '100%',
+    marginBottom: 15,
   },
-  disableInput: {
-    width: '60%',
-    height: 40,
-    borderWidth: 2,
-    borderColor: colors.PDarkGray,
-    backgroundColor: colors.PDarkGray,
-    marginBottom: 10,
+  sectionTitle: {
+    marginBottom: 8,
+  },
+  shortInput: {
+    width: '65%',
+  },
+  smallBtn: {
+    width: '30%',
+  },
+  btnWrapper: {
+    marginTop: 40,
   },
 });
 

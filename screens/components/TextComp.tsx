@@ -1,8 +1,8 @@
 import React from 'react';
-import {Text, TextStyle} from 'react-native';
+import {Text, TextProps, TextStyle} from 'react-native';
 import {colors} from '../../utils/colors';
 
-interface ITextCompProps {
+interface ITextCompProps extends TextProps {
   text: string | number;
   color?: string;
   weight?: string;
