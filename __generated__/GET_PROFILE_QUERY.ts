@@ -9,7 +9,6 @@
 
 export interface GET_PROFILE_QUERY_me_data {
   __typename: "UserDto";
-  username: string;
   dogname: string | null;
   email: string;
   id: number;

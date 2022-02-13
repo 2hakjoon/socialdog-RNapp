@@ -30,24 +30,15 @@ interface IJoinForm {
   password1: string;
   password2: string;
   code: string;
-  username: string;
 }
 
 const JOIN = gql`
   mutation M_CREATE_ACCOUNT(
     $email: String!
     $password: String!
-    $username: String!
     $code: String!
   ) {
-    createAccount(
-      args: {
-        email: $email
-        password: $password
-        username: $username
-        code: $code
-      }
-    ) {
+    createAccount(args: {email: $email, password: $password, code: $code}) {
       ok
       error
     }
@@ -138,10 +129,10 @@ function LocalJoin() {
     }
   };
 
-  const onSumbit = async ({email, password1, code, username}: IJoinForm) => {
-    if (email && password1 && code && username) {
+  const onSumbit = async ({email, password1, code}: IJoinForm) => {
+    if (email && password1 && code) {
       const result = await createAccount({
-        variables: {email: email, password: password1, code, username},
+        variables: {email: email, password: password1, code},
       });
       if (result.data?.createAccount.ok) {
         await Alert.alert('회원가입완료', '가입이 완료되었습니다.', [
@@ -167,7 +158,6 @@ function LocalJoin() {
     setValue('password1', 'test1234!');
     setValue('password2', 'test1234!');
     setValue('code', '491012');
-    setValue('username', '이학준');
   }, []);
 
   return (
@@ -261,18 +251,6 @@ function LocalJoin() {
             : formState.errors.password2?.message
         }
       />
-
-      <FormInputBox
-        title={'사용자 이름'}
-        control={control}
-        rules={{
-          required: '사용자 이름을 입력해주세요',
-        }}
-        name="username"
-        maxLength={10}
-        errors={formState.errors.username?.message}
-      />
-
       <BasicButton
         style={styles.btnWrapper}
         disable={
@@ -280,7 +258,6 @@ function LocalJoin() {
             Boolean(getValues('email')) &&
             Boolean(getValues('password1')) &&
             Boolean(getValues('password2')) &&
-            Boolean(getValues('username')) &&
             Boolean(getValues('code')) &&
             !paswordError
           )

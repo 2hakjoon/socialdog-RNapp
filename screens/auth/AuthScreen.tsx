@@ -45,7 +45,6 @@ const ME = gql`
     me {
       ok
       data {
-        username
         dogname
         email
         id
