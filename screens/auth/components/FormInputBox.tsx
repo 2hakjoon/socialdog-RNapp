@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, TextInputProps, View} from 'react-native';
-import {Controller} from 'react-hook-form';
+import {Controller, RegisterOptions} from 'react-hook-form';
 import TextComp from '../../components/TextComp';
 import FormInput from '../../components/FormInput';
 
@@ -8,7 +8,7 @@ interface IFormInputComp extends TextInputProps {
   title: string;
   name: string;
   control: any;
-  rules: any;
+  rules: RegisterOptions;
   errors: string | undefined;
   button?: {
     title: string;
@@ -24,7 +24,6 @@ function FormInputBox({
   errors = '',
   secureTextEntry,
   maxLength,
-  button,
 }: IFormInputComp) {
   return (
     <View style={styles.InputBox}>
