@@ -22,6 +22,7 @@ import SmallButton from '../../components/SmallButton';
 import {useNavigation} from '@react-navigation/native';
 import {AuthNavigationProp} from '../../../routes';
 import FormInput from '../../components/FormInput';
+import FormInputBox from '../components/FormInputBox';
 
 interface IJoinForm {
   email: string;

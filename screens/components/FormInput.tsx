@@ -4,6 +4,7 @@ import {colors} from '../../utils/colors';
 
 interface IFormInput extends TextInputProps {
   style?: TextStyle | undefined;
+  error?: boolean;
 }
 
 function FormInput({
@@ -11,10 +12,11 @@ function FormInput({
   onBlur,
   onChangeText,
   value,
-  autoCapitalize,
+  autoCapitalize = 'none',
   maxLength,
   secureTextEntry,
   style = {},
+  error,
 }: IFormInput) {
   return (
     <TextInput
@@ -22,6 +24,7 @@ function FormInput({
       style={{
         ...styles.default,
         ...(!editable && styles.disable),
+        ...(error && styles.error),
         ...style,
       }}
       onBlur={onBlur}
@@ -46,6 +49,9 @@ const styles = StyleSheet.create({
   disable: {
     borderColor: colors.PLightGray,
     backgroundColor: colors.PLightGray,
+  },
+  error: {
+    borderColor: 'red',
   },
 });
 

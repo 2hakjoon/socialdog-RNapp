@@ -14,6 +14,7 @@ import {storeData} from '../../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from '../../../utils/constants';
 import {useRoute} from '@react-navigation/native';
 import {AuthRoutProp} from '../../../routes';
+import FormInputBox from '../components/FormInputBox';
 
 interface ILogInScreenProps {
   setAccessToken: Function;
@@ -74,8 +75,9 @@ function LocalLogin({setAccessToken}: ILogInScreenProps) {
 
   return (
     <View style={styles.wrapper}>
-      <Controller
-        name="email"
+      <FormInputBox
+        title={'이메일'}
+        name={'email'}
         control={control}
         rules={{
           required: '이메일을 입력해주세요.',
@@ -84,21 +86,11 @@ function LocalLogin({setAccessToken}: ILogInScreenProps) {
             message: '이메일 형식으로 입력해주세요.',
           },
         }}
-        render={({field: {onChange, onBlur, value}}) => (
-          <TextInput
-            style={styles.input}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            autoCapitalize="none"
-          />
-        )}
+        errors={formState.errors.email?.message}
       />
-      {formState.errors.email?.message && (
-        <TextComp text={formState.errors.email.message} />
-      )}
-      <Controller
-        name="password"
+      <FormInputBox
+        title={'비밀번호'}
+        name={'password'}
         control={control}
         rules={{
           required: '비밀번호를 입력해주세요',
@@ -108,29 +100,22 @@ function LocalLogin({setAccessToken}: ILogInScreenProps) {
               '비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 입니다.',
           },
         }}
-        render={({field: {onChange, onBlur, value}}) => (
-          <TextInput
-            style={styles.input}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            maxLength={20}
-            secureTextEntry={true}
-          />
-        )}
+        secureTextEntry
+        errors={formState.errors.password?.message}
       />
-      {formState.errors.password?.message && (
-        <TextComp text={formState.errors.password.message} />
-      )}
-
-      <BasicButton title="로그인" onPress={handleSubmit(onSumbit)} />
+      <BasicButton
+        title="로그인"
+        onPress={handleSubmit(onSumbit)}
+        style={styles.buttonStyle}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   wrapper: {
-    width: '90%',
+    backgroundColor: 'white',
+    paddingHorizontal: '10%',
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
@@ -141,6 +126,9 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.PBlue,
     marginBottom: 10,
+  },
+  buttonStyle: {
+    marginTop: 20,
   },
 });
 
