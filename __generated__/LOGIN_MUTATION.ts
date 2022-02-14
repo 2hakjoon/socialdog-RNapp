@@ -7,7 +7,7 @@
 // GraphQL mutation operation: LOGIN_MUTATION
 // ====================================================
 
-export interface LOGIN_MUTATION_login {
+export interface LOGIN_MUTATION_localLogin {
   __typename: "LoginOutputDto";
   ok: boolean;
   accessToken: string | null;
@@ -16,7 +16,7 @@ export interface LOGIN_MUTATION_login {
 }
 
 export interface LOGIN_MUTATION {
-  login: LOGIN_MUTATION_login;
+  localLogin: LOGIN_MUTATION_localLogin;
 }
 
 export interface LOGIN_MUTATIONVariables {

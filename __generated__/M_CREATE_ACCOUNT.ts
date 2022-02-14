@@ -7,14 +7,14 @@
 // GraphQL mutation operation: M_CREATE_ACCOUNT
 // ====================================================
 
-export interface M_CREATE_ACCOUNT_createAccount {
+export interface M_CREATE_ACCOUNT_createLocalAccount {
   __typename: "CreateAccountOutputDto";
   ok: boolean;
   error: string | null;
 }
 
 export interface M_CREATE_ACCOUNT {
-  createAccount: M_CREATE_ACCOUNT_createAccount;
+  createLocalAccount: M_CREATE_ACCOUNT_createLocalAccount;
 }
 
 export interface M_CREATE_ACCOUNTVariables {

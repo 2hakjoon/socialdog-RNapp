@@ -27,7 +27,7 @@ interface ILoginForm {
 
 const LOGIN = gql`
   mutation LOGIN_MUTATION($email: String!, $password: String!) {
-    login(args: {email: $email, password: $password}) {
+    localLogin(args: {email: $email, password: $password}) {
       ok
       accessToken
       refreshToken
@@ -43,20 +43,23 @@ function LocalLogin({setAccessToken}: ILogInScreenProps) {
     mode: 'onBlur',
   });
 
-  const saveTokens = async ({login}: LOGIN_MUTATION) => {
-    if (login.accessToken && login.refreshToken) {
-      await storeData({key: USER_ACCESS_TOKEN, value: login.accessToken});
-      await storeData({key: USER_REFRESH_TOKEN, value: login.refreshToken});
+  const saveTokens = async ({localLogin}: LOGIN_MUTATION) => {
+    if (localLogin.accessToken && localLogin.refreshToken) {
+      await storeData({key: USER_ACCESS_TOKEN, value: localLogin.accessToken});
+      await storeData({
+        key: USER_REFRESH_TOKEN,
+        value: localLogin.refreshToken,
+      });
     }
   };
 
   const onSumbit = async ({email, password}: ILoginForm) => {
-    const {data} = await login({
-      variables: {email, password: password},
+    const res = await login({
+      variables: {email, password},
     });
-    if (data?.login.ok && data.login.accessToken) {
-      await saveTokens(data);
-      setAccessToken(data.login.accessToken);
+    if (res.data?.localLogin && res.data.localLogin.accessToken) {
+      await saveTokens(res.data);
+      setAccessToken(res.data.localLogin.accessToken);
     }
   };
 

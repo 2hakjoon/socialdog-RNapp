@@ -38,7 +38,9 @@ const JOIN = gql`
     $password: String!
     $code: String!
   ) {
-    createAccount(args: {email: $email, password: $password, code: $code}) {
+    createLocalAccount(
+      args: {email: $email, password: $password, code: $code}
+    ) {
       ok
       error
     }
@@ -134,7 +136,7 @@ function LocalJoin() {
       const result = await createAccount({
         variables: {email: email, password: password1, code},
       });
-      if (result.data?.createAccount.ok) {
+      if (result.data?.createLocalAccount.ok) {
         await Alert.alert('회원가입완료', '가입이 완료되었습니다.', [
           {
             text: '로그인 하러가기',
@@ -147,17 +149,17 @@ function LocalJoin() {
         console.log(result.errors);
         Alert.alert(
           '회원가입 오류',
-          result?.data?.createAccount?.error || '회원가입에 실패했습니다.',
+          result?.data?.createLocalAccount?.error || '회원가입에 실패했습니다.',
         );
       }
     }
   };
 
   useEffect(() => {
-    setValue('email', 'dlgkrwns1021@naver.com');
-    setValue('password1', 'test1234!');
-    setValue('password2', 'test1234!');
-    setValue('code', '491012');
+    // setValue('email', 'dlgkrwns1021@naver.com');
+    // setValue('password1', 'test1234!');
+    // setValue('password2', 'test1234!');
+    // setValue('code', '491012');
   }, []);
 
   return (
