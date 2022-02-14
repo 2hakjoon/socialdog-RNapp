@@ -20,7 +20,7 @@ function SmallButton({
 }: ISmallButton) {
   return (
     <TouchableOpacity
-      style={{...styles.default, ...(!disabled && styles.disable), ...style}}
+      style={{...styles.default, ...(disabled && styles.disable), ...style}}
       onPress={onPress}
       disabled={disabled}>
       <TextComp text={title} color="white" size={15} />
