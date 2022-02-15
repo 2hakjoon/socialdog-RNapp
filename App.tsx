@@ -26,7 +26,6 @@ import {applyMiddleware, createStore} from 'redux';
 import rootReducer from './module';
 import {
   ProfileStackList,
-  RootStackList,
   RootTabNavigator,
   SnsStackList,
   WalkStackList,
@@ -42,7 +41,6 @@ import WeatherScreen from './screens/weather/WeatherScreen';
 import {ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client';
 import {deleteTokens} from './utils/asyncStorage';
 import AuthScreen from './screens/auth/AuthScreen';
-import TextComp from './screens/components/TextComp';
 import SocialScreen from './screens/social/SocialScreen';
 import ProfileScreen from './screens/profile/ProfileScreen';
 
@@ -53,7 +51,6 @@ const client = new ApolloClient({
 });
 
 const RootTab = createBottomTabNavigator<RootTabNavigator>();
-const RootStack = createNativeStackNavigator<RootStackList>();
 const WalkStack = createNativeStackNavigator<WalkStackList>();
 const SnsStack = createNativeStackNavigator<SnsStackList>();
 const ProfileStack = createNativeStackNavigator<ProfileStackList>();

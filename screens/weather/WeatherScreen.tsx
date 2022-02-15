@@ -3,6 +3,7 @@ import {
   Button,
   ScrollView,
   StyleSheet,
+  Touchable,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -25,6 +26,7 @@ function WeatherScreen() {
   const [[weather, aqi, location], setWeatherData] = useState<
     [openWeather, openAqi, string]
   >([undefined, undefined, '']);
+  const user = useSelector((state: RootState) => state.auth.user);
   const geolocation = useSelector(
     (state: RootState) => state.geolocation.geolocation,
   );
@@ -53,6 +55,10 @@ function WeatherScreen() {
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const moveToProfile = () => {
+    navigation.navigate('ProfileTab');
   };
 
   useEffect(() => {
@@ -165,13 +171,16 @@ function WeatherScreen() {
         )}
       </ScrollView>
       <View style={styles.bottomContainer}>
-        <TouchableOpacity style={styles.dogFace}>
-          <MCIcon name="dog" size={40} />
+        <TouchableOpacity
+          style={styles.profileContainer}
+          onPress={moveToProfile}>
+          <View style={styles.dogFace}>
+            <MCIcon name="dog" size={40} />
+          </View>
+          <View style={styles.describeContainer}>
+            <TextComp text={user?.dogName || '프로필을 작성해주세요.'} />
+          </View>
         </TouchableOpacity>
-        <View style={styles.describeContainer}>
-          <TextComp text={'순대'} />
-          <TextComp text={'산책시간 : 0분 / 30분'} />
-        </View>
         <View style={styles.buttonContainer}>
           <Button
             title="산책하러가기"
@@ -248,8 +257,11 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   describeContainer: {
-    height: '100%',
     justifyContent: 'space-around',
+  },
+  profileContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   buttonContainer: {
     marginLeft: 'auto',
