@@ -12,16 +12,16 @@ import {Button} from 'react-native';
 import {storeData} from '../../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from '../../../utils/constants';
 import {
-  kakaoLogin,
-  kakaoLoginVariables,
-} from '../../../__generated__/kakaoLogin';
+  MKakaoLogin,
+  MKakaoLoginVariables,
+} from '../../../__generated__/MKakaoLogin';
 
 interface IKakaoLoginProps {
   setAccessToken: Function;
 }
 
 const KAKAO_LOGIN = gql`
-  mutation kakaoLogin(
+  mutation MKakaoLogin(
     $accessToken: String!
     $accessTokenExpiresAt: String!
     $refreshToken: String!
@@ -46,7 +46,7 @@ const KAKAO_LOGIN = gql`
 `;
 
 function KakaoLogin({setAccessToken}: IKakaoLoginProps) {
-  const [kakaoLogin] = useMutation<kakaoLogin, kakaoLoginVariables>(
+  const [kakaoLogin] = useMutation<MKakaoLogin, MKakaoLoginVariables>(
     KAKAO_LOGIN,
   );
 

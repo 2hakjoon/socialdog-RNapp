@@ -4,20 +4,20 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: M_CREATE_ACCOUNT
+// GraphQL mutation operation: MCreateLocalAccount
 // ====================================================
 
-export interface M_CREATE_ACCOUNT_createLocalAccount {
+export interface MCreateLocalAccount_createLocalAccount {
   __typename: "CreateAccountOutputDto";
   ok: boolean;
   error: string | null;
 }
 
-export interface M_CREATE_ACCOUNT {
-  createLocalAccount: M_CREATE_ACCOUNT_createLocalAccount;
+export interface MCreateLocalAccount {
+  createLocalAccount: MCreateLocalAccount_createLocalAccount;
 }
 
-export interface M_CREATE_ACCOUNTVariables {
+export interface MCreateLocalAccountVariables {
   email: string;
   password: string;
   code: string;

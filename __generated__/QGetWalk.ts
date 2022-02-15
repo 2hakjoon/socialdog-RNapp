@@ -4,25 +4,25 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: Q_WALK_RECORD
+// GraphQL query operation: QGetWalk
 // ====================================================
 
-export interface Q_WALK_RECORD_getWalk_data {
+export interface QGetWalk_getWalk_data {
   __typename: "Walks";
   walkRecord: string;
 }
 
-export interface Q_WALK_RECORD_getWalk {
+export interface QGetWalk_getWalk {
   __typename: "GetWalkOutputDto";
   ok: boolean;
   error: string | null;
-  data: Q_WALK_RECORD_getWalk_data | null;
+  data: QGetWalk_getWalk_data | null;
 }
 
-export interface Q_WALK_RECORD {
-  getWalk: Q_WALK_RECORD_getWalk;
+export interface QGetWalk {
+  getWalk: QGetWalk_getWalk;
 }
 
-export interface Q_WALK_RECORDVariables {
+export interface QGetWalkVariables {
   walkId: number;
 }

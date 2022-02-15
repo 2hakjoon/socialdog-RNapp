@@ -6,15 +6,15 @@ import {Controller, useForm} from 'react-hook-form';
 import {regexEmail, regexPassword} from '../../../utils/regex';
 import BasicButton from '../../components/BasicButton';
 import TextComp from '../../components/TextComp';
-import {
-  LOGIN_MUTATION,
-  LOGIN_MUTATIONVariables,
-} from '../../../__generated__/LOGIN_MUTATION';
 import {storeData} from '../../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from '../../../utils/constants';
 import {useRoute} from '@react-navigation/native';
 import {AuthRoutProp} from '../../../routes';
 import FormInputBox from '../components/FormInputBox';
+import {
+  MLocalLogin,
+  MLocalLoginVariables,
+} from '../../../__generated__/MLocalLogin';
 
 interface ILogInScreenProps {
   setAccessToken: Function;
@@ -26,7 +26,7 @@ interface ILoginForm {
 }
 
 const LOGIN = gql`
-  mutation LOGIN_MUTATION($email: String!, $password: String!) {
+  mutation MLocalLogin($email: String!, $password: String!) {
     localLogin(args: {email: $email, password: $password}) {
       ok
       accessToken
@@ -38,12 +38,12 @@ const LOGIN = gql`
 
 function LocalLogin({setAccessToken}: ILogInScreenProps) {
   const route = useRoute<AuthRoutProp<'Login'>>();
-  const [login] = useMutation<LOGIN_MUTATION, LOGIN_MUTATIONVariables>(LOGIN);
+  const [login] = useMutation<MLocalLogin, MLocalLoginVariables>(LOGIN);
   const {handleSubmit, setValue, formState, control} = useForm<ILoginForm>({
     mode: 'onBlur',
   });
 
-  const saveTokens = async ({localLogin}: LOGIN_MUTATION) => {
+  const saveTokens = async ({localLogin}: MLocalLogin) => {
     if (localLogin.accessToken && localLogin.refreshToken) {
       await storeData({key: USER_ACCESS_TOKEN, value: localLogin.accessToken});
       await storeData({

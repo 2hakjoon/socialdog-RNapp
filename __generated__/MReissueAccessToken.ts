@@ -4,21 +4,21 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: REISSUE_ACCESS_TOKEN_MUTATION
+// GraphQL mutation operation: MReissueAccessToken
 // ====================================================
 
-export interface REISSUE_ACCESS_TOKEN_MUTATION_reissueAccessToken {
+export interface MReissueAccessToken_reissueAccessToken {
   __typename: "ReissueAccessTokenOutputDto";
   ok: boolean;
   error: string | null;
   accessToken: string | null;
 }
 
-export interface REISSUE_ACCESS_TOKEN_MUTATION {
-  reissueAccessToken: REISSUE_ACCESS_TOKEN_MUTATION_reissueAccessToken;
+export interface MReissueAccessToken {
+  reissueAccessToken: MReissueAccessToken_reissueAccessToken;
 }
 
-export interface REISSUE_ACCESS_TOKEN_MUTATIONVariables {
+export interface MReissueAccessTokenVariables {
   accessToken: string;
   refreshToken: string;
 }

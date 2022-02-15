@@ -5,31 +5,28 @@ import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from '../../utils/constants';
 import jwt_decode, {JwtPayload} from 'jwt-decode';
 import {trimMilSec, TwoDays} from '../../utils/dataformat/timeformat';
 import {gql, useLazyQuery, useMutation} from '@apollo/client';
-import {
-  REISSUE_ACCESS_TOKEN_MUTATION,
-  REISSUE_ACCESS_TOKEN_MUTATIONVariables,
-} from '../../__generated__/REISSUE_ACCESS_TOKEN_MUTATION';
 import TextComp from '../components/TextComp';
 import LocalLogin from './templates/LocalLogin';
 import {authHeader} from '../../utils/dataformat/graphqlHeader';
 import {useDispatch} from 'react-redux';
 import {authorize} from '../../module/auth';
-import {GET_PROFILE_QUERY} from '../../__generated__/GET_PROFILE_QUERY';
 import LocalJoin from './templates/LocalJoin';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import AuthHome from './templates/AuthHome';
 import {AuthStackList} from '../../routes';
 import KakaoLogin from './templates/KakaoLogin';
+import {
+  MReissueAccessToken,
+  MReissueAccessTokenVariables,
+} from '../../__generated__/MReissueAccessToken';
+import {QMe} from '../../__generated__/QMe';
 
 interface IAuthScreenProps {
   setLoginState: Function;
 }
 
 const REISSUE_ACCESS_TOKEN = gql`
-  mutation REISSUE_ACCESS_TOKEN_MUTATION(
-    $accessToken: String!
-    $refreshToken: String!
-  ) {
+  mutation MReissueAccessToken($accessToken: String!, $refreshToken: String!) {
     reissueAccessToken(
       args: {accessToken: $accessToken, refreshToken: $refreshToken}
     ) {
@@ -41,7 +38,7 @@ const REISSUE_ACCESS_TOKEN = gql`
 `;
 
 const ME = gql`
-  query GET_PROFILE_QUERY {
+  query QMe {
     me {
       ok
       data {
@@ -60,14 +57,11 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
   const [checkingToken, setCheckingToken] = useState<boolean>(true);
 
   const [reissueAccessToken] = useMutation<
-    REISSUE_ACCESS_TOKEN_MUTATION,
-    REISSUE_ACCESS_TOKEN_MUTATIONVariables
+    MReissueAccessToken,
+    MReissueAccessTokenVariables
   >(REISSUE_ACCESS_TOKEN);
 
-  const [meQuery] = useLazyQuery<GET_PROFILE_QUERY>(
-    ME,
-    authHeader(accessToken),
-  );
+  const [meQuery] = useLazyQuery<QMe>(ME, authHeader(accessToken));
 
   const getOrReissueToken = async () => {
     const storeAccessToken = await getData({key: USER_ACCESS_TOKEN});

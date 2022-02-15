@@ -15,9 +15,9 @@ import {colors} from '../../utils/colors';
 import {gql, useMutation} from '@apollo/client';
 import {authHeader} from '../../utils/dataformat/graphqlHeader';
 import {
-  M_CREATE_WALK,
-  M_CREATE_WALKVariables,
-} from '../../__generated__/M_CREATE_WALK';
+  MCreateWalk,
+  MCreateWalkVariables,
+} from '../../__generated__/MCreateWalk';
 
 interface latlngObj {
   latitude: number;
@@ -25,7 +25,7 @@ interface latlngObj {
 }
 
 const CREATE_WALK = gql`
-  mutation M_CREATE_WALK(
+  mutation MCreateWalk(
     $walkingTime: Int!
     $startTime: Int!
     $finishTime: Int!
@@ -59,8 +59,8 @@ function RecordingScreen() {
   );
 
   const [createWalk, {error: createWalkError}] = useMutation<
-    M_CREATE_WALK,
-    M_CREATE_WALKVariables
+    MCreateWalk,
+    MCreateWalkVariables
   >(CREATE_WALK, authHeader(user?.accessToken));
 
   const getLocation = () =>

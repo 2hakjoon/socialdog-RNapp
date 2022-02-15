@@ -4,20 +4,20 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: M_CREATE_WALK
+// GraphQL mutation operation: MCreateWalk
 // ====================================================
 
-export interface M_CREATE_WALK_createWalk {
+export interface MCreateWalk_createWalk {
   __typename: "CreateWalkOutputDto";
   ok: boolean;
   error: string | null;
 }
 
-export interface M_CREATE_WALK {
-  createWalk: M_CREATE_WALK_createWalk;
+export interface MCreateWalk {
+  createWalk: MCreateWalk_createWalk;
 }
 
-export interface M_CREATE_WALKVariables {
+export interface MCreateWalkVariables {
   walkingTime: number;
   startTime: number;
   finishTime: number;

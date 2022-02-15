@@ -4,26 +4,28 @@ import {gql, useLazyQuery, useMutation} from '@apollo/client';
 import {regexEmail, regexPassword, regexVerifyCode} from '../../../utils/regex';
 import {Alert, StyleSheet, TextInput, View} from 'react-native';
 import {useForm, Controller} from 'react-hook-form';
-import {
-  M_CREATE_ACCOUNT,
-  M_CREATE_ACCOUNTVariables,
-} from '../../../__generated__/M_CREATE_ACCOUNT';
+
 import TextComp from '../../components/TextComp';
 import BasicButton from '../../components/BasicButton';
-import {
-  M_CREATE_VERIFICATON,
-  M_CREATE_VERIFICATONVariables,
-} from '../../../__generated__/M_CREATE_VERIFICATON';
-import {
-  Q_CHECK_VERIFICATION,
-  Q_CHECK_VERIFICATIONVariables,
-} from '../../../__generated__/Q_CHECK_VERIFICATION';
+
 import SmallButton from '../../components/SmallButton';
 import {useNavigation} from '@react-navigation/native';
 import {AuthNavigationProp} from '../../../routes';
 import FormInput from '../../components/FormInput';
 import FormInputBox from '../components/FormInputBox';
 import FormBtnInputBox from '../components/FormBtnInputBox';
+import {
+  MCreateLocalAccount,
+  MCreateLocalAccountVariables,
+} from '../../../__generated__/MCreateLocalAccount';
+import {
+  MCreateVerification,
+  MCreateVerificationVariables,
+} from '../../../__generated__/MCreateVerification';
+import {
+  MVerifyEmailAndCode,
+  MVerifyEmailAndCodeVariables,
+} from '../../../__generated__/MVerifyEmailAndCode';
 
 interface IJoinForm {
   email: string;
@@ -33,7 +35,7 @@ interface IJoinForm {
 }
 
 const JOIN = gql`
-  mutation M_CREATE_ACCOUNT(
+  mutation MCreateLocalAccount(
     $email: String!
     $password: String!
     $code: String!
@@ -48,7 +50,7 @@ const JOIN = gql`
 `;
 
 const CREATE_VERIFICATION = gql`
-  mutation M_CREATE_VERIFICATON($email: String!) {
+  mutation MCreateVerification($email: String!) {
     createVerification(args: {email: $email}) {
       ok
       error
@@ -57,7 +59,7 @@ const CREATE_VERIFICATION = gql`
 `;
 
 const CHECK_VERIFICATION = gql`
-  query Q_CHECK_VERIFICATION($email: String!, $code: String!) {
+  query MVerifyEmailAndCode($email: String!, $code: String!) {
     verifyEmailAndCode(args: {email: $email, code: $code}) {
       ok
       error
@@ -72,18 +74,18 @@ function LocalJoin() {
   const [verifyDone, setVerifyDone] = useState(false);
   const [paswordError, setPasswordError] = useState(false);
   const [createAccount, {loading, error, data}] = useMutation<
-    M_CREATE_ACCOUNT,
-    M_CREATE_ACCOUNTVariables
+    MCreateLocalAccount,
+    MCreateLocalAccountVariables
   >(JOIN);
 
   const [createVerification, {}] = useMutation<
-    M_CREATE_VERIFICATON,
-    M_CREATE_VERIFICATONVariables
+    MCreateVerification,
+    MCreateVerificationVariables
   >(CREATE_VERIFICATION);
 
   const [verifyEmailandCode] = useLazyQuery<
-    Q_CHECK_VERIFICATION,
-    Q_CHECK_VERIFICATIONVariables
+    MVerifyEmailAndCode,
+    MVerifyEmailAndCodeVariables
   >(CHECK_VERIFICATION);
 
   const {

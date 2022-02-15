@@ -4,21 +4,21 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: GET_PROFILE_QUERY
+// GraphQL query operation: QMe
 // ====================================================
 
-export interface GET_PROFILE_QUERY_me_data {
+export interface QMe_me_data {
   __typename: "UserProfileDto";
   dogname: string | null;
   id: number;
 }
 
-export interface GET_PROFILE_QUERY_me {
+export interface QMe_me {
   __typename: "CoreUserOutputDto";
   ok: boolean;
-  data: GET_PROFILE_QUERY_me_data | null;
+  data: QMe_me_data | null;
 }
 
-export interface GET_PROFILE_QUERY {
-  me: GET_PROFILE_QUERY_me;
+export interface QMe {
+  me: QMe_me;
 }

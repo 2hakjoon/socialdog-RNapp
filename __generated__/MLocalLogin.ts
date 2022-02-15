@@ -4,25 +4,22 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: kakaoLogin
+// GraphQL mutation operation: MLocalLogin
 // ====================================================
 
-export interface kakaoLogin_kakaoLogin {
+export interface MLocalLogin_localLogin {
   __typename: "LoginOutputDto";
   ok: boolean;
-  error: string | null;
   accessToken: string | null;
   refreshToken: string | null;
+  error: string | null;
 }
 
-export interface kakaoLogin {
-  kakaoLogin: kakaoLogin_kakaoLogin;
+export interface MLocalLogin {
+  localLogin: MLocalLogin_localLogin;
 }
 
-export interface kakaoLoginVariables {
-  accessToken: string;
-  accessTokenExpiresAt: string;
-  refreshToken: string;
-  refreshTokenExpiresAt: string;
-  scopes: string;
+export interface MLocalLoginVariables {
+  email: string;
+  password: string;
 }
