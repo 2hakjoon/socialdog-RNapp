@@ -162,7 +162,7 @@ const App = () => {
     } else {
       checkIosLocationPermission();
     }
-    deleteTokens();
+    //deleteTokens();
   }, []);
 
   function Walk() {

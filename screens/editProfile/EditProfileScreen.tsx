@@ -1,14 +1,17 @@
-import {gql, useMutation} from '@apollo/client';
-import React from 'react';
+import {gql, useApolloClient, useMutation} from '@apollo/client';
+import {useRoute} from '@react-navigation/native';
+import React, {useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {Alert, StyleSheet, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../module';
+import {RootRouteProps} from '../../routes';
 import {authHeader} from '../../utils/dataformat/graphqlHeader';
 import {
   MEditProfile,
   MEditProfileVariables,
 } from '../../__generated__/MEditProfile';
+import {ME} from '../auth/AuthScreen';
 import BasicButton from '../components/BasicButton';
 import FormInputBox from '../components/Input/FormInputBox';
 import ProfileAvatar from '../components/ProfileAvatar';
@@ -29,20 +32,45 @@ const EDIT_PROFILE = gql`
 `;
 
 function EditProfileScreen() {
-  const user = useSelector((state: RootState) => state.auth.user);
-  const {control, formState, handleSubmit} = useForm<MEditProfileVariables>();
+  const {params: user} = useRoute<RootRouteProps<'EditProfile'>>();
+  const client = useApolloClient();
+  const {control, formState, handleSubmit, setValue} =
+    useForm<MEditProfileVariables>();
   const [editProfile] = useMutation<MEditProfile, MEditProfileVariables>(
     EDIT_PROFILE,
   );
+
+  useEffect(() => {
+    setValue('username', user.username);
+    setValue('dogname', user.dogname);
+  }, []);
 
   const onSubmit = async (formData: MEditProfileVariables) => {
     try {
       console.log(formData);
       const res = await editProfile({
         variables: {...formData},
-        ...authHeader(user?.accessToken),
       });
-      Alert.alert('변경 완료', '변경사항이 반영되었습니다.');
+      if (res.data?.editProfile.ok) {
+        client.writeQuery({
+          query: ME,
+          data: {
+            me: {
+              __typename: 'CoreUserOutputDto',
+              ok: true,
+              data: {
+                __typename: 'UserProfile',
+                username: formData.username,
+                dogname: formData.dogname,
+                loginStrategy: user.loginStrategy,
+                id: user.id,
+              },
+            },
+          },
+          variables: {id: 10},
+        });
+        Alert.alert('변경 완료', '변경사항이 반영되었습니다.');
+      }
     } catch (e) {
       Alert.alert('오류', '사용자 정보 변경중에 오류가 발생했습니다.');
     }

@@ -1,6 +1,16 @@
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
+import { LoginStrategy } from "./__generated__/globalTypes";
+
+
+
+type editProfileParam = {
+  username:string | null | undefined
+  dogname:string | null | undefined
+  loginStrategy: LoginStrategy| undefined
+  id: number | null | undefined
+}
 
 export type AuthStackList = {
   AuthSelect:undefined
@@ -15,7 +25,7 @@ export type RootStackList = {
   Weather: undefined
   Profile: undefined
   Social: undefined
-  EditProfile: undefined
+  EditProfile: editProfileParam
 };
 
 export type WalkStackList={
@@ -30,7 +40,7 @@ export type SnsStackList ={
 
 export type ProfileStackList = {
   Profile: undefined
-  EditProfile: undefined
+  EditProfile: editProfileParam
 }
 
 

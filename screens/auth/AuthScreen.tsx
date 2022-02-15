@@ -37,7 +37,7 @@ const REISSUE_ACCESS_TOKEN = gql`
   }
 `;
 
-const ME = gql`
+export const ME = gql`
   query QMe {
     me {
       ok
@@ -135,7 +135,6 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
   useEffect(() => {
     if (accessToken) {
       globalStore.setData({key: USER_ACCESS_TOKEN, value: accessToken});
-      console.log(globalStore.getData(USER_ACCESS_TOKEN));
       meQuery().then(data => {
         const user = data.data?.me.data;
         if (user) {
