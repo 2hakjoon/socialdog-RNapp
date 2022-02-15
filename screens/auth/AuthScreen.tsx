@@ -42,6 +42,8 @@ const ME = gql`
     me {
       ok
       data {
+        loginStrategy
+        username
         dogname
         id
       }
@@ -132,7 +134,15 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
         const user = data.data?.me.data;
         if (user) {
           setLoginState(true);
-          dispatch(authorize({...user, accessToken}));
+          dispatch(
+            authorize({
+              id: user.id,
+              username: user.username,
+              accessToken: accessToken,
+              dogName: user.dogname,
+              loginStrategy: user.loginStrategy,
+            }),
+          );
         }
       });
     }

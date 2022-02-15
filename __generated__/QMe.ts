@@ -3,12 +3,16 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { LoginStrategy } from "./globalTypes";
+
 // ====================================================
 // GraphQL query operation: QMe
 // ====================================================
 
 export interface QMe_me_data {
-  __typename: "UserProfileDto";
+  __typename: "UserProfile";
+  loginStrategy: LoginStrategy;
+  username: string | null;
   dogname: string | null;
   id: number;
 }

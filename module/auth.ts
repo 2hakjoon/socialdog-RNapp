@@ -2,8 +2,10 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 export interface User {
   id: number;
-  dogName?: string;
+  dogName: string | null;
   accessToken:string;
+  username:string | null;
+  loginStrategy: "KAKAO"|"LOCAL";
 }
 
 export interface AuthState {
