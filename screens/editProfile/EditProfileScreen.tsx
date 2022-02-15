@@ -1,12 +1,14 @@
 import React from 'react';
+import FormInputBox from '../components/Input/FormInputBox';
 import ProfileAvatar from '../components/ProfileAvatar';
 import TextComp from '../components/TextComp';
 
 function EditProfileScreen() {
+  const {};
   return (
     <>
       <ProfileAvatar url={undefined} />
-      <TextComp text={'프로필셋팅'} />
+      <FormInputBox />
     </>
   );
 }

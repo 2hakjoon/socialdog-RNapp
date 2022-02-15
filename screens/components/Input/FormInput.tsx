@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, TextInput, TextInputProps, TextStyle} from 'react-native';
-import {colors} from '../../utils/colors';
+import {colors} from '../../../utils/colors';
 
 interface IFormInput extends TextInputProps {
   style?: TextStyle | undefined;

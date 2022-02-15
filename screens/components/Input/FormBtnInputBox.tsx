@@ -1,9 +1,9 @@
 import React from 'react';
 import {ButtonProps, StyleSheet, TextInputProps, View} from 'react-native';
 import {Controller} from 'react-hook-form';
-import TextComp from '../../components/TextComp';
-import FormInput from '../../components/FormInput';
-import SmallButton from '../../components/SmallButton';
+import TextComp from '../TextComp';
+import FormInput from './FormInput';
+import SmallButton from '../SmallButton';
 
 interface IFormInputComp extends TextInputProps {
   title: string;

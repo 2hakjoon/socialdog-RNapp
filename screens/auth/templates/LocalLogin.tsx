@@ -1,16 +1,15 @@
 import React, {useEffect} from 'react';
-import {StyleSheet, TextInput, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {colors} from '../../../utils/colors';
 import {gql, useMutation} from '@apollo/client';
-import {Controller, useForm} from 'react-hook-form';
+import {useForm} from 'react-hook-form';
 import {regexEmail, regexPassword} from '../../../utils/regex';
 import BasicButton from '../../components/BasicButton';
-import TextComp from '../../components/TextComp';
 import {storeData} from '../../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from '../../../utils/constants';
 import {useRoute} from '@react-navigation/native';
 import {AuthRoutProp} from '../../../routes';
-import FormInputBox from '../components/FormInputBox';
+import FormInputBox from '../../components/Input/FormInputBox';
 import {
   MLocalLogin,
   MLocalLoginVariables,

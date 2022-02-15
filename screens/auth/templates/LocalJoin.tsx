@@ -11,9 +11,9 @@ import BasicButton from '../../components/BasicButton';
 import SmallButton from '../../components/SmallButton';
 import {useNavigation} from '@react-navigation/native';
 import {AuthNavigationProp} from '../../../routes';
-import FormInput from '../../components/FormInput';
-import FormInputBox from '../components/FormInputBox';
-import FormBtnInputBox from '../components/FormBtnInputBox';
+import FormInput from '../../components/Input/FormInput';
+import FormInputBox from '../../components/Input/FormInputBox';
+import FormBtnInputBox from '../../components/Input/FormBtnInputBox';
 import {
   MCreateLocalAccount,
   MCreateLocalAccountVariables,

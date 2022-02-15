@@ -1,8 +1,8 @@
 import React from 'react';
 import {StyleSheet, TextInputProps, View} from 'react-native';
 import {Controller, RegisterOptions} from 'react-hook-form';
-import TextComp from '../../components/TextComp';
-import FormInput from '../../components/FormInput';
+import TextComp from '../TextComp';
+import FormInput from './FormInput';
 
 interface IFormInputComp extends TextInputProps {
   title: string;
