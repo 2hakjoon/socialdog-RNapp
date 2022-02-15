@@ -38,17 +38,37 @@ import {check, PERMISSIONS, request} from 'react-native-permissions';
 import GeolocationComponent from './screens/components/GeolocationComponent';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import WeatherScreen from './screens/weather/WeatherScreen';
-import {ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client';
+import {
+  ApolloClient,
+  ApolloLink,
+  ApolloProvider,
+  concat,
+  HttpLink,
+  InMemoryCache,
+} from '@apollo/client';
 import {deleteTokens} from './utils/asyncStorage';
 import AuthScreen from './screens/auth/AuthScreen';
 import SocialScreen from './screens/social/SocialScreen';
 import ProfileScreen from './screens/profile/ProfileScreen';
 import EditProfileScreen from './screens/editProfile/EditProfileScreen';
+import {USER_ACCESS_TOKEN} from './utils/constants';
+import {globalStore} from './globalStore';
 
-// Initialize Apollo Client
+const httpLink = new HttpLink({uri: 'http://121.154.94.120/graphql'});
+const authMiddleware = new ApolloLink((operation, forward) => {
+  // add the authorization to the headers
+  operation.setContext(({headers = {}}) => ({
+    headers: {
+      ...headers,
+      authorization: `Bearer ${globalStore.getData(USER_ACCESS_TOKEN)}`,
+    },
+  }));
+  return forward(operation);
+});
+
 const client = new ApolloClient({
-  uri: 'http://121.154.94.120/graphql',
   cache: new InMemoryCache(),
+  link: concat(authMiddleware, httpLink),
 });
 
 const RootTab = createBottomTabNavigator<RootTabNavigator>();

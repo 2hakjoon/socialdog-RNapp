@@ -7,7 +7,6 @@ import {trimMilSec, TwoDays} from '../../utils/dataformat/timeformat';
 import {gql, useLazyQuery, useMutation} from '@apollo/client';
 import TextComp from '../components/TextComp';
 import LocalLogin from './templates/LocalLogin';
-import {authHeader} from '../../utils/dataformat/graphqlHeader';
 import {useDispatch} from 'react-redux';
 import {authorize} from '../../module/auth';
 import LocalJoin from './templates/LocalJoin';
@@ -20,6 +19,7 @@ import {
   MReissueAccessTokenVariables,
 } from '../../__generated__/MReissueAccessToken';
 import {QMe} from '../../__generated__/QMe';
+import {globalStore} from '../../globalStore';
 
 interface IAuthScreenProps {
   setLoginState: Function;
@@ -63,7 +63,7 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
     MReissueAccessTokenVariables
   >(REISSUE_ACCESS_TOKEN);
 
-  const [meQuery] = useLazyQuery<QMe>(ME, authHeader(accessToken));
+  const [meQuery] = useLazyQuery<QMe>(ME);
 
   const getOrReissueToken = async () => {
     const storeAccessToken = await getData({key: USER_ACCESS_TOKEN});
@@ -94,13 +94,17 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
             if (reIssueResult.data?.reissueAccessToken.ok) {
               const newAccessToken =
                 reIssueResult.data?.reissueAccessToken.accessToken;
-              console.log('여기는 then', newAccessToken);
-              await storeData({
-                key: USER_ACCESS_TOKEN,
-                value: newAccessToken,
-              });
-              //토큰이 정상적으로 발급되면 token저장 및 checkingToken 상태 해제
               if (newAccessToken) {
+                await storeData({
+                  key: USER_ACCESS_TOKEN,
+                  value: newAccessToken,
+                });
+                //Apollo Client의 헤더에 추가하기 위해 저장.
+                globalStore.setData({
+                  key: USER_ACCESS_TOKEN,
+                  value: accessToken,
+                });
+                //토큰이 정상적으로 발급되면 token저장 및 checkingToken 상태 해제
                 setAccessToken(newAccessToken);
                 setCheckingToken(false);
               } else {
@@ -130,6 +134,8 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
 
   useEffect(() => {
     if (accessToken) {
+      globalStore.setData({key: USER_ACCESS_TOKEN, value: accessToken});
+      console.log(globalStore.getData(USER_ACCESS_TOKEN));
       meQuery().then(data => {
         const user = data.data?.me.data;
         if (user) {
