@@ -20,10 +20,11 @@ import {
 } from '../../utils/dataformat/timeformat';
 import {colors} from '../../utils/colors';
 import {gql, useLazyQuery, useQuery} from '@apollo/client';
-import {authHeader} from '../../utils/dataformat/graphqlHeader';
 import {now_yyyy_mm_dd} from '../../utils/dataformat/dateformat';
 import {QGetWalks} from '../../__generated__/QGetWalks';
 import {QGetWalk, QGetWalkVariables} from '../../__generated__/QGetWalk';
+import {ME} from '../auth/AuthScreen';
+import {QMe} from '../../__generated__/QMe';
 
 interface latlngObj {
   latitude: number;
@@ -74,7 +75,8 @@ function WalkRecordsScreen() {
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [recordList, setRecordList] = useState<ReocordType[]>([]);
   const [selectedRecord, setSelectedRecord] = useState<number>();
-  const user = useSelector((state: RootState) => state.auth.user);
+  const {data: meData} = useQuery<QMe>(ME);
+  const user = meData?.me.data;
   const geolocaton = useSelector(
     (state: RootState) => state.geolocation.geolocation,
   );
@@ -108,7 +110,6 @@ function WalkRecordsScreen() {
   };
 
   const {data, loading, error} = useQuery<QGetWalks>(GET_WALK_RECORDS, {
-    ...authHeader(user?.accessToken),
     onCompleted: makeRecordsToDayes,
     fetchPolicy: 'network-only',
     nextFetchPolicy: 'cache-first',
@@ -117,7 +118,6 @@ function WalkRecordsScreen() {
   const [getWalkRecord] = useLazyQuery<QGetWalk, QGetWalkVariables>(
     GET_WALK_RECORD,
     {
-      ...authHeader(user?.accessToken),
       onCompleted: async data => {
         if (data.getWalk.data?.walkRecord) {
           setLocations(JSON.parse(data.getWalk.data?.walkRecord));

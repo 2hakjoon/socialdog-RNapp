@@ -7,8 +7,6 @@ import {trimMilSec, TwoDays} from '../../utils/dataformat/timeformat';
 import {gql, useLazyQuery, useMutation} from '@apollo/client';
 import TextComp from '../components/TextComp';
 import LocalLogin from './templates/LocalLogin';
-import {useDispatch} from 'react-redux';
-import {authorize} from '../../module/auth';
 import LocalJoin from './templates/LocalJoin';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import AuthHome from './templates/AuthHome';
@@ -54,7 +52,6 @@ export const ME = gql`
 const LoginStack = createNativeStackNavigator<AuthStackList>();
 
 function AuthScreen({setLoginState}: IAuthScreenProps) {
-  const dispatch = useDispatch();
   const [accessToken, setAccessToken] = useState<string>();
   const [checkingToken, setCheckingToken] = useState<boolean>(true);
 
@@ -139,15 +136,6 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
         const user = data.data?.me.data;
         if (user) {
           setLoginState(true);
-          dispatch(
-            authorize({
-              id: user.id,
-              username: user.username,
-              accessToken: accessToken,
-              dogName: user.dogname,
-              loginStrategy: user.loginStrategy,
-            }),
-          );
         }
       });
     }

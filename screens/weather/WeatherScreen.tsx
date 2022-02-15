@@ -3,7 +3,6 @@ import {
   Button,
   ScrollView,
   StyleSheet,
-  Touchable,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -20,13 +19,17 @@ import {RootState} from '../../module';
 import {Geolocation} from '../../module/geolocation';
 import {colors} from '../../utils/colors';
 import {UseNavigationProp} from '../../routes';
+import {useQuery} from '@apollo/client';
+import {ME} from '../auth/AuthScreen';
+import {QMe} from '../../__generated__/QMe';
 
 function WeatherScreen() {
   //0:onecall날씨정보, 1:미세먼지 2:주소
   const [[weather, aqi, location], setWeatherData] = useState<
     [openWeather, openAqi, string]
   >([undefined, undefined, '']);
-  const user = useSelector((state: RootState) => state.auth.user);
+  const {data} = useQuery<QMe>(ME);
+  const user = data?.me.data;
   const geolocation = useSelector(
     (state: RootState) => state.geolocation.geolocation,
   );
@@ -178,7 +181,7 @@ function WeatherScreen() {
             <MCIcon name="dog" size={40} />
           </View>
           <View style={styles.describeContainer}>
-            <TextComp text={user?.dogName || '프로필을 작성해주세요.'} />
+            <TextComp text={user?.dogname || '프로필을 작성해주세요.'} />
           </View>
         </TouchableOpacity>
         <View style={styles.buttonContainer}>

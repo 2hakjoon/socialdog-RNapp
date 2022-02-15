@@ -13,7 +13,6 @@ import BtnPause from './components/BtnPause';
 import {timerFormatKor, trimMilSec} from '../../utils/dataformat/timeformat';
 import {colors} from '../../utils/colors';
 import {gql, useMutation} from '@apollo/client';
-import {authHeader} from '../../utils/dataformat/graphqlHeader';
 import {
   MCreateWalk,
   MCreateWalkVariables,
@@ -53,7 +52,6 @@ function RecordingScreen() {
   const [pause, setPause] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<number>();
   const [timer, setTimer] = useState<number>(0);
-  const user = useSelector((state: RootState) => state.auth.user);
   const geolocaton = useSelector(
     (state: RootState) => state.geolocation.geolocation,
   );
@@ -61,7 +59,7 @@ function RecordingScreen() {
   const [createWalk, {error: createWalkError}] = useMutation<
     MCreateWalk,
     MCreateWalkVariables
-  >(CREATE_WALK, authHeader(user?.accessToken));
+  >(CREATE_WALK);
 
   const getLocation = () =>
     Geolocation.getCurrentPosition(
