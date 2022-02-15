@@ -1,20 +1,29 @@
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../module';
+import {UseNavigationProp} from '../../routes';
 import AntDesignIcon from '../components/Icons/AntDesign';
 import EvilIcon from '../components/Icons/EvilIcons';
+import ProfileAvatar from '../components/ProfileAvatar';
 import TextComp from '../components/TextComp';
 
 function ProfileScreen() {
   const user = useSelector((state: RootState) => state.auth.user);
+  const naviation = useNavigation<UseNavigationProp<'ProfileTab'>>();
+
+  const navigateToEditProfile = () => {
+    naviation.navigate('EditProfile');
+  };
+
   return (
     <View style={styles.wrapper}>
-      <View style={styles.tobMenu}>
+      <TouchableOpacity style={styles.tobMenu} onPress={navigateToEditProfile}>
         <AntDesignIcon name="setting" size={50} />
-      </View>
+      </TouchableOpacity>
       <View style={styles.avatarContainer}>
-        <EvilIcon name="user" size={100} />
+        <ProfileAvatar url={undefined} size={100} />
         {user?.username ? (
           <View style={styles.rowBox}>
             <TextComp text={'보호자:'} />
