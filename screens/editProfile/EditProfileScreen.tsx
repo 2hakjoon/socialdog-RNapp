@@ -1,11 +1,11 @@
 import {gql, useApolloClient, useMutation} from '@apollo/client';
-import {useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {Alert, StyleSheet, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../module';
-import {RootRouteProps} from '../../routes';
+import {RootRouteProps, UseNavigationProp} from '../../routes';
 import {authHeader} from '../../utils/dataformat/graphqlHeader';
 import {
   MEditProfile,
@@ -33,6 +33,7 @@ const EDIT_PROFILE = gql`
 
 function EditProfileScreen() {
   const {params: user} = useRoute<RootRouteProps<'EditProfile'>>();
+  const navigation = useNavigation<UseNavigationProp<'ProfileTab'>>();
   const client = useApolloClient();
   const {control, formState, handleSubmit, setValue} =
     useForm<MEditProfileVariables>();
@@ -44,6 +45,10 @@ function EditProfileScreen() {
     setValue('username', user.username);
     setValue('dogname', user.dogname);
   }, []);
+
+  const goBackToProfile = () => {
+    navigation.goBack();
+  };
 
   const onSubmit = async (formData: MEditProfileVariables) => {
     try {
@@ -69,7 +74,14 @@ function EditProfileScreen() {
           },
           variables: {id: 10},
         });
-        Alert.alert('변경 완료', '변경사항이 반영되었습니다.');
+        Alert.alert('변경 완료', '변경사항이 반영되었습니다.', [
+          {
+            text: '확인',
+            onPress: () => {
+              goBackToProfile();
+            },
+          },
+        ]);
       }
     } catch (e) {
       Alert.alert('오류', '사용자 정보 변경중에 오류가 발생했습니다.');

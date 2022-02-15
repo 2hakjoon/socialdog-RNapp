@@ -1,7 +1,7 @@
-import {useLazyQuery} from '@apollo/client';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import React, {useCallback, useEffect} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {useQuery} from '@apollo/client';
+import {useNavigation} from '@react-navigation/native';
+import React from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {UseNavigationProp} from '../../routes';
 import {QMe} from '../../__generated__/QMe';
 import {ME} from '../auth/AuthScreen';
@@ -12,7 +12,7 @@ import TextComp from '../components/TextComp';
 function ProfileScreen() {
   //const user = useSelector((state: RootState) => state.auth.user);
 
-  const [meQuery, {data}] = useLazyQuery<QMe>(ME);
+  const {data} = useQuery<QMe>(ME);
   const user = data?.me.data;
   const naviation = useNavigation<UseNavigationProp<'ProfileTab'>>();
 
@@ -25,10 +25,6 @@ function ProfileScreen() {
     });
   };
 
-  useEffect(() => {
-    meQuery();
-  }, []);
-
   return (
     <View style={styles.wrapper}>
       <TouchableOpacity style={styles.tobMenu} onPress={navigateToEditProfile}>
@@ -36,15 +32,15 @@ function ProfileScreen() {
       </TouchableOpacity>
       <View style={styles.avatarContainer}>
         <ProfileAvatar url={undefined} size={100} />
-        {data?.me?.data?.username ? (
+        {user?.username ? (
           <View style={styles.rowBox}>
             <TextComp text={'보호자:'} />
-            <TextComp text={data?.me?.data?.username} />
+            <TextComp text={user?.username} />
           </View>
         ) : (
           <TextComp text={'보호자이름을 설정해주세요.'} />
         )}
-        {data?.me?.data?.dogname && <TextComp text={data?.me?.data?.dogname} />}
+        {user?.dogname && <TextComp text={user?.dogname} />}
       </View>
     </View>
   );
