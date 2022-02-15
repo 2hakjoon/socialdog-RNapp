@@ -4,10 +4,10 @@ import EvilIcon from './Icons/EvilIcons';
 
 interface IProfileAvatar {
   url: string | undefined;
-  size: number;
+  size?: number;
 }
 
-function ProfileAvatar({url, size}: IProfileAvatar) {
+function ProfileAvatar({url, size = 100}: IProfileAvatar) {
   return (
     <>
       {url ? (

@@ -43,6 +43,7 @@ import {deleteTokens} from './utils/asyncStorage';
 import AuthScreen from './screens/auth/AuthScreen';
 import SocialScreen from './screens/social/SocialScreen';
 import ProfileScreen from './screens/profile/ProfileScreen';
+import EditProfileScreen from './screens/editProfile/EditProfileScreen';
 
 // Initialize Apollo Client
 const client = new ApolloClient({
@@ -166,6 +167,10 @@ const App = () => {
     return (
       <ProfileStack.Navigator>
         <ProfileStack.Screen name={'Profile'} component={ProfileScreen} />
+        <ProfileStack.Screen
+          name={'EditProfile'}
+          component={EditProfileScreen}
+        />
       </ProfileStack.Navigator>
     );
   }

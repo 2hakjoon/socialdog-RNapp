@@ -15,6 +15,7 @@ export type RootStackList = {
   Weather: undefined
   Profile: undefined
   Social: undefined
+  EditProfile: undefined
 };
 
 export type WalkStackList={
@@ -29,6 +30,7 @@ export type SnsStackList ={
 
 export type ProfileStackList = {
   Profile: undefined
+  EditProfile: undefined
 }
 
 
