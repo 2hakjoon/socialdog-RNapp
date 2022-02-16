@@ -53,8 +53,8 @@ import ProfileScreen from './screens/profile/ProfileScreen';
 import EditProfileScreen from './screens/editProfile/EditProfileScreen';
 import {USER_ACCESS_TOKEN} from './utils/constants';
 import {globalStore} from './globalStore';
+import {createUploadLink} from 'apollo-upload-client';
 
-const httpLink = new HttpLink({uri: 'http://121.154.94.120/graphql'});
 const authMiddleware = new ApolloLink((operation, forward) => {
   // add the authorization to the headers
   operation.setContext(({headers = {}}) => ({
@@ -68,7 +68,10 @@ const authMiddleware = new ApolloLink((operation, forward) => {
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link: concat(authMiddleware, httpLink),
+  link: concat(
+    authMiddleware,
+    createUploadLink({uri: 'http://121.154.94.120/graphql'}) || undefined,
+  ),
 });
 
 const RootTab = createBottomTabNavigator<RootTabNavigator>();
@@ -162,7 +165,7 @@ const App = () => {
     } else {
       checkIosLocationPermission();
     }
-    //deleteTokens();
+    deleteTokens();
   }, []);
 
   function Walk() {

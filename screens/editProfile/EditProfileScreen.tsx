@@ -14,7 +14,7 @@ import {
 import {ME} from '../auth/AuthScreen';
 import BasicButton from '../components/BasicButton';
 import FormInputBox from '../components/Input/FormInputBox';
-import ProfileAvatar from '../components/ProfileAvatar';
+import ProfilePhoto from '../components/ProfilePhoto';
 
 const EDIT_PROFILE = gql`
   mutation MEditProfile(
@@ -90,7 +90,7 @@ function EditProfileScreen() {
 
   return (
     <View style={styles.wrapper}>
-      <ProfileAvatar url={undefined} />
+      <ProfilePhoto url={user.photo} />
       <FormInputBox
         title="이름"
         name="username"

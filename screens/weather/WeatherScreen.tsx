@@ -22,6 +22,7 @@ import {UseNavigationProp} from '../../routes';
 import {useQuery} from '@apollo/client';
 import {ME} from '../auth/AuthScreen';
 import {QMe} from '../../__generated__/QMe';
+import ProfilePhoto from '../components/ProfilePhoto';
 
 function WeatherScreen() {
   //0:onecall날씨정보, 1:미세먼지 2:주소
@@ -177,9 +178,7 @@ function WeatherScreen() {
         <TouchableOpacity
           style={styles.profileContainer}
           onPress={moveToProfile}>
-          <View style={styles.dogFace}>
-            <MCIcon name="dog" size={40} />
-          </View>
+          <ProfilePhoto url={user?.photo} size={50} />
           <View style={styles.describeContainer}>
             <TextComp text={user?.dogname || '프로필을 작성해주세요.'} />
           </View>

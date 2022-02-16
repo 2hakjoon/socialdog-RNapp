@@ -43,6 +43,7 @@ export const ME = gql`
         loginStrategy
         username
         dogname
+        photo
         id
       }
     }

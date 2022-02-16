@@ -14,6 +14,7 @@ export interface QMe_me_data {
   loginStrategy: LoginStrategy;
   username: string | null;
   dogname: string | null;
+  photo: string | null;
   id: number;
 }
 

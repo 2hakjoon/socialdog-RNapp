@@ -10,6 +10,7 @@ type editProfileParam = {
   dogname:string | null | undefined
   loginStrategy: LoginStrategy| undefined
   id: number | null | undefined
+  photo:string | null | undefined
 }
 
 export type AuthStackList = {

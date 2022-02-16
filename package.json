@@ -12,7 +12,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@apollo/client": "^3.5.8",
+    "@apollo/client": "^3.5.9",
     "@react-native-async-storage/async-storage": "^1.15.17",
     "@react-native-community/geolocation": "^2.0.2",
     "@react-native-firebase/app": "^14.2.2",
@@ -29,6 +29,7 @@
     "@types/react-native-vector-icons": "^6.4.10",
     "@types/react-redux": "^7.1.22",
     "@voximplant/react-native-foreground-service": "^2.0.0",
+    "apollo-upload-client": "^17.0.0",
     "babel-preset-react-native": "2.1.0",
     "graphql": "^16.3.0",
     "jwt-decode": "^3.1.2",
@@ -51,6 +52,7 @@
     "@babel/core": "^7.12.9",
     "@babel/runtime": "^7.12.5",
     "@react-native-community/eslint-config": "^2.0.0",
+    "@types/apollo-upload-client": "^17.0.0",
     "@types/jest": "^26.0.23",
     "@types/react-native": "^0.66.4",
     "@types/react-test-renderer": "^17.0.1",

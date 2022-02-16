@@ -6,7 +6,7 @@ import {UseNavigationProp} from '../../routes';
 import {QMe} from '../../__generated__/QMe';
 import {ME} from '../auth/AuthScreen';
 import AntDesignIcon from '../components/Icons/AntDesign';
-import ProfileAvatar from '../components/ProfileAvatar';
+import ProfilePhoto from '../components/ProfilePhoto';
 import TextComp from '../components/TextComp';
 
 function ProfileScreen() {
@@ -22,6 +22,7 @@ function ProfileScreen() {
       dogname: user?.dogname,
       loginStrategy: user?.loginStrategy,
       id: user?.id,
+      photo: user?.photo,
     });
   };
 
@@ -31,7 +32,7 @@ function ProfileScreen() {
         <AntDesignIcon name="setting" size={50} />
       </TouchableOpacity>
       <View style={styles.avatarContainer}>
-        <ProfileAvatar url={undefined} size={100} />
+        <ProfilePhoto url={user?.photo} size={100} />
         {user?.username ? (
           <View style={styles.rowBox}>
             <TextComp text={'보호자:'} />
