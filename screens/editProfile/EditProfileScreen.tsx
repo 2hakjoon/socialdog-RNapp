@@ -71,7 +71,7 @@ function EditProfileScreen() {
       const res = await editProfile({
         variables: {
           ...formData,
-          file,
+          file: file || null,
         },
       });
       if (res.data?.editProfile.ok) {
@@ -87,7 +87,7 @@ function EditProfileScreen() {
                 dogname: formData.dogname,
                 loginStrategy: user.loginStrategy,
                 id: user.id,
-                photo: newPhoto?.assets?.[0].uri,
+                photo: newPhoto ? newPhoto?.assets?.[0].uri : user.photo,
               },
             },
           },
@@ -101,12 +101,13 @@ function EditProfileScreen() {
             },
           },
         ]);
+      } else {
+        Alert.alert('변경 실패', '오류가 발생했습니다.', [
+          {
+            text: '확인',
+          },
+        ]);
       }
-      Alert.alert('변경 실패', '오류가 발생했습니다.', [
-        {
-          text: '확인',
-        },
-      ]);
     } catch (e) {
       Alert.alert('오류', '사용자 정보 변경중에 오류가 발생했습니다.');
     }
