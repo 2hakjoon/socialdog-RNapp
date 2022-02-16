@@ -1,12 +1,13 @@
 import {gql, useApolloClient, useMutation} from '@apollo/client';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
-import {Alert, StyleSheet, View} from 'react-native';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../module';
+import {Alert, Button, StyleSheet, View} from 'react-native';
+import {
+  ImagePickerResponse,
+  launchImageLibrary,
+} from 'react-native-image-picker';
 import {RootRouteProps, UseNavigationProp} from '../../routes';
-import {authHeader} from '../../utils/dataformat/graphqlHeader';
 import {
   MEditProfile,
   MEditProfileVariables,
@@ -15,15 +16,18 @@ import {ME} from '../auth/AuthScreen';
 import BasicButton from '../components/BasicButton';
 import FormInputBox from '../components/Input/FormInputBox';
 import ProfilePhoto from '../components/ProfilePhoto';
+import {ReactNativeFile} from 'apollo-upload-client';
 
 const EDIT_PROFILE = gql`
   mutation MEditProfile(
     $username: String
     $dogname: String
     $password: String
+    $file: Upload
   ) {
     editProfile(
       args: {username: $username, dogname: $dogname, password: $password}
+      file: $file
     ) {
       ok
       error
@@ -41,6 +45,8 @@ function EditProfileScreen() {
     EDIT_PROFILE,
   );
 
+  const [newPhoto, setNewPhoto] = useState<ImagePickerResponse>();
+
   useEffect(() => {
     setValue('username', user.username);
     setValue('dogname', user.dogname);
@@ -52,9 +58,21 @@ function EditProfileScreen() {
 
   const onSubmit = async (formData: MEditProfileVariables) => {
     try {
-      console.log(formData);
+      let file;
+      if (newPhoto?.assets?.[0]) {
+        const photo = newPhoto?.assets?.[0];
+        file = new ReactNativeFile({
+          uri: photo?.uri || '',
+          name:
+            Date.now() + '-' + user.id! + '.' + photo?.fileName?.split('.')[1]!,
+          type: photo?.type,
+        });
+      }
       const res = await editProfile({
-        variables: {...formData},
+        variables: {
+          ...formData,
+          file,
+        },
       });
       if (res.data?.editProfile.ok) {
         client.writeQuery({
@@ -69,6 +87,7 @@ function EditProfileScreen() {
                 dogname: formData.dogname,
                 loginStrategy: user.loginStrategy,
                 id: user.id,
+                photo: newPhoto?.assets?.[0].uri,
               },
             },
           },
@@ -83,14 +102,27 @@ function EditProfileScreen() {
           },
         ]);
       }
+      Alert.alert('변경 실패', '오류가 발생했습니다.', [
+        {
+          text: '확인',
+        },
+      ]);
     } catch (e) {
       Alert.alert('오류', '사용자 정보 변경중에 오류가 발생했습니다.');
     }
   };
 
+  const changeProfilePhoto = async () => {
+    // You can also use as a promise without 'callback':
+    const result = await launchImageLibrary({mediaType: 'photo'});
+    setNewPhoto(result);
+    console.log(result);
+  };
+
   return (
     <View style={styles.wrapper}>
-      <ProfilePhoto url={user.photo} />
+      <ProfilePhoto url={newPhoto?.assets?.[0].uri || user.photo} />
+      <Button title="프사변경" onPress={changeProfilePhoto} />
       <FormInputBox
         title="이름"
         name="username"
