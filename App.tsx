@@ -70,7 +70,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: concat(
     authMiddleware,
-    createUploadLink({uri: 'http://121.154.94.120/graphql'}) || undefined,
+    createUploadLink({uri: 'http://121.154.94.120/graphql'}),
   ),
 });
 
@@ -165,7 +165,7 @@ const App = () => {
     } else {
       checkIosLocationPermission();
     }
-    //deleteTokens();
+    deleteTokens();
   }, []);
 
   function Walk() {

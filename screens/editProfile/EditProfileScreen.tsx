@@ -3,10 +3,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {Alert, Button, StyleSheet, View} from 'react-native';
-import {
-  ImagePickerResponse,
-  launchImageLibrary,
-} from 'react-native-image-picker';
+import {Asset, launchImageLibrary} from 'react-native-image-picker';
 import {RootRouteProps, UseNavigationProp} from '../../routes';
 import {
   MEditProfile,
@@ -45,7 +42,7 @@ function EditProfileScreen() {
     EDIT_PROFILE,
   );
 
-  const [newPhoto, setNewPhoto] = useState<ImagePickerResponse>();
+  const [newPhoto, setNewPhoto] = useState<Asset>();
 
   useEffect(() => {
     setValue('username', user.username);
@@ -56,22 +53,25 @@ function EditProfileScreen() {
     navigation.goBack();
   };
 
+  const checkAndGenerateFile = (file: Asset | undefined) => {
+    if (file) {
+      return new ReactNativeFile({
+        uri: file.uri || '',
+        name: Date.now() + '-' + user.id! + '.' + file.fileName?.split('.')[1]!,
+        type: file.type,
+      });
+    }
+    return null;
+  };
+
   const onSubmit = async (formData: MEditProfileVariables) => {
     try {
-      let file;
-      if (newPhoto?.assets?.[0]) {
-        const photo = newPhoto?.assets?.[0];
-        file = new ReactNativeFile({
-          uri: photo?.uri || '',
-          name:
-            Date.now() + '-' + user.id! + '.' + photo?.fileName?.split('.')[1]!,
-          type: photo?.type,
-        });
-      }
+      let file = checkAndGenerateFile(newPhoto);
+
       const res = await editProfile({
         variables: {
           ...formData,
-          file: file || null,
+          file,
         },
       });
       if (res.data?.editProfile.ok) {
@@ -87,7 +87,7 @@ function EditProfileScreen() {
                 dogname: formData.dogname,
                 loginStrategy: user.loginStrategy,
                 id: user.id,
-                photo: newPhoto ? newPhoto?.assets?.[0].uri : user.photo,
+                photo: newPhoto ? newPhoto.uri : user.photo,
               },
             },
           },
@@ -116,13 +116,15 @@ function EditProfileScreen() {
   const changeProfilePhoto = async () => {
     // You can also use as a promise without 'callback':
     const result = await launchImageLibrary({mediaType: 'photo'});
-    setNewPhoto(result);
-    console.log(result);
+    if (!result.didCancel) {
+      setNewPhoto(result.assets?.[0]);
+    }
+    //console.log(result.assets?.[0]);
   };
 
   return (
     <View style={styles.wrapper}>
-      <ProfilePhoto url={newPhoto?.assets?.[0].uri || user.photo} />
+      <ProfilePhoto url={newPhoto?.uri || user.photo} />
       <Button title="프사변경" onPress={changeProfilePhoto} />
       <FormInputBox
         title="이름"

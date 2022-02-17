@@ -71,7 +71,7 @@ function LocalLogin({setAccessToken}: ILogInScreenProps) {
   }, [route]);
 
   useEffect(() => {
-    setValue('email', '2hakjoon@gmail.com');
+    setValue('email', 'dlgkrwns1021@naver.com');
     setValue('password', 'test1234!');
   }, []);
 

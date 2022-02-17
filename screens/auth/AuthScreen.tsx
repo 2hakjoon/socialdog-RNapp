@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import {deleteTokens, getData, storeData} from '../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from '../../utils/constants';
 import jwt_decode, {JwtPayload} from 'jwt-decode';
@@ -61,7 +61,9 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
     MReissueAccessTokenVariables
   >(REISSUE_ACCESS_TOKEN);
 
-  const [meQuery] = useLazyQuery<QMe>(ME);
+  const [meQuery] = useLazyQuery<QMe>(ME, {
+    onError: () => Alert.alert('오류', '회원정보를 찾을수 없습니다.'),
+  });
 
   const getOrReissueToken = async () => {
     const storeAccessToken = await getData({key: USER_ACCESS_TOKEN});
@@ -133,6 +135,7 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
   useEffect(() => {
     if (accessToken) {
       globalStore.setData({key: USER_ACCESS_TOKEN, value: accessToken});
+
       meQuery().then(data => {
         const user = data.data?.me.data;
         if (user) {
