@@ -66,8 +66,7 @@ function EditProfileScreen() {
 
   const onSubmit = async (formData: MEditProfileVariables) => {
     try {
-      let file = checkAndGenerateFile(newPhoto);
-
+      const file = checkAndGenerateFile(newPhoto);
       const res = await editProfile({
         variables: {
           ...formData,
