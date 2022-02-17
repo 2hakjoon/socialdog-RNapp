@@ -114,7 +114,12 @@ function EditProfileScreen() {
 
   const changeProfilePhoto = async () => {
     // You can also use as a promise without 'callback':
-    const result = await launchImageLibrary({mediaType: 'photo'});
+    const result = await launchImageLibrary({
+      mediaType: 'photo',
+      maxWidth: 1000,
+      maxHeight: 1000,
+      quality: 0.1,
+    });
     if (!result.didCancel) {
       setNewPhoto(result.assets?.[0]);
     }
