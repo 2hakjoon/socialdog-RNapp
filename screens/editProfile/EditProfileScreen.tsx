@@ -54,14 +54,14 @@ function EditProfileScreen() {
   };
 
   const checkAndGenerateFile = (file: Asset | undefined) => {
-    if (file) {
-      return new ReactNativeFile({
-        uri: file.uri || '',
-        name: Date.now() + '-' + user.id! + '.' + file.fileName?.split('.')[1]!,
-        type: file.type,
-      });
+    if (!file) {
+      return null;
     }
-    return null;
+    return new ReactNativeFile({
+      uri: file.uri || '',
+      name: Date.now() + '-' + user.id! + '.' + file.fileName?.split('.')[1]!,
+      type: file.type,
+    });
   };
 
   const onSubmit = async (formData: MEditProfileVariables) => {
