@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, StyleSheet, Text, View} from 'react-native';
-import RNMapView, {Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
+import RNMapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 
 import BackgroundTimer from 'react-native-background-timer';
 import Geolocation from '@react-native-community/geolocation';
@@ -12,11 +12,16 @@ import TimerComp from './components/TimerComp';
 import BtnPause from './components/BtnPause';
 import {timerFormatKor, trimMilSec} from '../../utils/dataformat/timeformat';
 import {colors} from '../../utils/colors';
-import {gql, useMutation} from '@apollo/client';
+import {gql, useMutation, useQuery} from '@apollo/client';
 import {
   MCreateWalk,
   MCreateWalkVariables,
 } from '../../__generated__/MCreateWalk';
+import TextComp from '../components/TextComp';
+import Foundation from '../components/Icons/Foundation';
+import {ME} from '../auth/AuthScreen';
+import {QMe} from '../../__generated__/QMe';
+import ProfilePhoto from '../components/ProfilePhoto';
 
 interface latlngObj {
   latitude: number;
@@ -52,6 +57,8 @@ function RecordingScreen() {
   const [pause, setPause] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<number>();
   const [timer, setTimer] = useState<number>(0);
+  const {data} = useQuery<QMe>(ME);
+  const user = data?.me.data;
   const geolocaton = useSelector(
     (state: RootState) => state.geolocation.geolocation,
   );
@@ -199,6 +206,15 @@ function RecordingScreen() {
             pitch: 0,
             zoom: 18,
           }}>
+          <Marker coordinate={location} anchor={{x: 0.5, y: 0.5}}>
+            <View style={styles.walkMarker}>
+              {user?.photo ? (
+                <ProfilePhoto url={user.photo} />
+              ) : (
+                <Foundation name="guide-dog" size={30} />
+              )}
+            </View>
+          </Marker>
           <Polyline
             coordinates={locations}
             strokeColor={colors.PBlue} // fallback for when `strokeColors` is not supported by the map-provider
@@ -245,6 +261,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     backgroundColor: 'white',
+  },
+  markerWrapper: {
+    position: 'relative',
+    overflow: 'visible',
+  },
+  walkMarker: {
+    overflow: 'hidden',
+    width: 35,
+    height: 35,
+    borderRadius: 20,
+    backgroundColor: 'white',
+    borderColor: colors.PBlue,
+    borderWidth: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
