@@ -29,7 +29,7 @@ function ProfileScreen() {
   return (
     <View style={styles.wrapper}>
       <TouchableOpacity style={styles.tobMenu} onPress={navigateToEditProfile}>
-        <AntDesignIcon name="setting" size={50} />
+        <AntDesignIcon name="setting" size={30} />
       </TouchableOpacity>
       <View style={styles.avatarContainer}>
         <ProfilePhoto url={user?.photo} size={100} />

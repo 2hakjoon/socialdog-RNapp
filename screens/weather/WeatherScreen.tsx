@@ -180,7 +180,11 @@ function WeatherScreen() {
           onPress={moveToProfile}>
           <ProfilePhoto url={user?.photo} size={50} />
           <View style={styles.describeContainer}>
-            <TextComp text={user?.dogname || '프로필을 작성해주세요.'} />
+            <TextComp
+              text={user?.dogname || '프로필을 작성해주세요.'}
+              size={20}
+              style={{paddingLeft: 10}}
+            />
           </View>
         </TouchableOpacity>
         <View style={styles.buttonContainer}>
