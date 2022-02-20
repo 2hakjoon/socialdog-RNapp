@@ -1,15 +1,13 @@
 import React from 'react';
-import {Text} from 'react-native';
 import WebView from 'react-native-webview';
 
 function SocialScreen() {
   return (
     <>
-      <Text>이곳은 소셜 페이지</Text>
-      {/* <WebView
-        source={{uri: 'https://www.naver.com/'}}
+      <WebView
+        source={{uri: 'http://localhost:3000/'}}
         style={{height: '100%', width: '100%'}}
-      /> */}
+      />
     </>
   );
 }
