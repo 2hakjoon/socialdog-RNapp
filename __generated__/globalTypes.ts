@@ -19,6 +19,11 @@ export enum LoginStrategy {
   LOCAL = "LOCAL",
 }
 
+export interface FileInputDto {
+  filename: string;
+  fileType: FileType;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================

@@ -13,13 +13,12 @@ import {ME} from '../auth/AuthScreen';
 import BasicButton from '../components/BasicButton';
 import FormInputBox from '../components/Input/FormInputBox';
 import ProfilePhoto from '../components/ProfilePhoto';
-import {ReactNativeFile} from 'apollo-upload-client';
-import {
-  MCreatePreSignedUrl,
-  MCreatePreSignedUrlVariables,
-} from '../../__generated__/MCreatePreSignedUrl';
 import {FileType} from '../../__generated__/globalTypes';
 import {AWS_S3_ENDPOINT} from '../../config';
+import {
+  MCreatePreSignedUrls,
+  MCreatePreSignedUrlsVariables,
+} from '../../__generated__/MCreatePreSignedUrls';
 
 const EDIT_PROFILE = gql`
   mutation MEditProfile(
@@ -43,10 +42,10 @@ const EDIT_PROFILE = gql`
 `;
 
 const CREATE_PRESIGNED_URL = gql`
-  mutation MCreatePreSignedUrl($filename: String!, $fileType: FileType!) {
-    createPreSignedUrl(args: {filename: $filename, fileType: $fileType}) {
+  mutation MCreatePreSignedUrls($files: [FileInputDto!]!) {
+    createPreSignedUrls(args: {files: $files}) {
       ok
-      url
+      urls
     }
   }
 `;
@@ -61,8 +60,8 @@ function EditProfileScreen() {
     EDIT_PROFILE,
   );
   const [createPreSignedUrl] = useMutation<
-    MCreatePreSignedUrl,
-    MCreatePreSignedUrlVariables
+    MCreatePreSignedUrls,
+    MCreatePreSignedUrlsVariables
   >(CREATE_PRESIGNED_URL);
 
   const [newPhoto, setNewPhoto] = useState<Asset>();
@@ -91,11 +90,15 @@ function EditProfileScreen() {
 
       const preSignedUrlData = await createPreSignedUrl({
         variables: {
-          filename: filename,
-          fileType: FileType.IMAGE,
+          files: [
+            {
+              filename: filename,
+              fileType: FileType.IMAGE,
+            },
+          ],
         },
       });
-      const preSignedUrl = preSignedUrlData.data?.createPreSignedUrl.url;
+      const preSignedUrl = preSignedUrlData.data?.createPreSignedUrls.urls[0];
       if (!preSignedUrl) {
         throw new Error('preSignedUrl이 발급되지 않았습니다.');
       }
