@@ -7,6 +7,13 @@
 // START Enums and Input Objects
 //==============================================================
 
+/**
+ * upload file type.
+ */
+export enum FileType {
+  IMAGE = "IMAGE",
+}
+
 export enum LoginStrategy {
   KAKAO = "KAKAO",
   LOCAL = "LOCAL",

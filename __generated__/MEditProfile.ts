@@ -21,5 +21,5 @@ export interface MEditProfileVariables {
   username?: string | null;
   dogname?: string | null;
   password?: string | null;
-  file?: any | null;
+  photo?: string | null;
 }

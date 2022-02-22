@@ -14,20 +14,39 @@ import BasicButton from '../components/BasicButton';
 import FormInputBox from '../components/Input/FormInputBox';
 import ProfilePhoto from '../components/ProfilePhoto';
 import {ReactNativeFile} from 'apollo-upload-client';
+import {
+  MCreatePreSignedUrl,
+  MCreatePreSignedUrlVariables,
+} from '../../__generated__/MCreatePreSignedUrl';
+import {FileType} from '../../__generated__/globalTypes';
+import {AWS_S3_ENDPOINT} from '../../config';
 
 const EDIT_PROFILE = gql`
   mutation MEditProfile(
     $username: String
     $dogname: String
     $password: String
-    $file: Upload
+    $photo: String
   ) {
     editProfile(
-      args: {username: $username, dogname: $dogname, password: $password}
-      file: $file
+      args: {
+        username: $username
+        dogname: $dogname
+        password: $password
+        photo: $photo
+      }
     ) {
       ok
       error
+    }
+  }
+`;
+
+const CREATE_PRESIGNED_URL = gql`
+  mutation MCreatePreSignedUrl($filename: String!, $fileType: FileType!) {
+    createPreSignedUrl(args: {filename: $filename, fileType: $fileType}) {
+      ok
+      url
     }
   }
 `;
@@ -41,6 +60,10 @@ function EditProfileScreen() {
   const [editProfile] = useMutation<MEditProfile, MEditProfileVariables>(
     EDIT_PROFILE,
   );
+  const [createPreSignedUrl] = useMutation<
+    MCreatePreSignedUrl,
+    MCreatePreSignedUrlVariables
+  >(CREATE_PRESIGNED_URL);
 
   const [newPhoto, setNewPhoto] = useState<Asset>();
 
@@ -53,24 +76,52 @@ function EditProfileScreen() {
     navigation.goBack();
   };
 
-  const checkAndGenerateFile = (file: Asset | undefined) => {
-    if (!file) {
-      return null;
+  const getBlob = async (fileUri: string) => {
+    const resp = await fetch(fileUri);
+    const imageBody = await resp.blob();
+    return imageBody;
+  };
+
+  const uploadPhotoToS3 = async (file: Asset) => {
+    try {
+      const blob = await getBlob(file.uri!);
+      const filename = `userPhoto/${Date.now()}_${user.id}_${
+        newPhoto?.fileName
+      }`;
+
+      const preSignedUrlData = await createPreSignedUrl({
+        variables: {
+          filename: filename,
+          fileType: FileType.IMAGE,
+        },
+      });
+      const preSignedUrl = preSignedUrlData.data?.createPreSignedUrl.url;
+      if (!preSignedUrl) {
+        throw new Error('preSignedUrl이 발급되지 않았습니다.');
+      }
+
+      const awsUploadresult = await fetch(preSignedUrl, {
+        method: 'PUT',
+        body: blob,
+      });
+      console.log(awsUploadresult);
+      if (awsUploadresult.status !== 200) {
+        throw new Error('파일 업로드 실패');
+      }
+      return AWS_S3_ENDPOINT + filename;
+    } catch (e) {
+      throw new Error('파일 업로드 실패');
     }
-    return new ReactNativeFile({
-      uri: file.uri || '',
-      name: Date.now() + '-' + user.id! + '.' + file.fileName?.split('.')[1]!,
-      type: file.type,
-    });
   };
 
   const onSubmit = async (formData: MEditProfileVariables) => {
     try {
-      const file = checkAndGenerateFile(newPhoto);
+      const file = newPhoto ? await uploadPhotoToS3(newPhoto) : undefined;
+
       const res = await editProfile({
         variables: {
           ...formData,
-          file,
+          photo: file,
         },
       });
       if (res.data?.editProfile.ok) {
@@ -86,7 +137,7 @@ function EditProfileScreen() {
                 dogname: formData.dogname,
                 loginStrategy: user.loginStrategy,
                 id: user.id,
-                photo: newPhoto ? newPhoto.uri : user.photo,
+                photo: file ? file : user.photo,
               },
             },
           },
@@ -123,7 +174,7 @@ function EditProfileScreen() {
     if (!result.didCancel) {
       setNewPhoto(result.assets?.[0]);
     }
-    //console.log(result.assets?.[0]);
+    console.log(result.assets?.[0]);
   };
 
   return (
