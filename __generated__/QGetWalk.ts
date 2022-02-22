@@ -24,5 +24,5 @@ export interface QGetWalk {
 }
 
 export interface QGetWalkVariables {
-  walkId: number;
+  walkId: string;
 }

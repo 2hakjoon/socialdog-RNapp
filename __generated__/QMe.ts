@@ -15,7 +15,7 @@ export interface QMe_me_data {
   username: string | null;
   dogname: string | null;
   photo: string | null;
-  id: number;
+  id: string;
 }
 
 export interface QMe_me {

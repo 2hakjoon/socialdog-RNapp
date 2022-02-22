@@ -21,7 +21,10 @@ import {
 import {colors} from '../../utils/colors';
 import {gql, useLazyQuery, useQuery} from '@apollo/client';
 import {now_yyyy_mm_dd} from '../../utils/dataformat/dateformat';
-import {QGetWalks} from '../../__generated__/QGetWalks';
+import {
+  QGetWalks,
+  QGetWalks_getWalks_data,
+} from '../../__generated__/QGetWalks';
 import {QGetWalk, QGetWalkVariables} from '../../__generated__/QGetWalk';
 import {ME} from '../auth/AuthScreen';
 import {QMe} from '../../__generated__/QMe';
@@ -31,15 +34,8 @@ interface latlngObj {
   longitude: number;
 }
 
-interface ReocordType {
-  startTime: number;
-  finishiTime: number;
-  walkingTime: number;
-  id: number;
-}
-
 interface RecordData {
-  [key: string]: [ReocordType];
+  [key: string]: [QGetWalks_getWalks_data];
 }
 
 const GET_WALK_RECORDS = gql`
@@ -57,7 +53,7 @@ const GET_WALK_RECORDS = gql`
 `;
 
 const GET_WALK_RECORD = gql`
-  query QGetWalk($walkId: Int!) {
+  query QGetWalk($walkId: String!) {
     getWalk(args: {walkId: $walkId}) {
       ok
       error
@@ -73,8 +69,8 @@ function WalkRecordsScreen() {
   const [locations, setLocations] = useState<latlngObj[]>([]);
   const [recordDays, setRecordDays] = useState<RecordData>({});
   const [selectedDate, setSelectedDate] = useState<string>('');
-  const [recordList, setRecordList] = useState<ReocordType[]>([]);
-  const [selectedRecord, setSelectedRecord] = useState<number>();
+  const [recordList, setRecordList] = useState<QGetWalks_getWalks_data[]>([]);
+  const [selectedRecord, setSelectedRecord] = useState<string>('');
   const {data: meData} = useQuery<QMe>(ME);
   const user = meData?.me.data;
   const geolocaton = useSelector(
@@ -89,18 +85,12 @@ function WalkRecordsScreen() {
         const date = now_yyyy_mm_dd(new Date(record.startTime * 1000));
         if (daysObj[`${date}`]) {
           daysObj[`${date}`].push({
-            startTime: record.startTime,
-            walkingTime: record.walkingTime,
-            finishiTime: record.finishTime,
-            id: record.id,
+            ...record,
           });
         } else {
           daysObj[`${date}`] = [
             {
-              startTime: record.startTime,
-              walkingTime: record.walkingTime,
-              finishiTime: record.finishTime,
-              id: record.id,
+              ...record,
             },
           ];
         }
@@ -219,6 +209,7 @@ function WalkRecordsScreen() {
             {recordList.map(recordObj => {
               return (
                 <TouchableOpacity
+                  key={recordObj.id}
                   onPress={() => setSelectedRecord(recordObj.id)}
                   style={styles.recordBtn}>
                   <TextComp

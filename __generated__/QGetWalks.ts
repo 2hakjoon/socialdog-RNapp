@@ -12,7 +12,7 @@ export interface QGetWalks_getWalks_data {
   walkingTime: number;
   startTime: number;
   finishTime: number;
-  id: number;
+  id: string;
 }
 
 export interface QGetWalks_getWalks {
