@@ -18,7 +18,6 @@ import {
 } from '../../__generated__/MReissueAccessToken';
 import {QMe} from '../../__generated__/QMe';
 import {globalStore} from '../../globalStore';
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 
 interface IAuthScreenProps {
   setLoginState: Function;
@@ -155,19 +154,6 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
       ) : (
         <>
           <KakaoLogin setAccessToken={setAccessToken} />
-          <GooglePlacesAutocomplete
-            placeholder="Searchh"
-            onPress={(data, details = null) => {
-              console.log('??');
-              // 'details' is provided when fetchDetails = true
-              console.log(data, details);
-            }}
-            query={{
-              components: 'country:kr',
-              key: process.env.GOOGLE_PLACE_API_KEY,
-              language: 'ko',
-            }}
-          />
           <LoginStack.Navigator>
             <LoginStack.Screen name={'AuthSelect'} component={AuthHome} />
             <LoginStack.Screen name={'Login'}>

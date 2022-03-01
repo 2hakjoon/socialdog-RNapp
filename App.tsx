@@ -43,7 +43,6 @@ import {
   ApolloLink,
   ApolloProvider,
   concat,
-  HttpLink,
   InMemoryCache,
 } from '@apollo/client';
 import {deleteTokens} from './utils/asyncStorage';
@@ -165,7 +164,7 @@ const App = () => {
     } else {
       checkIosLocationPermission();
     }
-    //deleteTokens();
+    deleteTokens();
   }, []);
 
   function Walk() {
