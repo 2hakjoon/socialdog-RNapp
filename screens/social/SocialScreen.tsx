@@ -17,9 +17,11 @@ function SocialScreen() {
   return (
     <>
       <WebView
-        source={{uri: 'https://oursocialdog.com/'}}
+        source={{uri: 'http://121.154.94.120:4000'}}
+        //source={{uri: 'https://oursocialdog.com'}}
         style={{height: '100%', width: '100%'}}
         javaScriptEnabled={true}
+        userAgent={'SOCIALDOG_APP'}
         injectedJavaScriptBeforeContentLoaded={injectJsToWebView}
       />
     </>
