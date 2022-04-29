@@ -17,6 +17,7 @@ import {
   MReissueAccessTokenVariables,
 } from '../../__generated__/MReissueAccessToken';
 import {QMe} from '../../__generated__/QMe';
+import {mVUserAccessToken} from '../../apollo-setup';
 
 interface IAuthScreenProps {
   setLoginState: Function;
@@ -128,8 +129,8 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
 
   useEffect(() => {
     if (accessToken) {
+      mVUserAccessToken(accessToken);
       storeData({key: USER_ACCESS_TOKEN, value: accessToken}).then(async () => {
-        console.log(await getData({key: USER_ACCESS_TOKEN}));
         meQuery().then(data => {
           const user = data.data?.me.data;
           console.log(user);

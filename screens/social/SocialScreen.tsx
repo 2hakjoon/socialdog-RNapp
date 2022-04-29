@@ -1,19 +1,26 @@
 import React from 'react';
 import WebView from 'react-native-webview';
+import {mVUserAccessToken, mVUserRefreshToken} from '../../apollo-setup';
 
 function SocialScreen() {
-  // const myInjectedJs = `
-  //   ((){ let tk = window.localStorage.getItem('tokenKey');
-  //     if(!tk || (tk && tk != '${token}')){
-  //       window.localStorage.setItem('tokenKey', '${token}');
-  //       window.location.reload();
-  //     }
-  //   })();`;
+  console.log('accessToken', mVUserAccessToken());
+  console.log('refreshToken', mVUserRefreshToken());
+
+  const INJECTED_JAVASCRIPT = `(function() {
+    window.alert("Asdff");
+})();`;
+  const injectJsToWebView = `
+    window.localStorage.setItem('USER_ACCESS_TOKEN', '${mVUserAccessToken()}');
+    window.localStorage.setItem('USER_REFRESH_TOKEN', '${mVUserRefreshToken()}');
+  `;
+
   return (
     <>
       <WebView
         source={{uri: 'https://oursocialdog.com/'}}
         style={{height: '100%', width: '100%'}}
+        javaScriptEnabled={true}
+        injectedJavaScriptBeforeContentLoaded={injectJsToWebView}
       />
     </>
   );
