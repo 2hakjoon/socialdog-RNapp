@@ -43,26 +43,29 @@ import {
   ApolloLink,
   ApolloProvider,
   concat,
+  fromPromise,
   InMemoryCache,
 } from '@apollo/client';
-import {deleteTokens} from './utils/asyncStorage';
+import {deleteTokens, getData} from './utils/asyncStorage';
 import AuthScreen from './screens/auth/AuthScreen';
 import SocialScreen from './screens/social/SocialScreen';
 import ProfileScreen from './screens/profile/ProfileScreen';
 import EditProfileScreen from './screens/editProfile/EditProfileScreen';
 import {USER_ACCESS_TOKEN} from './utils/constants';
-import {globalStore} from './globalStore';
 import {createUploadLink} from 'apollo-upload-client';
 
 const authMiddleware = new ApolloLink((operation, forward) => {
   // add the authorization to the headers
-  operation.setContext(({headers = {}}) => ({
-    headers: {
-      ...headers,
-      authorization: `Bearer ${globalStore.getData(USER_ACCESS_TOKEN)}`,
-    },
-  }));
-  return forward(operation);
+  const promises = fromPromise(getData({key: USER_ACCESS_TOKEN}));
+  return promises.flatMap(data => {
+    operation.setContext(({headers = {}}) => ({
+      headers: {
+        ...headers,
+        authorization: `Bearer ${data}`,
+      },
+    }));
+    return forward(operation);
+  });
 });
 
 const client = new ApolloClient({
@@ -100,7 +103,7 @@ const App = () => {
         setLocationPermission(true);
         Alert.alert(
           '백그라운드 위치정보.',
-          `정상적인 위치정보 수집을 위해, 추가로 위치정보를 항상 허용으로 설정해주세요`,
+          '정상적인 위치정보 수집을 위해, 추가로 위치정보를 항상 허용으로 설정해주세요',
           [
             {
               text: '괜찮아요',
@@ -118,7 +121,7 @@ const App = () => {
       } else {
         Alert.alert(
           '백그라운드 위치정보.',
-          `위치정보 권한이 없으면, 관련 서비스를 이용하실 수 업습니다.`,
+          '위치정보 권한이 없으면, 관련 서비스를 이용하실 수 업습니다.',
           [
             {
               text: '확인',
@@ -138,7 +141,7 @@ const App = () => {
     } else {
       Alert.alert(
         '백그라운드 위치정보.',
-        `정상적인 위치 수집을 위해, 위치정보를 항상 허용으로 설정해주세요`,
+        '정상적인 위치 수집을 위해, 위치정보를 항상 허용으로 설정해주세요',
         [
           {
             text: '알겠어요',
