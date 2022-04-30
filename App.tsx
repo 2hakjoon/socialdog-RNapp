@@ -141,16 +141,31 @@ const App = () => {
   function Walk() {
     return (
       <WalkStack.Navigator>
-        <WalkStack.Screen name={'Weather'} component={WeatherScreen} />
-        <WalkStack.Screen name={'WalkRecords'} component={WalkRecordsScreen} />
-        <WalkStack.Screen name={'Record'} component={RecordingScreen} />
+        <WalkStack.Screen
+          options={{title: '오늘의 날씨'}}
+          name={'Weather'}
+          component={WeatherScreen}
+        />
+        <WalkStack.Screen
+          name={'WalkRecords'}
+          options={{title: '산책 기록'}}
+          component={WalkRecordsScreen}
+        />
+        <WalkStack.Screen
+          name={'Record'}
+          options={{title: '산책 하기'}}
+          component={RecordingScreen}
+        />
       </WalkStack.Navigator>
     );
   }
 
   function Sns() {
     return (
-      <SnsStack.Navigator>
+      <SnsStack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}>
         <SnsStack.Screen name={'Social'} component={SocialScreen} />
       </SnsStack.Navigator>
     );
