@@ -95,7 +95,7 @@ function WeatherScreen() {
                         text={`${weather.current.temp.toFixed(1)}`}
                         size={30}
                       />
-                      <TextComp text={`°C`} size={20} />
+                      <TextComp text={'°C'} size={20} />
                     </View>
                     <TextComp text={'현재 기온'} />
                   </View>
@@ -106,7 +106,7 @@ function WeatherScreen() {
                         text={`${weather.current.feels_like.toFixed(1)}`}
                         size={30}
                       />
-                      <TextComp text={`°C`} size={20} />
+                      <TextComp text={'°C'} size={20} />
                     </View>
                     <TextComp text={'체감 온도'} />
                   </View>
@@ -119,7 +119,7 @@ function WeatherScreen() {
                         text={`${weather.daily[0].temp.min.toFixed(1)}`}
                         size={30}
                       />
-                      <TextComp text={`°C`} size={20} />
+                      <TextComp text={'°C'} size={20} />
                     </View>
                     <TextComp text={'최저 기온'} />
                   </View>
@@ -130,7 +130,7 @@ function WeatherScreen() {
                         text={`${weather.daily[0].temp.max.toFixed(1)}`}
                         size={30}
                       />
-                      <TextComp text={`°C`} size={20} />
+                      <TextComp text={'°C'} size={20} />
                     </View>
                     <TextComp text={'최고 기온'} />
                   </View>
@@ -175,18 +175,6 @@ function WeatherScreen() {
         )}
       </ScrollView>
       <View style={styles.bottomContainer}>
-        <TouchableOpacity
-          style={styles.profileContainer}
-          onPress={moveToProfile}>
-          <ProfilePhoto url={user?.photo} size={50} />
-          <View style={styles.describeContainer}>
-            <TextComp
-              text={user?.dogname || '프로필을 작성해주세요.'}
-              size={20}
-              style={{paddingLeft: 10}}
-            />
-          </View>
-        </TouchableOpacity>
         <View style={styles.buttonContainer}>
           <Button
             title="산책하러가기"
