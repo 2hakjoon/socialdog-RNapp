@@ -75,7 +75,6 @@ function RecordingScreen() {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         });
-        console.log(!pause && recording);
         if (!pause && recording) {
           setLocations(prev =>
             prev.concat([
@@ -86,7 +85,7 @@ function RecordingScreen() {
             ]),
           );
         }
-        console.log(position);
+        // console.log(position);
       },
       error => {},
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
@@ -105,12 +104,13 @@ function RecordingScreen() {
     try {
       const now = Date.now();
       const walkRecord = JSON.stringify(locations);
-      if (!startTime) throw new Error();
-      console.log('힝구');
+      if (!startTime) {
+        throw new Error();
+      }
       createWalk({
         variables: {
           startTime: trimMilSec(startTime),
-          walkingTime: timer + 1,
+          walkingTime: timer,
           finishTime: trimMilSec(now),
           walkRecord,
         },
@@ -128,7 +128,7 @@ function RecordingScreen() {
     setPause(true);
     Alert.alert(
       '산책이 끝났나요?',
-      `${timerFormatKor(timer + 1)} 동안 산책했어요.`,
+      `${timerFormatKor(timer)} 동안 산책했어요.`,
       [
         {
           text: '아직이요',
@@ -174,12 +174,12 @@ function RecordingScreen() {
     }, [recording, pause]),
   );
 
-  useFocusEffect(
-    useCallback(() => {
-      console.log(locations.length);
-      console.log(locations);
-    }, [locations]),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     console.log(locations.length);
+  //     console.log(locations);
+  //   }, [locations]),
+  // );
 
   useEffect(() => {
     if (geolocaton?.latitude && geolocaton.longitude) {

@@ -30,7 +30,7 @@ import {
   SnsStackList,
   WalkStackList,
 } from './routes';
-import WalkRecordsScreen from './screens/walk-records/WalkRecordsScreen';
+import WalkRecordsScreen from './screens/record/components/WalkRecordsScreen';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
@@ -135,7 +135,7 @@ const App = () => {
     } else {
       checkIosLocationPermission();
     }
-    deleteTokens();
+    // deleteTokens();
   }, []);
 
   function Walk() {

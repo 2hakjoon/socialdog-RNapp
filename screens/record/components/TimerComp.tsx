@@ -1,5 +1,5 @@
 import {useFocusEffect} from '@react-navigation/core';
-import React, {useCallback} from 'react';
+import React, {Dispatch, SetStateAction, useCallback, useState} from 'react';
 import {View} from 'react-native';
 import {timerFormat} from '../../../utils/dataformat/timeformat';
 import TextComp from '../../components/TextComp';
@@ -8,19 +8,42 @@ import BackgroundTimer from 'react-native-background-timer';
 interface ITimerCompProps {
   recording: boolean;
   timer: number;
-  setTimer: Function;
+  setTimer: Dispatch<SetStateAction<number>>;
   pause: boolean;
 }
 
 function TimerComp({recording, timer, setTimer, pause}: ITimerCompProps) {
+  const [timerIntervalId, setTimerIntervalId] = useState(-1);
+
+  const clearTimer = () => {
+    stopBackgroundTimer();
+    setTimer(0);
+  };
+
+  const stopBackgroundTimer = () => {
+    console.log('timerIntervalId:', timerIntervalId);
+    BackgroundTimer.clearInterval(timerIntervalId);
+  };
+
+  const startBackgroundTimer = () => {
+    stopBackgroundTimer();
+    const timerId = BackgroundTimer.setInterval(() => {
+      setTimer(prev => prev + 1);
+    }, 1000);
+    setTimerIntervalId(timerId);
+  };
+
   useFocusEffect(
     useCallback(() => {
+      console.log('recording:', recording, 'pause:', pause);
       if (recording && !pause) {
-        BackgroundTimer.setTimeout(() => {
-          setTimer(timer + 1);
-        }, 1000);
+        startBackgroundTimer();
+      } else if (recording && pause) {
+        stopBackgroundTimer();
+      } else if (!recording) {
+        clearTimer();
       }
-    }, [timer, recording, pause]),
+    }, [recording, pause]),
   );
 
   return (
