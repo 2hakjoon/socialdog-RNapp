@@ -39,11 +39,9 @@ import GeolocationComponent from './screens/components/GeolocationComponent';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import WeatherScreen from './screens/weather/WeatherScreen';
 import {ApolloProvider} from '@apollo/client';
-import {deleteTokens, getData} from './utils/asyncStorage';
+import {deleteTokens} from './utils/asyncStorage';
 import AuthScreen from './screens/auth/AuthScreen';
 import SocialScreen from './screens/social/SocialScreen';
-import ProfileScreen from './screens/profile/ProfileScreen';
-import EditProfileScreen from './screens/editProfile/EditProfileScreen';
 import {client} from './apollo-setup';
 
 const RootTab = createBottomTabNavigator<RootTabNavigator>();
@@ -158,18 +156,6 @@ const App = () => {
     );
   }
 
-  function Profile() {
-    return (
-      <ProfileStack.Navigator>
-        <ProfileStack.Screen name={'Profile'} component={ProfileScreen} />
-        <ProfileStack.Screen
-          name={'EditProfile'}
-          component={EditProfileScreen}
-        />
-      </ProfileStack.Navigator>
-    );
-  }
-
   return (
     <ApolloProvider client={client}>
       <Provider store={store}>
@@ -202,18 +188,6 @@ const App = () => {
                     tabBarLabel: '친구들',
                     tabBarIcon: ({color, size}) => (
                       <MIcon name="nature-people" color={color} size={size} />
-                    ),
-                  }}
-                />
-
-                <RootTab.Screen
-                  name={'ProfileTab'}
-                  component={Profile}
-                  options={{
-                    headerShown: false,
-                    tabBarLabel: '프로필',
-                    tabBarIcon: ({color, size}) => (
-                      <MIcon name="face" color={color} size={size} />
                     ),
                   }}
                 />

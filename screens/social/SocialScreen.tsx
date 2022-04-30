@@ -6,9 +6,6 @@ function SocialScreen() {
   console.log('accessToken', mVUserAccessToken());
   console.log('refreshToken', mVUserRefreshToken());
 
-  const INJECTED_JAVASCRIPT = `(function() {
-    window.alert("Asdff");
-})();`;
   const injectJsToWebView = `
     window.localStorage.setItem('USER_ACCESS_TOKEN', '${mVUserAccessToken()}');
     window.localStorage.setItem('USER_REFRESH_TOKEN', '${mVUserRefreshToken()}');
@@ -21,7 +18,7 @@ function SocialScreen() {
         //source={{uri: 'https://oursocialdog.com'}}
         style={{height: '100%', width: '100%'}}
         javaScriptEnabled={true}
-        userAgent={'SOCIALDOG_APP'}
+        // userAgent={'SOCIALDOG_APP'}
         injectedJavaScriptBeforeContentLoaded={injectJsToWebView}
       />
     </>

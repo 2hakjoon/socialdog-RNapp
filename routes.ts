@@ -1,67 +1,66 @@
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from '@react-navigation/stack';
-import { LoginStrategy } from "./__generated__/globalTypes";
-
-
+import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
+import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {LoginStrategy} from './__generated__/globalTypes';
 
 type editProfileParam = {
-  username:string | null | undefined
-  dogname:string | null | undefined
-  loginStrategy: LoginStrategy| undefined
-  id: number | null | undefined
-  photo:string | null | undefined
-}
-
-export type AuthStackList = {
-  AuthSelect:undefined
-  Login: {email: string | undefined ,password: string | undefined};
-  Join: undefined
-}
-
-
-export type RootStackList = {
-  Record: undefined
-  WalkRecords: undefined
-  Weather: undefined
-  Profile: undefined
-  Social: undefined
-  EditProfile: editProfileParam
+  username: string | null | undefined;
+  dogname: string | null | undefined;
+  loginStrategy: LoginStrategy | undefined;
+  id: number | null | undefined;
+  photo: string | null | undefined;
 };
 
-export type WalkStackList={
-  Record: undefined
-  WalkRecords: undefined
-  Weather: undefined
-}
+export type AuthStackList = {
+  AuthSelect: undefined;
+  Login: {email: string | undefined; password: string | undefined};
+  Join: undefined;
+};
 
-export type SnsStackList ={
-  Social: undefined
-}
+export type RootStackList = {
+  Record: undefined;
+  WalkRecords: undefined;
+  Weather: undefined;
+  Profile: undefined;
+  Social: undefined;
+  EditProfile: editProfileParam;
+};
+
+export type WalkStackList = {
+  Record: undefined;
+  WalkRecords: undefined;
+  Weather: undefined;
+};
+
+export type SnsStackList = {
+  Social: undefined;
+};
 
 export type ProfileStackList = {
-  Profile: undefined
-  EditProfile: editProfileParam
-}
-
+  Profile: undefined;
+  EditProfile: editProfileParam;
+};
 
 export type RootTabNavigator = {
-  WalkTab: undefined
-  ProfileTab: undefined
-  SocialTab: undefined
-}
+  WalkTab: undefined;
+  ProfileTab: undefined;
+  SocialTab: undefined;
+};
 
-export type UseNavigationProp<TabName extends keyof RootTabNavigator> = CompositeNavigationProp<
-  BottomTabNavigationProp<RootTabNavigator, TabName>,
-  StackNavigationProp<RootStackList>
->;
-
+export type UseNavigationProp<TabName extends keyof RootTabNavigator> =
+  CompositeNavigationProp<
+    BottomTabNavigationProp<RootTabNavigator, TabName>,
+    StackNavigationProp<RootStackList>
+  >;
 
 export type RootRouteProps<RouteName extends keyof RootStackList> = RouteProp<
-RootStackList,
-RouteName
+  RootStackList,
+  RouteName
 >;
 
-export type AuthNavigationProp= StackNavigationProp<AuthStackList>
+export type AuthNavigationProp = StackNavigationProp<AuthStackList>;
 
-export  type AuthRoutProp<RouteName extends keyof AuthStackList> = RouteProp<AuthStackList, RouteName>
+export type AuthRoutProp<RouteName extends keyof AuthStackList> = RouteProp<
+  AuthStackList,
+  RouteName
+>;
