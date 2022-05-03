@@ -54,15 +54,11 @@ function WeatherScreen() {
           lng: longitude,
         }),
       ]);
-      console.log(response);
+      // console.log(response);
       setWeatherData(response);
     } catch (e) {
       console.log(e);
     }
-  };
-
-  const moveToProfile = () => {
-    navigation.navigate('ProfileTab');
   };
 
   useEffect(() => {

@@ -5,8 +5,10 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useFocusEffect} from '@react-navigation/native';
 
 GoogleSignin.configure({
-  webClientId: Platform.OS === "ios" ? "147772000843-uslp492a991mdig3eehts509n9fs7tst.apps.googleusercontent.com" : 
-    '147772000843-6b96b92gvdvovklpsn8e6v59ueqoaqcf.apps.googleusercontent.com',
+  webClientId:
+    Platform.OS === 'ios'
+      ? '147772000843-uslp492a991mdig3eehts509n9fs7tst.apps.googleusercontent.com'
+      : '147772000843-6b96b92gvdvovklpsn8e6v59ueqoaqcf.apps.googleusercontent.com',
 });
 
 export interface User {

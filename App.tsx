@@ -103,7 +103,7 @@ const App = () => {
   const checkIosLocationPermission = async () => {
     const always = await check(PERMISSIONS.IOS.LOCATION_ALWAYS);
     const whenUse = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-    console.log(always, whenUse);
+    // console.log(always, whenUse);
     if (always === 'granted' || whenUse === 'granted') {
       setLocationPermission(true);
     } else {
@@ -116,7 +116,7 @@ const App = () => {
             onPress: () => {
               request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE)
                 .then(result => {
-                  console.log(result);
+                  // console.log(result);
                   if (result !== 'blocked') {
                     setLocationPermission(true);
                   }

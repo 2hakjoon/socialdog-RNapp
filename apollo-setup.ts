@@ -8,10 +8,13 @@ import {
 } from '@apollo/client';
 import {createUploadLink} from 'apollo-upload-client';
 import {getData} from './utils/asyncStorage';
-import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from './utils/constants';
+import {USER_ACCESS_TOKEN} from './utils/constants';
+import Config from 'react-native-config';
 
 export const mVUserAccessToken = makeVar('');
 export const mVUserRefreshToken = makeVar('');
+
+console.log(Config.BACKEND_API_URL);
 
 const authMiddleware = new ApolloLink((operation, forward) => {
   // add the authorization to the headers
@@ -29,8 +32,5 @@ const authMiddleware = new ApolloLink((operation, forward) => {
 
 export const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link: concat(
-    authMiddleware,
-    createUploadLink({uri: 'http://121.154.94.120/graphql'}),
-  ),
+  link: concat(authMiddleware, createUploadLink({uri: Config.BACKEND_API_URL})),
 });

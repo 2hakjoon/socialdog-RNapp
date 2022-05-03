@@ -1,11 +1,8 @@
 import {gql, useMutation} from '@apollo/client';
 import {
   KakaoOAuthToken,
-  KakaoProfile,
   getProfile as getKakaoProfile,
   login,
-  logout,
-  unlink,
 } from '@react-native-seoul/kakao-login';
 import React, {useState} from 'react';
 import {Button} from 'react-native';

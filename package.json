@@ -5,6 +5,7 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
+    "ios:dev": "react-native run-ios --scheme socialdogDev",
     "start": "react-native start",
     "test": "jest",
     "codegen": "sudo apollo client:codegen __generated__ --target=typescript --outputFlat",
