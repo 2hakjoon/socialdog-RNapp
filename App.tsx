@@ -24,12 +24,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Provider} from 'react-redux';
 import {applyMiddleware, createStore} from 'redux';
 import rootReducer from './module';
-import {
-  ProfileStackList,
-  RootTabNavigator,
-  SnsStackList,
-  WalkStackList,
-} from './routes';
+import {RootTabNavigator, SnsStackList, WalkStackList} from './routes';
 import WalkRecordsScreen from './screens/record/components/WalkRecordsScreen';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
@@ -39,7 +34,6 @@ import GeolocationComponent from './screens/components/GeolocationComponent';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import WeatherScreen from './screens/weather/WeatherScreen';
 import {ApolloProvider} from '@apollo/client';
-import {deleteTokens} from './utils/asyncStorage';
 import AuthScreen from './screens/auth/AuthScreen';
 import SocialScreen from './screens/social/SocialScreen';
 import {client} from './apollo-setup';
@@ -47,7 +41,6 @@ import {client} from './apollo-setup';
 const RootTab = createBottomTabNavigator<RootTabNavigator>();
 const WalkStack = createNativeStackNavigator<WalkStackList>();
 const SnsStack = createNativeStackNavigator<SnsStackList>();
-const ProfileStack = createNativeStackNavigator<ProfileStackList>();
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
 
 const App = () => {
