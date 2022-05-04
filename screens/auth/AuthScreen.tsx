@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
+import {Alert, Image, ImageBase, StyleSheet, View} from 'react-native';
 import {deleteTokens, getData, storeData} from '../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from '../../utils/constants';
 import jwt_decode, {JwtPayload} from 'jwt-decode';
@@ -18,6 +18,7 @@ import {
 } from '../../__generated__/MReissueAccessToken';
 import {QMe} from '../../__generated__/QMe';
 import {mVUserAccessToken} from '../../apollo-setup';
+import {colors} from '../../utils/colors';
 
 interface IAuthScreenProps {
   setLoginState: Function;
@@ -143,13 +144,17 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
   }, [accessToken]);
 
   return (
-    <>
+    <View style={styles.wrapper}>
       {checkingToken ? (
         <View>
           <TextComp text={'로그인 정보 확인중 ...'} />
         </View>
       ) : (
         <>
+          <Image
+            style={styles.image}
+            source={require('../../assets/png/login.png')}
+          />
           <KakaoLogin setAccessToken={setAccessToken} />
           {/* <LoginStack.Navigator>
             <LoginStack.Screen name={'AuthSelect'} component={AuthHome} />
@@ -160,16 +165,21 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
           </LoginStack.Navigator> */}
         </>
       )}
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   wrapper: {
-    width: '90%',
+    width: '100%',
     height: '100%',
-    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: colors.PBlue,
+  },
+  image: {
+    width: '90%',
+    height: '10%',
+    flex: 6,
   },
 });
 
