@@ -5,13 +5,7 @@ import {
   login,
 } from '@react-native-seoul/kakao-login';
 import React, {useState} from 'react';
-import {
-  Button,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableOpacityBase,
-} from 'react-native';
+import {Button, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {storeData} from '../../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from '../../../utils/constants';
 import {
@@ -103,19 +97,22 @@ function KakaoLogin({setAccessToken}: IKakaoLoginProps) {
   // };
 
   return (
-    <TouchableOpacity style={styles.button} onPress={signInWithKakao}>
-      <Image source={require('../../../assets/png/kakao_login_button.png')} />
-    </TouchableOpacity>
+    <View style={styles.wrapper}>
+      <TouchableOpacity style={styles.button} onPress={signInWithKakao}>
+        <Image source={require('../../../assets/png/kakao_login_button.png')} />
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  button: {
+  wrapper: {
     flex: 1,
     width: '100%',
     height: '100%',
     alignItems: 'center',
   },
+  button: {},
 });
 
 export default KakaoLogin;
