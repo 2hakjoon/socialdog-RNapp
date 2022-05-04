@@ -151,13 +151,13 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
       ) : (
         <>
           <KakaoLogin setAccessToken={setAccessToken} />
-          <LoginStack.Navigator>
+          {/* <LoginStack.Navigator>
             <LoginStack.Screen name={'AuthSelect'} component={AuthHome} />
             <LoginStack.Screen name={'Login'}>
               {() => <LocalLogin setAccessToken={setAccessToken} />}
             </LoginStack.Screen>
             <LoginStack.Screen name={'Join'} component={LocalJoin} />
-          </LoginStack.Navigator>
+          </LoginStack.Navigator> */}
         </>
       )}
     </>
