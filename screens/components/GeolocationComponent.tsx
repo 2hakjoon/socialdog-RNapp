@@ -28,7 +28,7 @@ function GeolocationComponent() {
           },
         });
       },
-      error => Alert.alert('Error', JSON.stringify(error)),
+      error => Alert.alert('Error', '위치정보 권한을 설정해주세요.'),
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
     );
 
