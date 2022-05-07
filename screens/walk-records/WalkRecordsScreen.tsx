@@ -28,6 +28,7 @@ import {
 import {QGetWalk, QGetWalkVariables} from '../../__generated__/QGetWalk';
 import {ME} from '../auth/AuthScreen';
 import {QMe} from '../../__generated__/QMe';
+import {geolocationCofig} from '../components/GeolocationComponent';
 
 interface latlngObj {
   latitude: number;
@@ -123,10 +124,10 @@ function WalkRecordsScreen() {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         });
-        console.log(position);
+        // console.log(position);
       },
       error => Alert.alert('Error', JSON.stringify(error)),
-      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
+      geolocationCofig,
     );
 
   //firbase의 키에 담긴 내용을 포멧팅해서 산책시작시간, 산책시간이 담긴 문자열로 리턴함

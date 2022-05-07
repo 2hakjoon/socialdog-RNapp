@@ -22,6 +22,7 @@ import Foundation from '../components/Icons/Foundation';
 import {ME} from '../auth/AuthScreen';
 import {QMe} from '../../__generated__/QMe';
 import ProfilePhoto from '../components/ProfilePhoto';
+import {geolocationCofig} from '../components/GeolocationComponent';
 
 interface latlngObj {
   latitude: number;
@@ -85,10 +86,10 @@ function RecordingScreen() {
             ]),
           );
         }
-        // console.log(position);
+        console.log(position);
       },
       error => {},
-      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
+      geolocationCofig,
     );
 
   const startRecording = () => {

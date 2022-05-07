@@ -49,9 +49,11 @@ const App = () => {
   const [locationPermission, setLocationPermission] = useState(false);
 
   const androidHasPermission = async () => {
-    return await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
+    const fineLocation = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
     );
+    console.log(fineLocation);
+    return fineLocation;
   };
 
   const getAndroidLocationPermission = async () => {

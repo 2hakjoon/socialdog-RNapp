@@ -8,10 +8,16 @@ import {getData, storeData} from '../../utils/asyncStorage';
 
 const LOCATION = 'LOCATION';
 
+export const geolocationCofig = {
+  enableHighAccuracy: false,
+  timeout: 20000,
+  maximumAge: 0,
+};
+
 function GeolocationComponent() {
   const dispatch = useDispatch();
 
-  const getLocation = () =>
+  const getLocation = () => {
     Geolocation.getCurrentPosition(
       position => {
         dispatch(
@@ -28,9 +34,13 @@ function GeolocationComponent() {
           },
         });
       },
-      error => Alert.alert('Error', '위치정보 권한을 설정해주세요.'),
-      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
+      error => {
+        console.log(error);
+        Alert.alert('Error', '위치정보 권한을 설정해주세요.');
+      },
+      geolocationCofig,
     );
+  };
 
   useEffect(() => {
     getData({key: LOCATION}).then(data => {
