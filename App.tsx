@@ -184,6 +184,7 @@ const App = () => {
                   options={{
                     headerShown: false,
                     tabBarLabel: '산책',
+                    tabBarStyle: {height: 60, paddingBottom: 10},
                     tabBarIcon: ({color, size}) => (
                       <FAIcon name="dog" color={color} size={size} />
                     ),
