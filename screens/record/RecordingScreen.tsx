@@ -19,10 +19,10 @@ import {
 } from '../../__generated__/MCreateWalk';
 import TextComp from '../components/TextComp';
 import Foundation from '../components/Icons/Foundation';
-import {ME} from '../auth/AuthScreen';
 import {QMe} from '../../__generated__/QMe';
 import ProfilePhoto from '../components/ProfilePhoto';
 import {geolocationCofig} from '../components/GeolocationComponent';
+import {ME} from '../../apollo-gqls/auth';
 
 interface latlngObj {
   latitude: number;
