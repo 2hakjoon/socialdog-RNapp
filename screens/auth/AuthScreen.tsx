@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Alert, Image, StyleSheet, View} from 'react-native';
-import {storeData} from '../../utils/asyncStorage';
+import {getData, storeData} from '../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN} from '../../utils/constants';
 import {useLazyQuery} from '@apollo/client';
 import TextComp from '../components/TextComp';
@@ -26,7 +26,6 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
   });
 
   useEffect(() => {
-    console.log('accessToken :', accessToken);
     if (accessToken) {
       mVUserAccessToken(accessToken);
       storeData({key: USER_ACCESS_TOKEN, value: accessToken}).then(async () => {
@@ -37,6 +36,10 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
             setLoginState(true);
           }
         });
+      });
+    } else {
+      getData({key: USER_ACCESS_TOKEN}).then(token => {
+        setAccessToken(token);
       });
     }
   }, [accessToken]);

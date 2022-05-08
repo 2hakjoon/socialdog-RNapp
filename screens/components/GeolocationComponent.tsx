@@ -1,15 +1,14 @@
 import Geolocation from '@react-native-community/geolocation';
 import {useEffect} from 'react';
 import {Alert} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../module';
+import {useDispatch} from 'react-redux';
 import {setGeolocation} from '../../module/geolocation';
 import {getData, storeData} from '../../utils/asyncStorage';
 
 const LOCATION = 'LOCATION';
 
 export const geolocationCofig = {
-  enableHighAccuracy: false,
+  enableHighAccuracy: true,
   timeout: 20000,
   maximumAge: 0,
 };
