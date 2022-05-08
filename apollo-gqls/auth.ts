@@ -8,6 +8,7 @@ export const REISSUE_ACCESS_TOKEN = gql`
       ok
       error
       accessToken
+      isRefreshTokenExpired
     }
   }
 `;

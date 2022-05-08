@@ -25,7 +25,6 @@ import {Provider} from 'react-redux';
 import {applyMiddleware, createStore} from 'redux';
 import rootReducer from './module';
 import {RootTabNavigator, SnsStackList, WalkStackList} from './routes';
-import WalkRecordsScreen from './screens/record/components/WalkRecordsScreen';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
@@ -37,6 +36,7 @@ import {ApolloProvider} from '@apollo/client';
 import AuthScreen from './screens/auth/AuthScreen';
 import SocialScreen from './screens/social/SocialScreen';
 import {client} from './apollo-setup';
+import WalkRecordsScreen from './screens/walk-records/WalkRecordsScreen';
 
 const RootTab = createBottomTabNavigator<RootTabNavigator>();
 const WalkStack = createNativeStackNavigator<WalkStackList>();

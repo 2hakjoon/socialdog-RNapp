@@ -12,6 +12,7 @@ export interface MReissueAccessToken_reissueAccessToken {
   ok: boolean;
   error: string | null;
   accessToken: string | null;
+  isRefreshTokenExpired: boolean | null;
 }
 
 export interface MReissueAccessToken {

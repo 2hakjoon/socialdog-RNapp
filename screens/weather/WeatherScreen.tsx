@@ -20,9 +20,9 @@ import {Geolocation} from '../../module/geolocation';
 import {colors} from '../../utils/colors';
 import {UseNavigationProp} from '../../routes';
 import {useQuery} from '@apollo/client';
-import {ME} from '../auth/AuthScreen';
 import {QMe} from '../../__generated__/QMe';
 import ProfilePhoto from '../components/ProfilePhoto';
+import {ME} from '../../apollo-gqls/auth';
 
 function WeatherScreen() {
   //0:onecall날씨정보, 1:미세먼지 2:주소

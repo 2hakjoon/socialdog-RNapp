@@ -26,12 +26,13 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
   });
 
   useEffect(() => {
+    console.log('accessToken :', accessToken);
     if (accessToken) {
       mVUserAccessToken(accessToken);
       storeData({key: USER_ACCESS_TOKEN, value: accessToken}).then(async () => {
         meQuery().then(data => {
           const user = data.data?.me.data;
-          console.log(user);
+          // console.log(user);
           if (user) {
             setLoginState(true);
           }

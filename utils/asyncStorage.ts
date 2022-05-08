@@ -32,3 +32,12 @@ export const deleteTokens = async () => {
   await storeData({key: USER_ACCESS_TOKEN, value: null});
   await storeData({key: USER_REFRESH_TOKEN, value: null});
 };
+
+export const getAuthTokens = async (): Promise<{
+  accessToken: string;
+  refreshToken: string;
+}> => {
+  const accessToken = await getData({key: USER_ACCESS_TOKEN});
+  const refreshToken = await getData({key: USER_REFRESH_TOKEN});
+  return {accessToken, refreshToken};
+};
