@@ -55,78 +55,10 @@ const LoginStack = createNativeStackNavigator<AuthStackList>();
 
 function AuthScreen({setLoginState}: IAuthScreenProps) {
   const [accessToken, setAccessToken] = useState<string>();
-  const [checkingToken, setCheckingToken] = useState<boolean>(true);
-
-  const [reissueAccessToken] = useMutation<
-    MReissueAccessToken,
-    MReissueAccessTokenVariables
-  >(REISSUE_ACCESS_TOKEN);
-
-  const [meQuery] = useLazyQuery<QMe>(ME, {
+  
+  const [meQuery, {loading: meQueryLoading}] = useLazyQuery<QMe>(ME, {
     onError: () => Alert.alert('오류', '회원정보를 찾을수 없습니다.'),
   });
-
-  const getOrReissueToken = async () => {
-    const storeAccessToken = await getData({key: USER_ACCESS_TOKEN});
-    //저장소에 accessToken이 있을때
-    if (storeAccessToken) {
-      try {
-        const decodedAccessToken = jwt_decode<JwtPayload>(storeAccessToken);
-        //엑세스 토큰은 만료기한이 1주일임. 만료 2일전에 재발급함.
-        if (
-          decodedAccessToken.exp &&
-          decodedAccessToken.exp < trimMilSec(Date.now() + TwoDays)
-        ) {
-          const refreshToken = await getData({key: USER_REFRESH_TOKEN});
-          const decodedRefreshToken = jwt_decode<JwtPayload>(refreshToken);
-
-          //리프레시 토큰만료이전을 확인 후 서버에 엑세스 토큰 요청
-          if (
-            decodedRefreshToken.exp &&
-            decodedRefreshToken.exp > trimMilSec(Date.now())
-          ) {
-            //토큰 재발급
-            const reIssueResult = await reissueAccessToken({
-              variables: {
-                accessToken: storeAccessToken,
-                refreshToken,
-              },
-            });
-            if (reIssueResult.data?.reissueAccessToken.ok) {
-              const newAccessToken =
-                reIssueResult.data?.reissueAccessToken.accessToken;
-              if (newAccessToken) {
-                await storeData({
-                  key: USER_ACCESS_TOKEN,
-                  value: newAccessToken,
-                });
-                //토큰이 정상적으로 발급되면 token저장 및 checkingToken 상태 해제
-                setAccessToken(newAccessToken);
-                setCheckingToken(false);
-              } else {
-                throw new Error();
-              }
-            }
-          } else {
-            throw new Error('리프레시 토큰이 만료됨');
-          }
-        } else {
-          setAccessToken(storeAccessToken);
-          setCheckingToken(false);
-        }
-      } catch (e) {
-        console.log(e);
-        deleteTokens();
-        setCheckingToken(false);
-      }
-    } else {
-      setCheckingToken(false);
-    }
-  };
-
-  useEffect(() => {
-    getOrReissueToken();
-  }, [checkingToken]);
 
   useEffect(() => {
     if (accessToken) {
@@ -145,7 +77,7 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
 
   return (
     <View style={styles.wrapper}>
-      {checkingToken ? (
+      {meQueryLoading ? (
         <View>
           <TextComp text={'로그인 정보 확인중 ...'} />
         </View>
