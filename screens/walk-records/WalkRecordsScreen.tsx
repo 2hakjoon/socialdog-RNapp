@@ -26,9 +26,10 @@ import {
   QGetWalks_getWalks_data,
 } from '../../__generated__/QGetWalks';
 import {QGetWalk, QGetWalkVariables} from '../../__generated__/QGetWalk';
-import {ME} from '../auth/AuthScreen';
 import {QMe} from '../../__generated__/QMe';
 import {geolocationCofig} from '../components/GeolocationComponent';
+import {GET_WALK_RECORD, GET_WALK_RECORDS} from '../../apollo-gqls/walks';
+import {ME} from '../../apollo-gqls/auth';
 
 interface latlngObj {
   latitude: number;
@@ -38,32 +39,6 @@ interface latlngObj {
 interface RecordData {
   [key: string]: [QGetWalks_getWalks_data];
 }
-
-const GET_WALK_RECORDS = gql`
-  query QGetWalks {
-    getWalks {
-      ok
-      data {
-        walkingTime
-        startTime
-        finishTime
-        id
-      }
-    }
-  }
-`;
-
-const GET_WALK_RECORD = gql`
-  query QGetWalk($walkId: String!) {
-    getWalk(args: {walkId: $walkId}) {
-      ok
-      error
-      data {
-        walkRecord
-      }
-    }
-  }
-`;
 
 function WalkRecordsScreen() {
   const [location, setLocation] = useState<latlngObj | null>(null);
@@ -79,7 +54,7 @@ function WalkRecordsScreen() {
   );
 
   const makeRecordsToDayes = (walkRecords: QGetWalks) => {
-    console.log(walkRecords);
+    // console.log(walkRecords);
     let daysObj: RecordData = {};
     if (walkRecords.getWalks.data) {
       walkRecords.getWalks.data.forEach(record => {

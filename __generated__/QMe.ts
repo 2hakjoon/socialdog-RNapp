@@ -12,7 +12,7 @@ import { LoginStrategy } from "./globalTypes";
 export interface QMe_me_data {
   __typename: "UserProfile";
   loginStrategy: LoginStrategy;
-  username: string | null;
+  username: string;
   dogname: string | null;
   photo: string | null;
   id: string;
