@@ -15,6 +15,7 @@ import {
   PermissionsAndroid,
   Platform,
   StatusBar,
+  ToastAndroid,
   useColorScheme,
 } from 'react-native';
 import RecordingScreen from './screens/record/RecordingScreen';
@@ -49,11 +50,38 @@ const App = () => {
   const [locationPermission, setLocationPermission] = useState(false);
 
   const androidHasPermission = async () => {
-    const fineLocation = await PermissionsAndroid.check(
+    if (Platform.Version < 23) {
+      return true;
+    }
+
+    const hasPermission = await PermissionsAndroid.check(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
     );
-    console.log(fineLocation);
-    return fineLocation;
+
+    if (hasPermission) {
+      return true;
+    }
+
+    const status = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+
+    if (status === PermissionsAndroid.RESULTS.GRANTED) {
+      return true;
+    }
+
+    if (status === PermissionsAndroid.RESULTS.DENIED) {
+      ToastAndroid.show('위치 권한요청이 거절되었습니다.', ToastAndroid.LONG);
+    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+      ToastAndroid.show('위치 권한요청을 수락하셨습니다.', ToastAndroid.LONG);
+    }
+
+    return false;
+    // const fineLocation = await PermissionsAndroid.check(
+    //   PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    // );
+    // console.log(fineLocation);
+    // return fineLocation;
   };
 
   const getAndroidLocationPermission = async () => {

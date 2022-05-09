@@ -1824,10 +1824,10 @@
     "@typescript-eslint/types" "5.9.1"
     eslint-visitor-keys "^3.0.0"
 
-"@voximplant/react-native-foreground-service@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@voximplant/react-native-foreground-service/-/react-native-foreground-service-2.0.0.tgz#06da5b121231a8ffcb13bc792ce67c37f1fbb2d8"
-  integrity sha512-V7hpxvYVsIvbpJaIlhjl4BUsWEzPYKIIfWZOYm0s93VEBmp548xx8f5hSeVuhaR6NqveibxVNr+J011ej/yc2g==
+"@voximplant/react-native-foreground-service@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@voximplant/react-native-foreground-service/-/react-native-foreground-service-3.0.1.tgz#e96d102d060b15c303558ecac9846345d22f7410"
+  integrity sha512-lCjNe89KcOuTxe8i+XKAMoWhHqeLQr9dAYprLNum/VyZgDOUhmz3tRdQ86lXs9M37oXTe0VkEd22oVCdtMIQpw==
 
 "@wry/context@^0.6.0":
   version "0.6.1"

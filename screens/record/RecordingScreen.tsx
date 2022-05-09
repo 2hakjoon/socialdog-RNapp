@@ -88,7 +88,9 @@ function RecordingScreen() {
         }
         console.log(position);
       },
-      error => {},
+      error => {
+        console.log(error);
+      },
       geolocationCofig,
     );
 
