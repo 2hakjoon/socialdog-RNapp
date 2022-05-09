@@ -8,9 +8,9 @@ import {getData, storeData} from '../../utils/asyncStorage';
 const LOCATION = 'LOCATION';
 
 export const geolocationCofig = {
-  enableHighAccuracy: true,
-  timeout: 20000,
-  maximumAge: 0,
+  //enableHighAccuracy: false,
+  timeout: 2000,
+  //maximumAge: 0,
 };
 
 function GeolocationComponent() {

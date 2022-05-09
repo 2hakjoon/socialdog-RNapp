@@ -59,40 +59,42 @@ const App = () => {
   const getAndroidLocationPermission = async () => {
     if (await androidHasPermission()) {
       setLocationPermission(true);
-      return true;
+      return;
     } else {
-      const result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-      if (result === 'granted') {
-        setLocationPermission(true);
-        Alert.alert(
-          '백그라운드 위치정보.',
-          '정상적인 위치정보 수집을 위해, 추가로 위치정보를 항상 허용으로 설정해주세요',
-          [
-            {
-              text: '괜찮아요',
-              onPress: () => {},
-              style: 'cancel',
-            },
-            {
-              text: '설정하기',
-              onPress: () => {
-                Linking.openSettings();
-              },
-            },
-          ],
-        );
-      } else {
-        Alert.alert(
-          '백그라운드 위치정보.',
-          '위치정보 권한이 없으면, 관련 서비스를 이용하실 수 없습니다.',
-          [
-            {
-              text: '확인',
-            },
-          ],
-        );
-      }
+      return;
     }
+    //   const result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+    //   if (result === 'granted') {
+    //     setLocationPermission(true);
+    //     Alert.alert(
+    //       '백그라운드 위치정보.',
+    //       '정상적인 위치정보 수집을 위해, 추가로 위치정보를 항상 허용으로 설정해주세요',
+    //       [
+    //         {
+    //           text: '괜찮아요',
+    //           onPress: () => {},
+    //           style: 'cancel',
+    //         },
+    //         {
+    //           text: '설정하기',
+    //           onPress: () => {
+    //             Linking.openSettings();
+    //           },
+    //         },
+    //       ],
+    //     );
+    //   } else {
+    //     Alert.alert(
+    //       '백그라운드 위치정보.',
+    //       '위치정보 권한이 없으면, 관련 서비스를 이용하실 수 없습니다.',
+    //       [
+    //         {
+    //           text: '확인',
+    //         },
+    //       ],
+    //     );
+    //   }
+    // }
   };
 
   const checkIosLocationPermission = async () => {
