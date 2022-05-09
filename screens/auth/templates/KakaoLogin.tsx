@@ -5,13 +5,21 @@ import {
   login,
 } from '@react-native-seoul/kakao-login';
 import React, {useState} from 'react';
-import {Button, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {storeData} from '../../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from '../../../utils/constants';
 import {
   MKakaoLogin,
   MKakaoLoginVariables,
 } from '../../../__generated__/MKakaoLogin';
+import TextComp from '../../components/TextComp';
 
 interface IKakaoLoginProps {
   setAccessToken: Function;
@@ -43,9 +51,10 @@ const KAKAO_LOGIN = gql`
 `;
 
 function KakaoLogin({setAccessToken}: IKakaoLoginProps) {
-  const [kakaoLogin] = useMutation<MKakaoLogin, MKakaoLoginVariables>(
-    KAKAO_LOGIN,
-  );
+  const [kakaoLogin, {loading: kakaoLoginLoading}] = useMutation<
+    MKakaoLogin,
+    MKakaoLoginVariables
+  >(KAKAO_LOGIN);
 
   const signInWithKakao = async (): Promise<void> => {
     try {
@@ -99,7 +108,25 @@ function KakaoLogin({setAccessToken}: IKakaoLoginProps) {
   return (
     <View style={styles.wrapper}>
       <TouchableOpacity style={styles.button} onPress={signInWithKakao}>
-        <Image source={require('../../../assets/png/kakao_login_button.png')} />
+        {kakaoLoginLoading ? (
+          <View style={styles.loading}>
+            <TextComp
+              text={'로그인 중'}
+              size={18}
+              weight={'600'}
+              color={'white'}
+            />
+            <ActivityIndicator
+              size={'small'}
+              color="white"
+              style={{paddingLeft: 6}}
+            />
+          </View>
+        ) : (
+          <Image
+            source={require('../../../assets/png/kakao_login_button.png')}
+          />
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -113,6 +140,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   button: {},
+  loading: {
+    flex: 1,
+    display: 'flex',
+    height: '100%',
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+  },
 });
 
 export default KakaoLogin;

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Alert, Image, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, Alert, Image, StyleSheet, View} from 'react-native';
 import {getData, storeData} from '../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN} from '../../utils/constants';
 import {useLazyQuery} from '@apollo/client';
@@ -46,26 +46,36 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
 
   return (
     <View style={styles.wrapper}>
-      {meQueryLoading ? (
-        <View>
-          <TextComp text={'로그인 정보 확인중 ...'} />
-        </View>
-      ) : (
-        <>
-          <Image
-            style={styles.image}
-            source={require('../../assets/png/login.png')}
-          />
+      <>
+        <Image
+          style={styles.image}
+          source={require('../../assets/png/login.png')}
+        />
+        {meQueryLoading ? (
+          <View style={styles.loading}>
+            <TextComp
+              text={'로그인 정보 확인 중'}
+              size={18}
+              weight={'600'}
+              color={'white'}
+            />
+            <ActivityIndicator
+              size={'small'}
+              color="white"
+              style={{paddingLeft: 6}}
+            />
+          </View>
+        ) : (
           <KakaoLogin setAccessToken={setAccessToken} />
-          {/* <LoginStack.Navigator>
+        )}
+        {/* <LoginStack.Navigator>
             <LoginStack.Screen name={'AuthSelect'} component={AuthHome} />
             <LoginStack.Screen name={'Login'}>
               {() => <LocalLogin setAccessToken={setAccessToken} />}
             </LoginStack.Screen>
             <LoginStack.Screen name={'Join'} component={LocalJoin} />
           </LoginStack.Navigator> */}
-        </>
-      )}
+      </>
     </View>
   );
 }
@@ -81,6 +91,12 @@ const styles = StyleSheet.create({
     width: '90%',
     height: '10%',
     flex: 6,
+  },
+  loading: {
+    flex: 1,
+    display: 'flex',
+    alignItems: 'flex-start',
+    flexDirection: 'row',
   },
 });
 
