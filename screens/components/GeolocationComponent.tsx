@@ -1,5 +1,5 @@
 import Geolocation, {GeoOptions} from 'react-native-geolocation-service';
-import {useEffect} from 'react';
+import {useEffect, useRef} from 'react';
 import {Alert} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {setGeolocation} from '../../module/geolocation';
@@ -10,13 +10,11 @@ const LOCATION = 'LOCATION';
 export const geolocationCofig: GeoOptions = {
   accuracy: {
     android: 'high',
-    ios: 'best',
+    ios: 'bestForNavigation',
   },
   enableHighAccuracy: true,
   timeout: 2000,
   maximumAge: 0,
-  forceRequestLocation: true,
-  forceLocationManager: true,
 };
 
 function GeolocationComponent() {
@@ -46,8 +44,6 @@ function GeolocationComponent() {
       geolocationCofig,
     );
   };
-
-  
 
   useEffect(() => {
     getData({key: LOCATION}).then(data => {

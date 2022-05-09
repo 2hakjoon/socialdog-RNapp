@@ -10,7 +10,7 @@ import {
 import RNMapView, {Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../module';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import LineCalendar from './components/LineCalendar';
 import {useFocusEffect} from '@react-navigation/core';
 import TextComp from '../components/TextComp';

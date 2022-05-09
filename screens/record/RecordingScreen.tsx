@@ -1,9 +1,9 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Alert, StyleSheet, Text, View} from 'react-native';
 import RNMapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 
 import BackgroundTimer from 'react-native-background-timer';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../module';
@@ -68,6 +68,8 @@ function RecordingScreen() {
     MCreateWalk,
     MCreateWalkVariables
   >(CREATE_WALK);
+
+  const watchId = useRef(-1);
 
   const getLocation = () =>
     Geolocation.getCurrentPosition(
@@ -153,6 +155,31 @@ function RecordingScreen() {
     setRecordingId(intervalId);
   };
 
+  const updateUserLocation = async () => {
+    watchId.current = Geolocation.watchPosition(
+      position => {
+        //setLocation(position);
+        console.log(position);
+      },
+      error => {
+        setLocation(null);
+        console.log(error);
+      },
+      {
+        accuracy: {
+          android: 'high',
+          ios: 'best',
+        },
+        enableHighAccuracy: true,
+        distanceFilter: 0,
+        interval: 4000,
+        fastestInterval: 2000,
+        forceRequestLocation: true,
+        forceLocationManager: true,
+      },
+    );
+  };
+
   useFocusEffect(
     useCallback(() => {
       return () => {
@@ -170,7 +197,7 @@ function RecordingScreen() {
       if (!recording) {
         getLocation();
       }
-
+      // updateUserLocation();
       return () => {
         BackgroundTimer.clearInterval(recordingId);
       };
