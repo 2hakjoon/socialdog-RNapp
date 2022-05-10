@@ -1,8 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Alert, Platform, StyleSheet, Text, View} from 'react-native';
 import RNMapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
-
-import BackgroundTimer from 'react-native-background-timer';
 import Geolocation from 'react-native-geolocation-service';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
@@ -20,7 +18,10 @@ import {
 import Foundation from '../components/Icons/Foundation';
 import {QMe} from '../../__generated__/QMe';
 import ProfilePhoto from '../components/ProfilePhoto';
-import {geolocationCofig} from '../components/GeolocationComponent';
+import {
+  geolocationCofig,
+  hasLocationPermission,
+} from '../components/GeolocationComponent';
 import {ME} from '../../apollo-gqls/auth';
 import VIForegroundService from '@voximplant/react-native-foreground-service';
 import appConfig from '../../app.json';
@@ -72,35 +73,10 @@ function RecordingScreen() {
 
   const watchId = useRef(-1);
 
-  const getLocation = () =>
-    Geolocation.getCurrentPosition(
-      position => {
-        setLocation({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        });
-        if (!pause && recording) {
-          setLocations(prev =>
-            prev.concat([
-              {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-              },
-            ]),
-          );
-        }
-        console.log(position);
-      },
-      error => {
-        console.log(error);
-      },
-      geolocationCofig,
-    );
-
   const startRecording = () => {
-    startForegroundService();
     setRecording(true);
     setStartTime(Date.now());
+    getLocationUpdates();
   };
 
   const toggleRecording = () => {
@@ -147,45 +123,13 @@ function RecordingScreen() {
         {
           text: '끝났어요',
           onPress: () => {
-            stopForegroundService();
+            removeLocationUpdates();
             saveRecordingAndReset();
           },
         },
       ],
     );
   };
-
-  const watchUserLocation = () => {
-    BackgroundTimer.clearInterval(recordingId);
-    const intervalId = BackgroundTimer.setInterval(() => {
-      getLocation();
-    }, 3000);
-    setRecordingId(intervalId);
-  };
-
-  useFocusEffect(
-    useCallback(() => {
-      return () => {
-        BackgroundTimer.clearInterval(recordingId);
-      };
-    }, [recordingId]),
-  );
-
-  useFocusEffect(
-    useCallback(() => {
-      if (recording) {
-        getLocation();
-      }
-      watchUserLocation();
-      if (!recording) {
-        getLocation();
-      }
-      // updateUserLocation();
-      return () => {
-        BackgroundTimer.clearInterval(recordingId);
-      };
-    }, [recording, pause]),
-  );
 
   const startForegroundService = async () => {
     if (Platform.Version >= 26) {
@@ -210,11 +154,96 @@ function RecordingScreen() {
     VIForegroundService.stopService().catch((err: any) => console.log(err));
   }, []);
 
+  const getLocation = () =>
+    Geolocation.getCurrentPosition(
+      position => {
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+        if (!pause && recording) {
+          setLocations(prev =>
+            prev.concat([
+              {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              },
+            ]),
+          );
+        }
+        console.log(position);
+      },
+      error => {
+        console.log(error);
+      },
+      geolocationCofig,
+    );
+
+  const getLocationUpdates = async () => {
+    const hasPermission = await hasLocationPermission();
+
+    if (!hasPermission) {
+      return;
+    }
+
+    if (Platform.OS === 'android') {
+      await startForegroundService();
+    }
+
+    watchId.current = Geolocation.watchPosition(
+      position => {
+        console.log(position);
+      },
+      error => {
+        console.log(error);
+      },
+      {
+        accuracy: {
+          android: 'high',
+          ios: 'best',
+        },
+        enableHighAccuracy: true,
+        distanceFilter: 0,
+        interval: 3000,
+        fastestInterval: 2000,
+        // 아랫줄 코드 적용시 동작안함.
+        // forceRequestLocation: true,
+        // forceLocationManager: true,
+        showLocationDialog: true,
+        useSignificantChanges: false,
+      },
+    );
+    console.log(watchId);
+  };
+
+  const removeLocationUpdates = useCallback(() => {
+    if (watchId.current !== -1) {
+      stopForegroundService();
+      Geolocation.clearWatch(watchId.current);
+      watchId.current = -1;
+    }
+  }, [stopForegroundService]);
+
   useEffect(() => {
     if (geolocaton?.latitude && geolocaton.longitude) {
       setLocation({...geolocaton});
     }
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (recording) {
+        getLocation();
+      }
+      if (!recording) {
+        getLocation();
+      }
+      return () => {
+        stopForegroundService();
+      };
+    }, [recording, pause]),
+  );
+
   return (
     <>
       {location ? (
