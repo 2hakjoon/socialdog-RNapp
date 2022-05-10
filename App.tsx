@@ -15,6 +15,7 @@ import {
   PermissionsAndroid,
   Platform,
   StatusBar,
+  StyleSheet,
   ToastAndroid,
   useColorScheme,
 } from 'react-native';
@@ -214,7 +215,7 @@ const App = () => {
                   options={{
                     headerShown: false,
                     tabBarLabel: '산책',
-                    tabBarStyle: {height: 60, paddingBottom: 10},
+                    tabBarStyle: styles.tabBar,
                     tabBarIcon: ({color, size}) => (
                       <FAIcon name="dog" color={color} size={size} />
                     ),
@@ -227,6 +228,7 @@ const App = () => {
                   options={{
                     headerShown: false,
                     tabBarLabel: '친구들',
+                    tabBarStyle: styles.tabBar,
                     tabBarIcon: ({color, size}) => (
                       <MIcon name="nature-people" color={color} size={size} />
                     ),
@@ -240,5 +242,12 @@ const App = () => {
     </ApolloProvider>
   );
 };
+
+const styles = StyleSheet.create({
+  tabBar: {
+    height: 60,
+    paddingBottom: 10,
+  },
+});
 
 export default App;
