@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Alert, StyleSheet, Text, View} from 'react-native';
+import {Alert, Platform, StyleSheet, Text, View} from 'react-native';
 import RNMapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 
 import BackgroundTimer from 'react-native-background-timer';
@@ -17,12 +17,13 @@ import {
   MCreateWalk,
   MCreateWalkVariables,
 } from '../../__generated__/MCreateWalk';
-import TextComp from '../components/TextComp';
 import Foundation from '../components/Icons/Foundation';
 import {QMe} from '../../__generated__/QMe';
 import ProfilePhoto from '../components/ProfilePhoto';
 import {geolocationCofig} from '../components/GeolocationComponent';
 import {ME} from '../../apollo-gqls/auth';
+import VIForegroundService from '@voximplant/react-native-foreground-service';
+import appConfig from '../../app.json';
 
 interface latlngObj {
   latitude: number;
@@ -97,6 +98,7 @@ function RecordingScreen() {
     );
 
   const startRecording = () => {
+    startForegroundService();
     setRecording(true);
     setStartTime(Date.now());
   };
@@ -142,7 +144,13 @@ function RecordingScreen() {
           },
           style: 'cancel',
         },
-        {text: '끝났어요', onPress: () => saveRecordingAndReset()},
+        {
+          text: '끝났어요',
+          onPress: () => {
+            stopForegroundService();
+            saveRecordingAndReset();
+          },
+        },
       ],
     );
   };
@@ -153,31 +161,6 @@ function RecordingScreen() {
       getLocation();
     }, 3000);
     setRecordingId(intervalId);
-  };
-
-  const updateUserLocation = async () => {
-    watchId.current = Geolocation.watchPosition(
-      position => {
-        //setLocation(position);
-        console.log(position);
-      },
-      error => {
-        setLocation(null);
-        console.log(error);
-      },
-      {
-        accuracy: {
-          android: 'high',
-          ios: 'best',
-        },
-        enableHighAccuracy: true,
-        distanceFilter: 0,
-        interval: 4000,
-        fastestInterval: 2000,
-        forceRequestLocation: true,
-        forceLocationManager: true,
-      },
-    );
   };
 
   useFocusEffect(
@@ -204,12 +187,28 @@ function RecordingScreen() {
     }, [recording, pause]),
   );
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     console.log(locations.length);
-  //     console.log(locations);
-  //   }, [locations]),
-  // );
+  const startForegroundService = async () => {
+    if (Platform.Version >= 26) {
+      await VIForegroundService.createNotificationChannel({
+        id: 'locationChannel',
+        name: 'Location Tracking Channel',
+        description: 'Tracks location of user',
+        enableVibration: false,
+      });
+    }
+
+    return VIForegroundService.startService({
+      channelId: 'locationChannel',
+      id: 420,
+      title: appConfig.displayName,
+      text: '산책 기록중입니다.',
+      icon: 'ic_launcher',
+    });
+  };
+
+  const stopForegroundService = useCallback(() => {
+    VIForegroundService.stopService().catch((err: any) => console.log(err));
+  }, []);
 
   useEffect(() => {
     if (geolocaton?.latitude && geolocaton.longitude) {

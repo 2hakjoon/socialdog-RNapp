@@ -1,1 +1,1 @@
-//declare module '@voximplant/react-native-foreground-service';
+declare module '@voximplant/react-native-foreground-service';
