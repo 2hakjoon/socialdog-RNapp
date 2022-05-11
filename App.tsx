@@ -29,6 +29,7 @@ import AuthScreen from './screens/auth/AuthScreen';
 import SocialScreen from './screens/social/SocialScreen';
 import {client} from './apollo-setup';
 import WalkRecordsScreen from './screens/walk-records/WalkRecordsScreen';
+import {colors} from './utils/colors';
 
 const RootTab = createBottomTabNavigator<RootTabNavigator>();
 const WalkStack = createNativeStackNavigator<WalkStackList>();
@@ -76,7 +77,10 @@ const App = () => {
     <ApolloProvider client={client}>
       <Provider store={store}>
         <SafeAreaView style={{height: '100%'}}>
-          <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+          <StatusBar
+            backgroundColor={!loginState ? colors.PBlue : 'white'}
+            barStyle={!loginState ? 'light-content' : 'dark-content'}
+          />
 
           <GeolocationComponent />
 
