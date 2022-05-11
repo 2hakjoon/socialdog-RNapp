@@ -144,7 +144,7 @@ function WalkRecordsScreen() {
   const flatListRef = useRef<FlatList>(null);
 
   const flatListScrollTop = () => {
-    flatListRef.current?.scrollToOffset({offset: 0});
+    flatListRef.current?.scrollToOffset({offset: 0, animated: false});
   };
 
   const walkItems = ({item}: any) => {
