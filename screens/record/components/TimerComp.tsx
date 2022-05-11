@@ -21,7 +21,7 @@ function TimerComp({recording, timer, setTimer, pause}: ITimerCompProps) {
   };
 
   const stopBackgroundTimer = () => {
-    console.log('timerIntervalId:', timerIntervalId);
+    // console.log('timerIntervalId:', timerIntervalId);
     BackgroundTimer.clearInterval(timerIntervalId);
   };
 
@@ -35,7 +35,7 @@ function TimerComp({recording, timer, setTimer, pause}: ITimerCompProps) {
 
   useFocusEffect(
     useCallback(() => {
-      console.log('recording:', recording, 'pause:', pause);
+      // console.log('recording:', recording, 'pause:', pause);
       if (recording && !pause) {
         startBackgroundTimer();
       } else if (recording && pause) {

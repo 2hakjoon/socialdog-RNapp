@@ -9,7 +9,6 @@ import {
   MEditProfile,
   MEditProfileVariables,
 } from '../../__generated__/MEditProfile';
-import {ME} from '../auth/AuthScreen';
 import BasicButton from '../components/BasicButton';
 import FormInputBox from '../components/Input/FormInputBox';
 import ProfilePhoto from '../components/ProfilePhoto';
@@ -19,6 +18,7 @@ import {
   MCreatePreSignedUrls,
   MCreatePreSignedUrlsVariables,
 } from '../../__generated__/MCreatePreSignedUrls';
+import {ME} from '../../apollo-gqls/auth';
 
 const EDIT_PROFILE = gql`
   mutation MEditProfile(
