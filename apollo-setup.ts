@@ -10,7 +10,12 @@ import {
 } from '@apollo/client';
 import {onError} from '@apollo/client/link/error';
 import {createUploadLink} from 'apollo-upload-client';
-import {getAuthTokens, getData, storeData} from './utils/asyncStorage';
+import {
+  deleteTokens,
+  getAuthTokens,
+  getData,
+  storeData,
+} from './utils/asyncStorage';
 import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from './utils/constants';
 import Config from 'react-native-config';
 import {
@@ -18,6 +23,7 @@ import {
   MReissueAccessTokenVariables,
 } from './__generated__/MReissueAccessToken';
 import {REISSUE_ACCESS_TOKEN} from './apollo-gqls/auth';
+import {Alert} from 'react-native';
 
 export const mVUserAccessToken = makeVar('');
 export const mVUserRefreshToken = makeVar('');
@@ -78,6 +84,11 @@ const errorLink = onError(
             }
             // refreshToken이 만료되었다면, 캐시를 전부 지우고, 로그인 해제
             if (data.data?.reissueAccessToken.isRefreshTokenExpired) {
+              Alert.alert(
+                '다시 로그인 해주시요.',
+                '보안을 위해서 다시 로그인해주세요.',
+              );
+              deleteTokens();
               client.resetStore();
             }
           }),
@@ -107,6 +118,8 @@ const errorLink = onError(
     }
   },
 );
+
+export const mVLoginState = makeVar(false);
 
 export const client = new ApolloClient({
   cache: new InMemoryCache(),

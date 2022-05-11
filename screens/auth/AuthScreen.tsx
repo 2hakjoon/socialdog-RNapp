@@ -8,7 +8,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AuthStackList} from '../../routes';
 import KakaoLogin from './templates/KakaoLogin';
 import {QMe} from '../../__generated__/QMe';
-import {mVUserAccessToken} from '../../apollo-setup';
+import {mVLoginState, mVUserAccessToken} from '../../apollo-setup';
 import {colors} from '../../utils/colors';
 import {ME} from '../../apollo-gqls/auth';
 
@@ -18,7 +18,7 @@ interface IAuthScreenProps {
 
 const LoginStack = createNativeStackNavigator<AuthStackList>();
 
-function AuthScreen({setLoginState}: IAuthScreenProps) {
+function AuthScreen() {
   const [accessToken, setAccessToken] = useState<string>();
 
   const [meQuery, {loading: meQueryLoading}] = useLazyQuery<QMe>(ME, {
@@ -33,7 +33,7 @@ function AuthScreen({setLoginState}: IAuthScreenProps) {
           const user = data.data?.me.data;
           // console.log(user);
           if (user) {
-            setLoginState(true);
+            mVLoginState(true);
           }
         });
       });

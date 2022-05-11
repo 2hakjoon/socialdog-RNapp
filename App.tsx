@@ -24,10 +24,10 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 import GeolocationComponent from './screens/components/GeolocationComponent';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import WeatherScreen from './screens/weather/WeatherScreen';
-import {ApolloProvider} from '@apollo/client';
+import {ApolloProvider, useReactiveVar} from '@apollo/client';
 import AuthScreen from './screens/auth/AuthScreen';
 import SocialScreen from './screens/social/SocialScreen';
-import {client} from './apollo-setup';
+import {client, mVLoginState} from './apollo-setup';
 import WalkRecordsScreen from './screens/walk-records/WalkRecordsScreen';
 import {colors} from './utils/colors';
 
@@ -37,9 +37,7 @@ const SnsStack = createNativeStackNavigator<SnsStackList>();
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-  const [loginState, setLoginState] = useState(false);
-
+  const loginState = useReactiveVar(mVLoginState);
   function Walk() {
     return (
       <WalkStack.Navigator>
@@ -86,7 +84,7 @@ const App = () => {
 
           <NavigationContainer>
             {!loginState ? (
-              <AuthScreen setLoginState={setLoginState} />
+              <AuthScreen />
             ) : (
               <RootTab.Navigator>
                 <RootTab.Screen
