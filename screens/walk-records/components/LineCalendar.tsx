@@ -49,8 +49,8 @@ function LineCalendar({
     <View style={styles.wrapper}>
       <>
         <TextComp
-          text={'최근 7일간의 기록'}
-          size={30}
+          text={'최근 일주일 기록'}
+          size={22}
           color={colors.PBlack}
           style={{paddingLeft: 10, paddingBottom: 10}}
         />
@@ -79,7 +79,7 @@ function LineCalendar({
                   size={20}
                 />
               </View>
-              {checkWalkDate(day) && <View style={styles.roundDot}></View>}
+              {checkWalkDate(day) && <View style={styles.roundDot} />}
             </TouchableOpacity>
           ))}
         </View>
@@ -91,7 +91,7 @@ function LineCalendar({
 const styles = StyleSheet.create({
   wrapper: {
     flex: 2,
-    backgroundColor: colors.PWhite,
+    backgroundColor: 'white',
     paddingTop: 10,
   },
   calendarContainer: {

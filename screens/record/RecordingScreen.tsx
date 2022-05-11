@@ -137,6 +137,7 @@ function RecordingScreen() {
         name: 'Location Tracking Channel',
         description: 'Tracks location of user',
         enableVibration: false,
+        // importance: 5,
       });
     }
 
@@ -146,6 +147,7 @@ function RecordingScreen() {
       title: appConfig.displayName,
       text: '산책 기록중입니다.',
       icon: 'ic_launcher',
+      // priority: 2,
     });
   };
 
@@ -170,7 +172,7 @@ function RecordingScreen() {
             ]),
           );
         }
-        console.log(position);
+        // console.log(position);
       },
       error => {
         console.log(error);
@@ -215,7 +217,7 @@ function RecordingScreen() {
         },
         enableHighAccuracy: true,
         distanceFilter: 0,
-        interval: 3000,
+        interval: 4000,
         fastestInterval: 2000,
         // 아랫줄 코드 적용시 동작안함.
         // forceRequestLocation: true,
@@ -224,7 +226,7 @@ function RecordingScreen() {
         useSignificantChanges: false,
       },
     );
-    console.log(watchId);
+    // console.log(watchId);
   };
 
   const removeLocationUpdates = useCallback(() => {
@@ -253,6 +255,15 @@ function RecordingScreen() {
         stopForegroundService();
       };
     }, [recording, pause]),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      if (timer > 10800) {
+        saveRecordingAndReset();
+        Alert.alert('산책 종료', '최대 산책가능시간은 3시간입니다 :(');
+      }
+    }, [timer]),
   );
 
   return (

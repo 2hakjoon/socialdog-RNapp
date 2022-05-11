@@ -54,7 +54,6 @@ function WalkRecordsScreen() {
   );
 
   const makeRecordsToDayes = (walkRecords: QGetWalks) => {
-    // console.log(walkRecords);
     let daysObj: RecordData = {};
     if (walkRecords.getWalks.data) {
       walkRecords.getWalks.data.forEach(record => {
@@ -78,7 +77,6 @@ function WalkRecordsScreen() {
   const {data, loading, error} = useQuery<QGetWalks>(GET_WALK_RECORDS, {
     onCompleted: makeRecordsToDayes,
     fetchPolicy: 'network-only',
-    nextFetchPolicy: 'cache-first',
   });
 
   const [getWalkRecord] = useLazyQuery<QGetWalk, QGetWalkVariables>(
@@ -105,9 +103,9 @@ function WalkRecordsScreen() {
       geolocationCofig,
     );
 
-  //firbase의 키에 담긴 내용을 포멧팅해서 산책시작시간, 산책시간이 담긴 문자열로 리턴함
+  //키에 담긴 내용을 포멧팅해서 산책시작시간, 산책시간이 담긴 문자열로 리턴함
   const formatRcordKeyToTime = (startTime: number, walkingtime: number) => {
-    console.log(startTime);
+    // console.log(startTime);
     const startHour = new Date(startTime).getHours();
     const walkingTime = walkingtime;
     return `${formatAmPmHour(startHour)} ${formatWalkingTime(walkingTime)}`;
@@ -116,7 +114,7 @@ function WalkRecordsScreen() {
   //날짜를 선택할때마다 해당 날짜의 산책데이터 리스트를 recordList에 넣어줌.
   useEffect(() => {
     if (selectedDate.trim()) {
-      console.log(recordDays, selectedDate);
+      // console.log(recordDays, selectedDate);
       setRecordList([...recordDays[selectedDate]]);
     }
   }, [selectedDate]);
@@ -139,7 +137,7 @@ function WalkRecordsScreen() {
     }
   }, []);
 
-  console.log(recordDays);
+  // console.log(recordDays);
 
   return (
     <>
@@ -213,6 +211,7 @@ const styles = StyleSheet.create({
     flex: 3,
   },
   recordListContainer: {
+    backgroundColor: 'white',
     flex: 1,
   },
   recordBtn: {
