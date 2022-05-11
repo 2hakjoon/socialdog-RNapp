@@ -55,7 +55,6 @@ const CREATE_WALK = gql`
 function RecordingScreen() {
   const [location, setLocation] = useState<latlngObj | null>(null);
   const [locations, setLocations] = useState<latlngObj[]>([]);
-  const [recordingId, setRecordingId] = useState(null);
   const [recording, setRecording] = useState(false);
   const [pause, setPause] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<number>();
@@ -192,7 +191,19 @@ function RecordingScreen() {
 
     watchId.current = Geolocation.watchPosition(
       position => {
-        console.log(position);
+        setLocations(prev =>
+          prev.concat([
+            {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            },
+          ]),
+        );
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+        // console.log(position);
       },
       error => {
         console.log(error);
