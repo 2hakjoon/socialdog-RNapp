@@ -1,6 +1,7 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Alert,
+  FlatList,
   ScrollView,
   StyleSheet,
   Text,
@@ -115,6 +116,7 @@ function WalkRecordsScreen() {
   useEffect(() => {
     if (selectedDate.trim()) {
       // console.log(recordDays, selectedDate);
+      flatListScrollTop();
       setRecordList([...recordDays[selectedDate]]);
     }
   }, [selectedDate]);
@@ -138,6 +140,30 @@ function WalkRecordsScreen() {
   }, []);
 
   // console.log(recordDays);
+
+  const flatListRef = useRef<FlatList>(null);
+
+  const flatListScrollTop = () => {
+    flatListRef.current?.scrollToOffset({offset: 0});
+  };
+
+  const walkItems = ({item}: any) => {
+    const recordObj = item as QGetWalks_getWalks_data;
+    return (
+      <TouchableOpacity
+        key={recordObj.id}
+        onPress={() => setSelectedRecord(recordObj.id)}
+        style={styles.recordBtn}>
+        <TextComp
+          text={formatRcordKeyToTime(
+            recordObj.startTime,
+            recordObj.walkingTime,
+          )}
+          color={colors.PWhite}
+        />
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <>
@@ -163,7 +189,7 @@ function WalkRecordsScreen() {
             coordinates={locations}
             strokeColor={colors.PBlue} // fallback for when `strokeColors` is not supported by the map-provider
             strokeWidth={5}
-            lineJoin={'round'}
+            lineJoin={'miter'}
             lineCap={'round'}
           />
         </RNMapView>
@@ -179,24 +205,15 @@ function WalkRecordsScreen() {
               setSelectedDate={setSelectedDate}
             />
           )}
-          <ScrollView style={styles.recordListContainer} horizontal>
-            {recordList.map(recordObj => {
-              return (
-                <TouchableOpacity
-                  key={recordObj.id}
-                  onPress={() => setSelectedRecord(recordObj.id)}
-                  style={styles.recordBtn}>
-                  <TextComp
-                    text={formatRcordKeyToTime(
-                      recordObj.startTime,
-                      recordObj.walkingTime,
-                    )}
-                    color={colors.PWhite}
-                  />
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
+          <FlatList
+            ref={flatListRef}
+            data={recordList}
+            renderItem={walkItems}
+            keyExtractor={item => item.id}
+            style={styles.recordListContainer}
+            horizontal
+            refreshing
+          />
         </>
       </View>
     </>
