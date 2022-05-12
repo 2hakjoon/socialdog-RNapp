@@ -25,6 +25,7 @@ import {
 import {ME} from '../../apollo-gqls/auth';
 import VIForegroundService from '@voximplant/react-native-foreground-service';
 import appConfig from '../../app.json';
+import {gpsFilter} from '../../App';
 
 interface latlngObj {
   latitude: number;
@@ -101,6 +102,7 @@ function RecordingScreen() {
       setPause(false);
       setTimer(0);
       setLocations([]);
+      gpsFilter.clearFilter();
     } catch (e) {
       console.log(e);
     }
@@ -193,17 +195,23 @@ function RecordingScreen() {
 
     watchId.current = Geolocation.watchPosition(
       position => {
-        setLocations(prev =>
-          prev.concat([
-            {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-            },
-          ]),
-        );
+        const [latitude, longitude] = gpsFilter.filterNewData([
+          position.coords.latitude,
+          position.coords.longitude,
+        ]);
+        if (!pause && recording) {
+          setLocations(prev =>
+            prev.concat([
+              {
+                latitude,
+                longitude,
+              },
+            ]),
+          );
+        }
         setLocation({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
+          latitude,
+          longitude,
         });
         // console.log(position);
       },

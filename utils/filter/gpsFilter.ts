@@ -1,10 +1,15 @@
-export class gpsFilter {
+export class GpsFilter {
   protected round: number;
   protected prevDataArr: Array<Array<number>>;
   protected predictVal: Array<number>;
 
   constructor(round: number) {
     this.round = round;
+    this.prevDataArr = [];
+    this.predictVal = [];
+  }
+
+  clearFilter() {
     this.prevDataArr = [];
     this.predictVal = [];
   }
