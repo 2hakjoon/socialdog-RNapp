@@ -27,6 +27,7 @@ import {Alert} from 'react-native';
 
 export const mVUserAccessToken = makeVar('');
 export const mVUserRefreshToken = makeVar('');
+export const mVLoginState = makeVar(false);
 
 let ApolloLinkAccessToken = '';
 let ApolloLinkRefreshToken = '';
@@ -118,8 +119,6 @@ const errorLink = onError(
     }
   },
 );
-
-export const mVLoginState = makeVar(false);
 
 export const client = new ApolloClient({
   cache: new InMemoryCache(),

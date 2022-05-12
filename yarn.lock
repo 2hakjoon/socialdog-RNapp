@@ -1128,6 +1128,18 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@rayyamhk/complex@1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@rayyamhk/complex/-/complex-1.0.10.tgz#6daa9c1bf4b6a86b2e1414a6aa8a1f32ef6a8ace"
+  integrity sha512-0HGH6SDcOd34zQVO97pfnIU6ul/qu0WkShZdupLLS3e5IEyNSkaX7mgVsDcWLpFNxLRs5RL2wS7iIYbsEp9MZg==
+
+"@rayyamhk/matrix@^1.0.5":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@rayyamhk/matrix/-/matrix-1.0.8.tgz#207649294a59bedf302fc714cd393abfe67e9bf9"
+  integrity sha512-EIvEnmcL4q5FMb/g20/FxoZnewkbiiSY4S0+TWu+jkAKF4E/p8ocUN3CET0AXUVJwaA7t8drtBwGNFE8qAgAxg==
+  dependencies:
+    "@rayyamhk/complex" "1.0.10"
+
 "@react-native-async-storage/async-storage@^1.15.17":
   version "1.15.17"
   resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.15.17.tgz#0dae263a52e476ffce871086f1fef5b8e44708eb"
@@ -5660,6 +5672,14 @@ jwt-decode@^3.1.2:
   resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-3.1.2.tgz#3fb319f3675a2df0c2895c8f5e9fa4b67b04ed59"
   integrity sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==
 
+kalman-filter@^1.9.2:
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/kalman-filter/-/kalman-filter-1.9.2.tgz#a1e6f312c1e67f06257868fbd83fe41ca858e029"
+  integrity sha512-/e9ybLw8tP2xhUE9Ck10wRseZngOu1XZVaj7PXOWJkW3DU+zShniviT3dsMdLFItm/MM7bINCEyPMffDVcuCPA==
+  dependencies:
+    "@rayyamhk/matrix" "^1.0.5"
+    matrix-inverse "^2.0.0"
+
 keyv@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/keyv/-/keyv-3.1.0.tgz#ecc228486f69991e49e9476485a5be1e8fc5c4d9"
@@ -5923,6 +5943,11 @@ matcher@^3.0.0:
   integrity sha512-OkeDaAZ/bQCxeFAozM55PKcKU0yJMPGifLwV4Qgjitu+5MoAfSQN4lsLJeXZ1b8w0x+/Emda6MZgXS1jvsapng==
   dependencies:
     escape-string-regexp "^4.0.0"
+
+matrix-inverse@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/matrix-inverse/-/matrix-inverse-2.0.0.tgz#2e8db33f8b977bd5e3b03f31d2fae89c2278203b"
+  integrity sha512-iUZfjmnAEDah54qLlj63PYFnZvcCwW+mhfYgf3KrtDn1ruyVE5vFrEeJ77RfsHaqMN/L3ZLnP+5/O2E7bgKEvQ==
 
 merge-options@^3.0.4:
   version "3.0.4"
