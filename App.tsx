@@ -30,11 +30,14 @@ import SocialScreen from './screens/social/SocialScreen';
 import {client, mVLoginState} from './apollo-setup';
 import WalkRecordsScreen from './screens/walk-records/WalkRecordsScreen';
 import {colors} from './utils/colors';
+import {gpsFilter} from './utils/filter/gpsFilter';
 
 const RootTab = createBottomTabNavigator<RootTabNavigator>();
 const WalkStack = createNativeStackNavigator<WalkStackList>();
 const SnsStack = createNativeStackNavigator<SnsStackList>();
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
+
+const myFilter = new gpsFilter(30);
 
 const App = () => {
   const loginState = useReactiveVar(mVLoginState);
