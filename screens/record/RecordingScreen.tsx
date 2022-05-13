@@ -76,7 +76,6 @@ function RecordingScreen() {
   const startRecording = () => {
     setRecording(true);
     setStartTime(Date.now());
-    getLocationUpdates();
   };
 
   const toggleRecording = () => {
@@ -154,7 +153,9 @@ function RecordingScreen() {
   };
 
   const stopForegroundService = useCallback(() => {
-    VIForegroundService.stopService().catch((err: any) => console.log(err));
+    if (Platform.OS === 'android') {
+      VIForegroundService.stopService().catch((err: any) => console.log(err));
+    }
   }, []);
 
   const getLocation = () =>
@@ -199,14 +200,16 @@ function RecordingScreen() {
           position.coords.latitude,
           position.coords.longitude,
         ]);
-        setLocations(prev =>
-          prev.concat([
-            {
-              latitude,
-              longitude,
-            },
-          ]),
-        );
+        if (!pause && recording) {
+          setLocations(prev =>
+            prev.concat([
+              {
+                latitude,
+                longitude,
+              },
+            ]),
+          );
+        }
         setLocation({
           latitude,
           longitude,
@@ -254,6 +257,7 @@ function RecordingScreen() {
       if (recording) {
         getLocation();
       }
+      getLocationUpdates();
       if (!recording) {
         getLocation();
       }
