@@ -175,7 +175,7 @@ function RecordingScreen() {
             ]),
           );
         }
-        // console.log(position);
+        console.log(position);
       },
       error => {
         console.log(error);
@@ -193,6 +193,8 @@ function RecordingScreen() {
     if (Platform.OS === 'android') {
       await startForegroundService();
     }
+
+    Geolocation.clearWatch(watchId.current);
 
     watchId.current = Geolocation.watchPosition(
       position => {
