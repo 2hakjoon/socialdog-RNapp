@@ -76,6 +76,7 @@ function RecordingScreen() {
   const startRecording = () => {
     setRecording(true);
     setStartTime(Date.now());
+    gpsFilter.clearFilter();
   };
 
   const toggleRecording = () => {
