@@ -203,14 +203,25 @@ function RecordingScreen() {
           position.coords.longitude,
         ]);
         if (!pause && recording) {
-          setLocations(prev =>
-            prev.concat([
-              {
-                latitude,
-                longitude,
-              },
-            ]),
-          );
+          setLocations(prev => {
+            const {latitude: prevLat, longitude: prevLong} =
+              prev[prev.length - 1];
+            //4미터 이상 움직였을때만 기록.
+            //소수점 5번째 자리는 1m
+            if (
+              Math.abs(latitude - prevLat) > 0.00004 ||
+              Math.abs(longitude - prevLong) > 0.00004
+            ) {
+              console.log('recoreded');
+              return prev.concat([
+                {
+                  latitude,
+                  longitude,
+                },
+              ]);
+            }
+            return prev;
+          });
         }
         setLocation({
           latitude,
