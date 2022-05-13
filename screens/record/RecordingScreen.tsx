@@ -199,16 +199,14 @@ function RecordingScreen() {
           position.coords.latitude,
           position.coords.longitude,
         ]);
-        if (!pause && recording) {
-          setLocations(prev =>
-            prev.concat([
-              {
-                latitude,
-                longitude,
-              },
-            ]),
-          );
-        }
+        setLocations(prev =>
+          prev.concat([
+            {
+              latitude,
+              longitude,
+            },
+          ]),
+        );
         setLocation({
           latitude,
           longitude,

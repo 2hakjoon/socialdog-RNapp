@@ -1,12 +1,23 @@
+type prevWeightType = 0.1 | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 | 0.7 | 0.8 | 0.9;
+
+export interface IGpsFilter {
+  round: number;
+  prevWeight?: prevWeightType;
+}
+
 export class GpsFilter {
   protected round: number;
   protected prevDataArr: Array<Array<number>>;
   protected predictVal: Array<number>;
+  protected prevWeight: prevWeightType;
+  protected currWeight: number;
 
-  constructor(round: number) {
-    this.round = round;
+  constructor(args: IGpsFilter) {
+    this.round = args.round;
     this.prevDataArr = [];
     this.predictVal = [];
+    this.prevWeight = args.prevWeight || 0.5;
+    this.currWeight = +(1 - this.prevWeight).toFixed(1);
   }
 
   clearFilter() {
@@ -15,11 +26,6 @@ export class GpsFilter {
   }
 
   filterNewData(data: [number, number]) {
-    // console.log('=================================', 'data', data);
-    // console.log('data', data);
-    // console.log("prevDataArr",this.prevDataArr)
-    // console.log('predictVal', this.predictVal);
-
     if (this.prevDataArr.length < 1) {
       this.prevDataArr.push(data);
       return data;
