@@ -9,7 +9,13 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {Platform, StatusBar, StyleSheet, useColorScheme} from 'react-native';
+import {
+  Platform,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  useColorScheme,
+} from 'react-native';
 import RecordingScreen from './screens/record/RecordingScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -31,6 +37,22 @@ import {client, mVLoginState} from './apollo-setup';
 import WalkRecordsScreen from './screens/walk-records/WalkRecordsScreen';
 import {colors} from './utils/colors';
 import {GpsFilter} from './utils/filter/gpsFilter';
+import IconWeatherClearDay from './screens/weather/components/IconWeatherClearDay';
+import IconWeatherClearNight from './screens/weather/components/IconWeatherClearNight';
+import IconWeatherCloudy from './screens/weather/components/IconWeatherCloudy';
+import IconWeatherFog from './screens/weather/components/IconWeatherFog';
+import IconWeatherHeavyRain from './screens/weather/components/IconWeatherHeavyRain';
+import IconWeatherHeavySleet from './screens/weather/components/IconWeatherHeavySleet';
+import IconWeatherHeavySnow from './screens/weather/components/IconWeatherHeavySnow';
+import IconWeatherOvercast from './screens/weather/components/IconWeatherOvercast';
+import IconWeatherPartlyCloudyDay from './screens/weather/components/IconWeatherPartlyCloudyDay';
+import IconWeatherPartlyCloudyNight from './screens/weather/components/IconWeatherPartlyCloudyNight';
+import IconWeatherRain from './screens/weather/components/IconWeatherRain';
+import IconWeatherSleet from './screens/weather/components/IconWeatherSleet';
+import IconWeatherSnow from './screens/weather/components/IconWeatherSnow';
+import IconWeatherThunderRain from './screens/weather/components/IconWeatherThunderRain';
+import IconWeatherThunderSnow from './screens/weather/components/IconWeatherThunderSnow';
+import IconWeatherWindy from './screens/weather/components/IconWeatherWindy';
 
 const RootTab = createBottomTabNavigator<RootTabNavigator>();
 const WalkStack = createNativeStackNavigator<WalkStackList>();

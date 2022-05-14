@@ -13,6 +13,7 @@ module.exports = {
         '@typescript-eslint/no-unused-vars': 0,
         'react-native/no-inline-styles': 0,
         '@typescript-eslint/no-shadow': 0,
+        'eslint-disable react/react-in-jsx-scope': 0,
       },
     },
   ],
