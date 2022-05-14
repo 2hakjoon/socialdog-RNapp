@@ -33,6 +33,7 @@
     "@voximplant/react-native-foreground-service": "2.0.0",
     "apollo-upload-client": "^17.0.0",
     "babel-preset-react-native": "2.1.0",
+    "dayjs": "^1.11.2",
     "graphql": "^16.3.0",
     "jwt-decode": "^3.1.2",
     "kalman-filter": "^1.9.2",

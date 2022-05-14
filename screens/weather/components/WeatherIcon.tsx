@@ -1,8 +1,15 @@
+import dayjs from 'dayjs';
 import React from 'react';
-import IOIcon from 'react-native-vector-icons/Ionicons';
-import FeIcon from 'react-native-vector-icons/Feather';
-import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import FAIcon from 'react-native-vector-icons/FontAwesome5';
+import IconWeatherClearDay from './IconWeatherClearDay';
+import IconWeatherClearNight from './IconWeatherClearNight';
+import IconWeatherCloudy from './IconWeatherCloudy';
+import IconWeatherFog from './IconWeatherFog';
+import IconWeatherHeavyRain from './IconWeatherHeavyRain';
+import IconWeatherOvercast from './IconWeatherOvercast';
+import IconWeatherRain from './IconWeatherRain';
+import IconWeatherSnow from './IconWeatherSnow';
+import IconWeatherThunderRain from './IconWeatherThunderRain';
+import IconWeatherWindy from './IconWeatherWindy';
 
 interface IWeather {
   weather: string;
@@ -10,7 +17,12 @@ interface IWeather {
 }
 
 function WeatherIcon({weather, size = 150}: IWeather) {
-  const Atmosphere = [
+  const isDay = () => {
+    const nowHour = dayjs().hour();
+    return nowHour > 6 && nowHour < 18;
+  };
+
+  const atmosphere = [
     'Mist',
     'Smoke',
     'Haze',
@@ -19,21 +31,23 @@ function WeatherIcon({weather, size = 150}: IWeather) {
     'Sand',
     'Dust',
     'Ash',
-    'Squall',
-    'Tornado',
   ];
+  const windy = ['Squall', 'Tornado'];
 
   return (
     <>
-      {weather === 'Thunderstorm' && (
-        <IOIcon size={size} name="thunderstorm-outline" />
+      {weather === 'Thunderstorm' && <IconWeatherThunderRain />}
+      {weather === 'Drizzle' && <IconWeatherRain />}
+      {weather === 'Rain' && <IconWeatherHeavyRain />}
+      {weather === 'Snow' && <IconWeatherSnow />}
+      {atmosphere.includes(weather) && <IconWeatherFog />}
+      {weather === 'Clear' && (
+        <>{isDay() ? <IconWeatherClearDay /> : <IconWeatherClearNight />}</>
       )}
-      {weather === 'Drizzle' && <IOIcon size={size} name="rainy-outline" />}
-      {weather === 'Rain' && <FeIcon size={size} name="cloud-drizzle" />}
-      {weather === 'Snow' && <MCIcon size={size} name="weather-snowy-heavy" />}
-      {Atmosphere.includes(weather) && <FAIcon size={size} name="smog" />}
-      {weather === 'Clear' && <IOIcon size={size} name="sunny-outline" />}
-      {weather === 'Clouds' && <IOIcon size={size} name="cloudy-outline" />}
+      {weather === 'Clouds' && (
+        <>{isDay() ? <IconWeatherCloudy /> : <IconWeatherOvercast />}</>
+      )}
+      {windy.includes(weather) && <IconWeatherWindy />}
     </>
   );
 }
