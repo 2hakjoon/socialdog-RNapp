@@ -9,6 +9,7 @@ import IconWeatherOvercast from './IconWeatherOvercast';
 import IconWeatherRain from './IconWeatherRain';
 import IconWeatherSnow from './IconWeatherSnow';
 import IconWeatherThunderRain from './IconWeatherThunderRain';
+import IconWeatherThunderSnow from './IconWeatherThunderSnow';
 import IconWeatherWindy from './IconWeatherWindy';
 
 interface IWeather {
@@ -20,6 +21,11 @@ function WeatherIcon({weather, size = 150}: IWeather) {
   const isDay = () => {
     const nowHour = dayjs().hour();
     return nowHour > 6 && nowHour < 18;
+  };
+
+  const isSummer = () => {
+    const nowMonth = dayjs().month();
+    return nowMonth > 4 && nowMonth < 10;
   };
 
   const atmosphere = [
@@ -36,7 +42,11 @@ function WeatherIcon({weather, size = 150}: IWeather) {
 
   return (
     <>
-      {weather === 'Thunderstorm' && <IconWeatherThunderRain />}
+      {weather === 'Thunderstorm' && (
+        <>
+          {isSummer() ? <IconWeatherThunderRain /> : <IconWeatherThunderSnow />}
+        </>
+      )}
       {weather === 'Drizzle' && <IconWeatherRain />}
       {weather === 'Rain' && <IconWeatherHeavyRain />}
       {weather === 'Snow' && <IconWeatherSnow />}
