@@ -1,9 +1,10 @@
 import React from 'react';
 import Svg, {Path} from 'react-native-svg';
+import {IWeatherIconProps} from '../template/WeatherIcon';
 
-function IconWeatherPartlyCloudyDay() {
+function IconWeatherPartlyCloudyDay({size}: IWeatherIconProps) {
   return (
-    <Svg width="200" height="180" viewBox="0 0 200 180" fill="none">
+    <Svg width={size} height={size} viewBox="0 0 200 180" fill="none">
       <Path
         fill-rule="evenodd"
         clip-rule="evenodd"

@@ -1,9 +1,10 @@
 import React from 'react';
 import Svg, {Path} from 'react-native-svg';
+import {IWeatherIconProps} from '../template/WeatherIcon';
 
-function IconWeatherHeavyRain() {
+function IconWeatherHeavyRain({size}: IWeatherIconProps) {
   return (
-    <Svg width="240" height="240" viewBox="0 0 240 240" fill="none">
+    <Svg width={size} height={size} viewBox="0 0 240 240" fill="none">
       <Path
         d="M194.969 98.1333C194.99 97.5017 195 96.8674 195 96.2307C195 65.1647 170.152 39.9807 139.5 39.9807C115.185 39.9807 94.5218 55.8284 87.0176 77.8886C81.6283 75.0382 75.4999 73.4266 69 73.4266C47.4609 73.4266 30 91.1235 30 112.954C30 134.784 47.4609 152.481 69 152.481L139.5 152.481C139.525 152.481 139.55 152.481 139.575 152.481H181.5C197.24 152.481 210 139.548 210 123.596C210 112.58 203.917 103.005 194.969 98.1333Z"
         fill="white"

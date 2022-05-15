@@ -16,6 +16,9 @@ interface IWeather {
   weather: string;
   size?: number;
 }
+export interface IWeatherIconProps {
+  size: number;
+}
 
 function WeatherIcon({weather, size = 150}: IWeather) {
   const isDay = () => {
@@ -44,20 +47,36 @@ function WeatherIcon({weather, size = 150}: IWeather) {
     <>
       {weather === 'Thunderstorm' && (
         <>
-          {isSummer() ? <IconWeatherThunderRain /> : <IconWeatherThunderSnow />}
+          {isSummer() ? (
+            <IconWeatherThunderRain size={size} />
+          ) : (
+            <IconWeatherThunderSnow size={size} />
+          )}
         </>
       )}
-      {weather === 'Drizzle' && <IconWeatherRain />}
-      {weather === 'Rain' && <IconWeatherHeavyRain />}
-      {weather === 'Snow' && <IconWeatherSnow />}
-      {atmosphere.includes(weather) && <IconWeatherFog />}
+      {weather === 'Drizzle' && <IconWeatherRain size={size} />}
+      {weather === 'Rain' && <IconWeatherHeavyRain size={size} />}
+      {weather === 'Snow' && <IconWeatherSnow size={size} />}
+      {atmosphere.includes(weather) && <IconWeatherFog size={size} />}
       {weather === 'Clear' && (
-        <>{isDay() ? <IconWeatherClearDay /> : <IconWeatherClearNight />}</>
+        <>
+          {isDay() ? (
+            <IconWeatherClearDay size={size} />
+          ) : (
+            <IconWeatherClearNight size={size} />
+          )}
+        </>
       )}
       {weather === 'Clouds' && (
-        <>{isDay() ? <IconWeatherCloudy /> : <IconWeatherOvercast />}</>
+        <>
+          {isDay() ? (
+            <IconWeatherCloudy size={size} />
+          ) : (
+            <IconWeatherOvercast size={size} />
+          )}
+        </>
       )}
-      {windy.includes(weather) && <IconWeatherWindy />}
+      {windy.includes(weather) && <IconWeatherWindy size={size} />}
     </>
   );
 }
