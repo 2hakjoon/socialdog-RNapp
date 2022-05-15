@@ -1,16 +1,16 @@
 import dayjs from 'dayjs';
 import React from 'react';
-import IconWeatherClearDay from './IconWeatherClearDay';
-import IconWeatherClearNight from './IconWeatherClearNight';
-import IconWeatherCloudy from './IconWeatherCloudy';
-import IconWeatherFog from './IconWeatherFog';
-import IconWeatherHeavyRain from './IconWeatherHeavyRain';
-import IconWeatherOvercast from './IconWeatherOvercast';
-import IconWeatherRain from './IconWeatherRain';
-import IconWeatherSnow from './IconWeatherSnow';
-import IconWeatherThunderRain from './IconWeatherThunderRain';
-import IconWeatherThunderSnow from './IconWeatherThunderSnow';
-import IconWeatherWindy from './IconWeatherWindy';
+import IconWeatherClearDay from '../components/IconWeatherClearDay';
+import IconWeatherClearNight from '../components/IconWeatherClearNight';
+import IconWeatherCloudy from '../components/IconWeatherCloudy';
+import IconWeatherFog from '../components/IconWeatherFog';
+import IconWeatherHeavyRain from '../components/IconWeatherHeavyRain';
+import IconWeatherOvercast from '../components/IconWeatherOvercast';
+import IconWeatherRain from '../components/IconWeatherRain';
+import IconWeatherSnow from '../components/IconWeatherSnow';
+import IconWeatherThunderRain from '../components/IconWeatherThunderRain';
+import IconWeatherThunderSnow from '../components/IconWeatherThunderSnow';
+import IconWeatherWindy from '../components/IconWeatherWindy';
 
 interface IWeather {
   weather: string;
@@ -20,7 +20,7 @@ interface IWeather {
 function WeatherIcon({weather, size = 150}: IWeather) {
   const isDay = () => {
     const nowHour = dayjs().hour();
-    return nowHour > 6 && nowHour < 18;
+    return nowHour > 6 && nowHour < 20;
   };
 
   const isSummer = () => {

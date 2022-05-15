@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 export const regexPassword =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 

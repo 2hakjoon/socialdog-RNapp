@@ -9,7 +9,7 @@ import {
 import EvIcon from 'react-native-vector-icons/EvilIcons';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
-import WeatherIcon from './components/WeatherIcon';
+import WeatherIcon from './template/WeatherIcon';
 import {getAddressFromLatLng} from '../../utils/googlemaps/geocoding';
 import {openAqi, openWeather} from '../../utils/types/openWeatherMap.types';
 import TextComp from '../components/TextComp';
