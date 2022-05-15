@@ -60,6 +60,7 @@ function RecordingScreen() {
   const [pause, setPause] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<number>();
   const [timer, setTimer] = useState<number>(0);
+  const [moveFastCount, setMoveFastCount] = useState(0);
   const {data} = useQuery<QMe>(ME);
   const user = data?.me.data;
   const geolocaton = useSelector(
@@ -207,19 +208,29 @@ function RecordingScreen() {
           setLocations(prev => {
             const {latitude: prevLat, longitude: prevLong} =
               prev[prev.length - 1];
-            //4미터 이상 움직였을때만 기록.
-            //소수점 5번째 자리는 1m
+
+            // 소수점 5번째 자리는 1m
+            // 3미터 이상 움직였을때만 기록.
             if (
-              Math.abs(latitude - prevLat) > 0.00004 ||
-              Math.abs(longitude - prevLong) > 0.00004
+              Math.abs(latitude - prevLat) > 0.00003 ||
+              Math.abs(longitude - prevLong) > 0.00003
             ) {
-              console.log('recoreded');
-              return prev.concat([
-                {
-                  latitude,
-                  longitude,
-                },
-              ]);
+              // 2초안에 10미터 이상 움직인 데이터는 gps값이 튄것으로 판단.
+              // 초속 5미터를 기준.
+              if (
+                Math.abs(latitude - prevLat) < 0.0001 ||
+                Math.abs(longitude - prevLong) < 0.0001
+              ) {
+                setMoveFastCount(0);
+                return prev.concat([
+                  {
+                    latitude,
+                    longitude,
+                  },
+                ]);
+              } else {
+                setMoveFastCount(prev => prev + 1);
+              }
             }
             return prev;
           });
@@ -240,7 +251,7 @@ function RecordingScreen() {
         },
         enableHighAccuracy: true,
         distanceFilter: 0,
-        interval: 4000,
+        interval: 2000,
         fastestInterval: 2000,
         // 아랫줄 코드 적용시 동작안함.
         // forceRequestLocation: true,
@@ -289,6 +300,17 @@ function RecordingScreen() {
       }
     }, [timer]),
   );
+
+  useEffect(() => {
+    if (moveFastCount > 10) {
+      removeLocationUpdates();
+      saveRecordingAndReset();
+      Alert.alert(
+        '기록 종료',
+        '자전거, 자동차를 탑승하신것으로 확인되어, 산책 기록을 종료힙니다.',
+      );
+    }
+  }, [moveFastCount]);
 
   return (
     <>
