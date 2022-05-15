@@ -215,11 +215,11 @@ function RecordingScreen() {
               Math.abs(latitude - prevLat) + Math.abs(longitude - prevLong) >
               0.00008
             ) {
-              // 1초안에 20미터 이상 움직인 데이터는 gps값이 튄것으로 판단.
+              // 1초안에 30미터 이상 움직인 데이터는 gps값이 튄것으로 판단.
               // 초속 5미터를 기준.
               if (
                 Math.abs(latitude - prevLat) + Math.abs(longitude - prevLong) <
-                0.0002
+                0.0003
               ) {
                 console.log('recorded');
                 setMoveFastCount(0);
