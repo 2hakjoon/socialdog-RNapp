@@ -74,10 +74,13 @@ function RecordingScreen() {
 
   const watchId = useRef(-1);
 
-  const startRecording = () => {
+  const startRecording = async () => {
     setRecording(true);
     setStartTime(Date.now());
     gpsFilter.clearFilter();
+    if (Platform.OS === 'android') {
+      await startForegroundService();
+    }
   };
 
   const toggleRecording = () => {
@@ -190,10 +193,6 @@ function RecordingScreen() {
 
     if (!hasPermission) {
       return;
-    }
-
-    if (Platform.OS === 'android') {
-      await startForegroundService();
     }
 
     Geolocation.clearWatch(watchId.current);
