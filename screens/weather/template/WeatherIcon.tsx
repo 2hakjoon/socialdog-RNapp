@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import React from 'react';
+import {StyleSheet, View} from 'react-native';
 import IconWeatherClearDay from '../components/IconWeatherClearDay';
 import IconWeatherClearNight from '../components/IconWeatherClearNight';
 import IconWeatherCloudy from '../components/IconWeatherCloudy';
@@ -44,7 +45,11 @@ function WeatherIcon({weather, size = 150}: IWeather) {
   const windy = ['Squall', 'Tornado'];
 
   return (
-    <>
+    <View
+      style={{
+        ...(isDay() ? styles.dayBackBig : styles.nightBackBig),
+        padding: size > 100 ? 20 : 5,
+      }}>
       {weather === 'Thunderstorm' && (
         <>
           {isSummer() ? (
@@ -77,8 +82,25 @@ function WeatherIcon({weather, size = 150}: IWeather) {
         </>
       )}
       {windy.includes(weather) && <IconWeatherWindy size={size} />}
-    </>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  dayBackBig: {
+    padding: 20,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'skyblue',
+  },
+  nightBackBig: {
+    padding: 20,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'lightgray',
+  },
+});
 
 export default WeatherIcon;
