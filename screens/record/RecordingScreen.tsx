@@ -204,22 +204,24 @@ function RecordingScreen() {
           position.coords.longitude,
         ]);
         if (!pause && recording) {
+          console.log(position);
           setLocations(prev => {
             const {latitude: prevLat, longitude: prevLong} =
               prev[prev.length - 1];
 
             // 소수점 5번째 자리는 1m
-            // 3미터 이상 움직였을때만 기록.
+            // 5미터 이상 움직였을때만 기록.
             if (
-              Math.abs(latitude - prevLat) > 0.00003 ||
-              Math.abs(longitude - prevLong) > 0.00003
+              Math.abs(latitude - prevLat) + Math.abs(longitude - prevLong) >
+              0.00008
             ) {
-              // 2초안에 10미터 이상 움직인 데이터는 gps값이 튄것으로 판단.
+              // 1초안에 20미터 이상 움직인 데이터는 gps값이 튄것으로 판단.
               // 초속 5미터를 기준.
               if (
-                Math.abs(latitude - prevLat) < 0.0001 ||
-                Math.abs(longitude - prevLong) < 0.0001
+                Math.abs(latitude - prevLat) + Math.abs(longitude - prevLong) <
+                0.0002
               ) {
+                console.log('recorded');
                 setMoveFastCount(0);
                 return prev.concat([
                   {
@@ -250,8 +252,8 @@ function RecordingScreen() {
         },
         enableHighAccuracy: true,
         distanceFilter: 0,
-        interval: 2000,
-        fastestInterval: 2000,
+        interval: 1000,
+        fastestInterval: 500,
         // 아랫줄 코드 적용시 동작안함.
         // forceRequestLocation: true,
         // forceLocationManager: true,
