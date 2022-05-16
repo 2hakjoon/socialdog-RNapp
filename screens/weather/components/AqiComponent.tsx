@@ -43,7 +43,7 @@ function AqiComponent({pm2_5, pm10}: IAqiComponent) {
 
   return (
     <View style={styles.outerWrapper}>
-      <TextComp text={'미세먼지'} size={20} />
+      <TextComp text={'미세먼지'} size={25} weight={'600'} />
       <View style={styles.wrapper}>
         <View style={styles.block}>
           <TextComp text={'pm10'} />
@@ -62,13 +62,13 @@ function AqiComponent({pm2_5, pm10}: IAqiComponent) {
 
 const styles = StyleSheet.create({
   outerWrapper: {
+    height: 200,
     alignItems: 'center',
-    height: '25%',
-    paddingBottom: 30,
+    justifyContent: 'space-around',
+    paddingBottom: 40,
   },
   wrapper: {
-    paddingTop: 10,
-    height: '100%',
+    height: 120,
     flexDirection: 'row',
     justifyContent: 'space-around',
   },

@@ -83,52 +83,35 @@ function WeatherScreen() {
                 size={150}
                 weather={weather.current.weather[0].main}
               />
-              <View style={styles.tempBlock}>
-                <View style={styles.hContainer}>
-                  <View>
-                    <View style={styles.tempText}>
-                      <TextComp
-                        text={`${weather.current.temp.toFixed(1)}`}
-                        size={30}
-                      />
-                      <TextComp text={'°C'} size={20} />
-                    </View>
-                    <TextComp text={'현재 기온'} />
-                  </View>
-
-                  <View>
-                    <View style={styles.tempText}>
-                      <TextComp
-                        text={`${weather.current.feels_like.toFixed(1)}`}
-                        size={30}
-                      />
-                      <TextComp text={'°C'} size={20} />
-                    </View>
-                    <TextComp text={'체감 온도'} />
+              <View style={styles.tempBlockWrapper}>
+                <View style={styles.feelTemp}>
+                  <TextComp text={'체감 온도'} color={colors.PDarkGray} />
+                  <View style={styles.tempText}>
+                    <TextComp
+                      text={`${weather.current.feels_like.toFixed(1)}`}
+                      size={20}
+                      color={colors.PDarkGray}
+                    />
+                    <TextComp text={'°C'} size={10} color={colors.PDarkGray} />
                   </View>
                 </View>
 
-                <View style={styles.hContainer}>
-                  <View>
-                    <View style={styles.tempText}>
-                      <TextComp
-                        text={`${weather.daily[0].temp.min.toFixed(1)}`}
-                        size={30}
-                      />
-                      <TextComp text={'°C'} size={20} />
-                    </View>
-                    <TextComp text={'최저 기온'} />
+                <View style={styles.currTemp}>
+                  <View style={styles.tempText}>
+                    <TextComp
+                      text={`${weather.current.temp.toFixed(1)}`}
+                      size={40}
+                    />
+                    <TextComp text={'°C'} size={30} />
                   </View>
+                  <TextComp text={'현재 기온'} size={20} />
+                </View>
 
-                  <View>
-                    <View style={styles.tempText}>
-                      <TextComp
-                        text={`${weather.daily[0].temp.max.toFixed(1)}`}
-                        size={30}
-                      />
-                      <TextComp text={'°C'} size={20} />
-                    </View>
-                    <TextComp text={'최고 기온'} />
+                <View style={styles.feelTemp}>
+                  <TextComp text={' '} color={colors.PDarkGray} />
+                  <View style={styles.tempText}>
+                    <TextComp text={' '} size={20} color={colors.PDarkGray} />
+                    <TextComp text={' '} size={10} color={colors.PDarkGray} />
                   </View>
                 </View>
               </View>
@@ -141,32 +124,38 @@ function WeatherScreen() {
               />
             )}
 
-            <TextComp text={'시간대별 날씨'} size={20} />
-            <View style={styles.weekWeather}>
+            <TextComp text={'시간대별 날씨'} size={22} />
+            <ScrollView horizontal style={styles.weatherArray}>
               {weather.hourly.map(({dt, weather, temp}, idx) => {
                 if (idx < 8) {
                   return (
-                    <View key={idx}>
-                      <TextComp text={`${new Date(dt * 1000).getHours()}시`} />
-                      <WeatherIcon size={30} weather={weather[0].main} />
-                      <TextComp size={10} text={`${temp.toFixed(1)}°C`} />
+                    <View key={idx} style={styles.weatherBlock}>
+                      <TextComp
+                        text={`${new Date(dt * 1000).getHours()}시`}
+                        size={14}
+                      />
+                      <WeatherIcon size={35} weather={weather[0].main} />
+                      <TextComp text={`${Math.round(temp)}°C`} />
                     </View>
                   );
                 }
               })}
-            </View>
+            </ScrollView>
 
-            <TextComp text={'요일별 날씨'} size={20} />
-            <View style={styles.weekWeather}>
+            <TextComp text={'요일별 날씨'} size={22} />
+            <ScrollView horizontal style={styles.weatherArray}>
               {weather.daily.map(({dt, temp, weather}, idx) => (
-                <View key={idx}>
-                  <TextComp text={`${new Date(dt * 1000).getDate()}일`} />
-                  <WeatherIcon size={30} weather={weather[0].main} />
-                  <TextComp size={10} text={`${temp.max.toFixed(1)}°C`} />
-                  <TextComp size={10} text={`${temp.min.toFixed(1)}°C`} />
+                <View key={idx} style={styles.weatherBlock}>
+                  <TextComp
+                    text={`${new Date(dt * 1000).getDate()}일`}
+                    size={14}
+                  />
+                  <WeatherIcon size={35} weather={weather[0].main} />
+                  <TextComp size={12} text={`${Math.round(temp.max)}°C`} />
+                  <TextComp size={12} text={`${Math.round(temp.min)}°C`} />
                 </View>
               ))}
-            </View>
+            </ScrollView>
           </>
         )}
       </ScrollView>
@@ -193,7 +182,7 @@ function WeatherScreen() {
 const styles = StyleSheet.create({
   wrapper: {
     width: '100%',
-    height: '85%',
+    height: '100%',
     backgroundColor: 'white',
     paddingHorizontal: 16,
   },
@@ -205,29 +194,40 @@ const styles = StyleSheet.create({
   },
   tempContainer: {
     width: '100%',
-    height: '35%',
+    height: 250,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
   },
-  tempBlock: {
+  tempBlockWrapper: {
+    width: '100%',
     paddingVertical: 20,
+    flexDirection: 'column',
+    alignItems: 'center',
     flex: 1,
   },
-  hContainer: {
-    flex: 1,
-    width: '100%',
+  feelTemp: {
+    width: '80%',
+    paddingBottom: 10,
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-around',
+  },
+  currTemp: {
+    paddingVertical: 10,
     alignItems: 'center',
   },
   tempText: {
     flexDirection: 'row',
   },
-  weekWeather: {
+  weatherArray: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 10,
+  },
+  weatherBlock: {
+    height: 120,
+    alignItems: 'center',
+    paddingRight: 10,
+    justifyContent: 'center',
   },
   bottomContainer: {
     height: '15%',
