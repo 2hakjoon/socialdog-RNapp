@@ -56,6 +56,7 @@ const CREATE_WALK = gql`
 function RecordingScreen() {
   const [location, setLocation] = useState<latlngObj | null>(null);
   const [locations, setLocations] = useState<latlngObj[]>([]);
+  const [mapZoom, setMapZoom] = useState<number>(18);
   const [recording, setRecording] = useState(false);
   const [pause, setPause] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<number>();
@@ -317,6 +318,12 @@ function RecordingScreen() {
     <>
       {location ? (
         <RNMapView
+          onRegionChangeComplete={region => {
+            setMapZoom(
+              Math.ceil(Math.log(360 / region.longitudeDelta) / Math.LN2),
+            );
+          }}
+          onPanDrag={e => console.log(e.target)}
           provider={PROVIDER_GOOGLE}
           style={{flex: 7}}
           initialCamera={{
@@ -324,14 +331,14 @@ function RecordingScreen() {
             center: location,
             heading: 0,
             pitch: 0,
-            zoom: 18,
+            zoom: mapZoom,
           }}
           camera={{
             altitude: 15000,
             center: location,
             heading: 0,
             pitch: 0,
-            zoom: 18,
+            zoom: mapZoom,
           }}>
           <Marker coordinate={location} anchor={{x: 0.5, y: 0.5}}>
             <View style={styles.walkMarker}>
