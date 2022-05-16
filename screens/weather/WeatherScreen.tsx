@@ -1,13 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Button,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import EvIcon from 'react-native-vector-icons/EvilIcons';
-import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import WeatherIcon from './template/WeatherIcon';
 import {getAddressFromLatLng} from '../../utils/googlemaps/geocoding';
@@ -21,7 +14,6 @@ import {colors} from '../../utils/colors';
 import {UseNavigationProp} from '../../routes';
 import {useQuery} from '@apollo/client';
 import {QMe} from '../../__generated__/QMe';
-import ProfilePhoto from '../components/ProfilePhoto';
 import {ME} from '../../apollo-gqls/auth';
 
 function WeatherScreen() {
@@ -142,7 +134,7 @@ function WeatherScreen() {
               })}
             </ScrollView>
 
-            <TextComp text={'요일별 날씨'} size={22} />
+            <TextComp text={'이번주 날씨'} size={22} />
             <ScrollView horizontal style={styles.weatherArray}>
               {weather.daily.map(({dt, temp, weather}, idx) => (
                 <View key={idx} style={styles.weatherBlock}>
@@ -161,18 +153,21 @@ function WeatherScreen() {
       </ScrollView>
       <View style={styles.bottomContainer}>
         <View style={styles.buttonContainer}>
-          <Button
-            title="산책하러가기"
-            onPress={() => {
-              navigation.navigate('Record');
-            }}
-          />
-          <Button
-            title="산책 기록 보기"
+          <TouchableOpacity
+            style={styles.bottomButton}
             onPress={() => {
               navigation.navigate('WalkRecords');
-            }}
-          />
+            }}>
+            <TextComp text="산책기록 보기" size={18} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.bottomButton}
+            onPress={() => {
+              navigation.navigate('Record');
+            }}>
+            <TextComp text="산책하러 가기" size={18} />
+          </TouchableOpacity>
         </View>
       </View>
     </>
@@ -229,12 +224,6 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     justifyContent: 'center',
   },
-  bottomContainer: {
-    height: '15%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-  },
   dogFace: {
     height: 50,
     width: 50,
@@ -253,9 +242,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  bottomContainer: {
+    height: 60,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    backgroundColor: 'white',
+    borderTopWidth: 2,
+    borderTopColor: colors.PLightGray,
+  },
   buttonContainer: {
+    width: '100%',
     marginLeft: 'auto',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
+    flexDirection: 'row',
+  },
+  bottomButton: {
+    flex: 1,
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
   },
 });
 
