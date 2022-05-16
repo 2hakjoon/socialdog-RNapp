@@ -53,6 +53,7 @@ function WalkRecordsScreen() {
   const geolocaton = useSelector(
     (state: RootState) => state.geolocation.geolocation,
   );
+  const refMapView = useRef<RNMapView>(null);
 
   const makeRecordsToDayes = (walkRecords: QGetWalks) => {
     let daysObj: RecordData = {};
@@ -139,6 +140,39 @@ function WalkRecordsScreen() {
     }
   }, []);
 
+  // 산책기록이 선택되면, 해당 기록의 폴리라인 전체를 보여주게 카메라 이동.
+  useEffect(() => {
+    if (locations.length) {
+      // 경로에 상관없이 좌표값을 오름차순으로 정렬함.
+      const sortLat = locations
+        .slice()
+        .sort((a, b) => Number(a.latitude) - Number(b.latitude));
+      const sortLong = locations
+        .slice()
+        .sort((a, b) => Number(a.longitude) - Number(b.longitude));
+
+      // 가장 작은 좌표값과 가장 큰 좌표값의 차이를 구하고, 지도에 표시할때 여백을 위해 1.2를 곱함
+      const latitudeDelta =
+        Math.abs(sortLat[0].latitude - sortLat[sortLat.length - 1].latitude) *
+        1.2;
+      const longitudeDelta =
+        Math.abs(
+          sortLong[0].longitude - sortLong[sortLat.length - 1].longitude,
+        ) * 1.2;
+
+      // 카메라를 폴리라인의 중앙에 위치하기 위해 가장작은 좌표, 가장 큰 좌표의 중간점을 구해줌.
+      // anmimateToRegion 함수를 이용해서 카메라를 이동.
+      refMapView.current?.animateToRegion({
+        latitude:
+          (sortLat[0].latitude + sortLat[sortLat.length - 1].latitude) / 2,
+        longitude:
+          (sortLong[0].longitude + sortLong[sortLong.length - 1].longitude) / 2,
+        latitudeDelta,
+        longitudeDelta,
+      });
+    }
+  }, [locations]);
+
   // console.log(recordDays);
 
   const flatListRef = useRef<FlatList>(null);
@@ -169,6 +203,7 @@ function WalkRecordsScreen() {
     <>
       {location ? (
         <RNMapView
+          ref={refMapView}
           provider={PROVIDER_GOOGLE}
           style={styles.mapContainer}
           initialCamera={{
@@ -183,7 +218,7 @@ function WalkRecordsScreen() {
             center: locations.length ? locations[0] : location,
             heading: 0,
             pitch: 0,
-            zoom: 17,
+            zoom: 16,
           }}>
           <Polyline
             coordinates={locations}
