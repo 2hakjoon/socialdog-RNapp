@@ -15,6 +15,7 @@ import {UseNavigationProp} from '../../routes';
 import {useQuery} from '@apollo/client';
 import {QMe} from '../../__generated__/QMe';
 import {ME} from '../../apollo-gqls/auth';
+import {getWeatherData, storeWeatherData} from '../../utils/asyncStorage';
 
 function WeatherScreen() {
   //0:onecall날씨정보, 1:미세먼지 2:주소
@@ -41,6 +42,7 @@ function WeatherScreen() {
         await fetch(
           `https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=${latitude}&lon=${longitude}&appid=${APIkey}`,
         ).then(r => r.json()),
+        //주소정보
         await getAddressFromLatLng({
           lat: latitude,
           lng: longitude,
@@ -48,12 +50,19 @@ function WeatherScreen() {
       ]);
       // console.log(response);
       setWeatherData(response);
+      storeWeatherData(response);
     } catch (e) {
       console.log(e);
     }
   };
 
   useEffect(() => {
+    getWeatherData().then(data => {
+      // console.log(data);
+      if (data) {
+        setWeatherData(data);
+      }
+    });
     if (geolocation?.latitude && geolocation.longitude) {
       getWeather({...geolocation});
     }
@@ -62,13 +71,13 @@ function WeatherScreen() {
   return (
     <>
       <ScrollView style={styles.wrapper}>
-        {Boolean(location) && (
+        {location.length > 0 && (
           <View style={styles.locationTitle}>
             <EvIcon name="location" size={25} />
             <TextComp text={location} size={20} />
           </View>
         )}
-        {weather && (
+        {weather?.current && (
           <>
             <View style={styles.tempContainer}>
               <WeatherIcon
@@ -109,7 +118,7 @@ function WeatherScreen() {
               </View>
             </View>
 
-            {aqi && (
+            {aqi?.list && (
               <AqiComponent
                 pm10={aqi.list[0].components.pm10}
                 pm2_5={aqi.list[0].components.pm2_5}

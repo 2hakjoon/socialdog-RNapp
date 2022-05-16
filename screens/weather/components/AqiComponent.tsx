@@ -53,7 +53,7 @@ function AqiComponent({pm2_5, pm10}: IAqiComponent) {
         <View style={styles.block}>
           <TextComp text={'pm2.5'} />
           <TextComp text={pm2_5Level(pm2_5)} size={30} />
-          <TextComp text={`${pm2_5}㎍/㎥`} />
+          <TextComp text={`pm2.5 : ${pm2_5}㎍/㎥`} />
         </View>
       </View>
     </View>

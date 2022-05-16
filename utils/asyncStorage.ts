@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from './constants';
+import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN, WEATHER_DATA} from './constants';
 
 interface IStoreData {
   key: string;
@@ -40,4 +40,20 @@ export const getAuthTokens = async (): Promise<{
   const accessToken = await getData({key: USER_ACCESS_TOKEN});
   const refreshToken = await getData({key: USER_REFRESH_TOKEN});
   return {accessToken, refreshToken};
+};
+
+export const storeWeatherData = async (data: {}) => {
+  try {
+    await storeData({key: WEATHER_DATA, value: data});
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const getWeatherData = async () => {
+  try {
+    return await getData({key: WEATHER_DATA});
+  } catch (e) {
+    console.log(e);
+  }
 };
