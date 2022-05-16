@@ -270,7 +270,7 @@ function RecordingScreen() {
       Geolocation.clearWatch(watchId.current);
       watchId.current = -1;
     }
-  }, [stopForegroundService]);
+  }, [watchId]);
 
   useEffect(() => {
     if (geolocaton?.latitude && geolocaton.longitude) {
