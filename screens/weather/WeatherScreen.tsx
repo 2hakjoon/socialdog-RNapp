@@ -48,7 +48,7 @@ function WeatherScreen() {
           lng: longitude,
         }),
       ]);
-      // console.log(response);
+      console.log(response);
       setWeatherData(response);
       storeWeatherData(response);
     } catch (e) {
@@ -77,7 +77,7 @@ function WeatherScreen() {
             <TextComp text={location} size={20} />
           </View>
         )}
-        {weather?.current && (
+        {weather?.current ? (
           <>
             <View style={styles.tempContainer}>
               <WeatherIcon
@@ -158,6 +158,16 @@ function WeatherScreen() {
               ))}
             </ScrollView>
           </>
+        ) : (
+          <View
+            style={{
+              width: '100%',
+              height: '100%',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <TextComp text={'날씨정보를 받아오는 중입니다....'} />
+          </View>
         )}
       </ScrollView>
       <View style={styles.bottomContainer}>
