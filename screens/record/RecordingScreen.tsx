@@ -92,6 +92,7 @@ function RecordingScreen() {
     try {
       const now = Date.now();
       const walkRecord = JSON.stringify(locations);
+
       if (!startTime) {
         throw new Error();
       }

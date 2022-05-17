@@ -62,4 +62,5 @@ buck-out/
 .env.production
 .env.development
 .env.dev
+./utils/trackingData.ts
 config.ts

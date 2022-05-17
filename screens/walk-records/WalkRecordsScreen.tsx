@@ -187,7 +187,10 @@ function WalkRecordsScreen() {
       <TouchableOpacity
         key={recordObj.id}
         onPress={() => setSelectedRecord(recordObj.id)}
-        style={styles.recordBtn}>
+        style={{
+          ...styles.recordBlock,
+          ...(selectedRecord === recordObj.id && styles.selectedRecord),
+        }}>
         <TextComp
           text={formatRcordKeyToTime(
             recordObj.startTime,
@@ -266,15 +269,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     flex: 1,
   },
-  recordBtn: {
+  recordBlock: {
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.PBlue,
+    backgroundColor: '#81a2fc',
     paddingHorizontal: 15,
     paddingVertical: 5,
     marginHorizontal: 10,
     borderRadius: 15,
+  },
+  selectedRecord: {
+    backgroundColor: colors.PBlue,
   },
 });
 
