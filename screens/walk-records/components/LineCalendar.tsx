@@ -6,11 +6,12 @@ import {colors} from '../../../utils/colors';
 import {now_yyyy_mm_dd} from '../../../utils/dataformat/dateformat';
 import {Oneday} from '../../../utils/dataformat/timeformat';
 import TextComp from '../../components/TextComp';
+import {IRecordData} from '../WalkRecordsScreen';
 
 const width = Dimensions.get('window').width; //full width
 
 interface ILineCalendar {
-  recordDays: {};
+  recordDays: IRecordData;
   selectedDate: string;
   setSelectedDate: Function;
 }
@@ -36,7 +37,7 @@ function LineCalendar({
   };
 
   const checkWalkDate = (day: string) => {
-    return Object.keys(recordDays).includes(day);
+    return recordDays[day]?.length > 0;
   };
 
   useFocusEffect(

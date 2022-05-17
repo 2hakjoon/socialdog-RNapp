@@ -20,7 +20,7 @@ import {
   formatWalkingTime,
 } from '../../utils/dataformat/timeformat';
 import {colors} from '../../utils/colors';
-import {useLazyQuery, useQuery} from '@apollo/client';
+import {useLazyQuery, useMutation, useQuery} from '@apollo/client';
 import {now_yyyy_mm_dd} from '../../utils/dataformat/dateformat';
 import {
   QGetWalks,
@@ -29,35 +29,48 @@ import {
 import {QGetWalk, QGetWalkVariables} from '../../__generated__/QGetWalk';
 import {QMe} from '../../__generated__/QMe';
 import {geolocationCofig} from '../components/GeolocationComponent';
-import {GET_WALK_RECORD, GET_WALK_RECORDS} from '../../apollo-gqls/walks';
+import {
+  DELETE_WALK_RECORD,
+  GET_WALK_RECORD,
+  GET_WALK_RECORDS,
+} from '../../apollo-gqls/walks';
 import {ME} from '../../apollo-gqls/auth';
 import AntDesignIcon from '../components/Icons/AntDesign';
+import {
+  MDeleteWalk,
+  MDeleteWalkVariables,
+} from '../../__generated__/MDeleteWalk';
+import dayjs from 'dayjs';
 
 interface latlngObj {
   latitude: number;
   longitude: number;
 }
 
-interface RecordData {
-  [key: string]: [QGetWalks_getWalks_data];
+export interface IRecordData {
+  [key: string]: QGetWalks_getWalks_data[];
 }
 
 function WalkRecordsScreen() {
   const [location, setLocation] = useState<latlngObj | null>(null);
   const [locations, setLocations] = useState<latlngObj[]>([]);
-  const [recordDays, setRecordDays] = useState<RecordData>({});
+  const [recordDays, setRecordDays] = useState<IRecordData>({});
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [recordList, setRecordList] = useState<QGetWalks_getWalks_data[]>([]);
   const [selectedRecord, setSelectedRecord] = useState<string>('');
   const {data: meData} = useQuery<QMe>(ME);
+  const [deleteWalk] = useMutation<MDeleteWalk, MDeleteWalkVariables>(
+    DELETE_WALK_RECORD,
+  );
   const user = meData?.me.data;
   const geolocaton = useSelector(
     (state: RootState) => state.geolocation.geolocation,
   );
   const refMapView = useRef<RNMapView>(null);
+  console.log(recordDays);
 
   const makeRecordsToDayes = (walkRecords: QGetWalks) => {
-    let daysObj: RecordData = {};
+    let daysObj: IRecordData = {};
     if (walkRecords.getWalks.data) {
       walkRecords.getWalks.data.forEach(record => {
         const date = now_yyyy_mm_dd(new Date(record.startTime * 1000));
@@ -182,6 +195,36 @@ function WalkRecordsScreen() {
     flatListRef.current?.scrollToOffset({offset: 0, animated: false});
   };
 
+  const deleteWalkHandler = (id: string, startTime: number) => {
+    Alert.alert('산책 기록 삭제', '산책 기록을 삭제 하시겠습니까?', [
+      {text: '취소', onPress: () => {}, style: 'cancel'},
+      {
+        text: '확인',
+        onPress: async () => {
+          try {
+            const res = await deleteWalk({variables: {args: {walkId: id}}});
+            if (res.data?.deleteWalk.error) {
+              Alert.alert('오류', res.data?.deleteWalk.error);
+              return;
+            }
+            // state에 저장된 기록들 삭제.
+            setRecordList(prev => prev.filter(val => val.id !== id));
+            setLocations([]);
+            const dayKey = dayjs(startTime * 1000).format('YYYY-MM-DD');
+            setRecordDays(prev => {
+              return {
+                ...prev,
+                [dayKey]: prev[dayKey].filter(val => val.id !== id),
+              };
+            });
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      },
+    ]);
+  };
+
   const walkItems = ({item}: any) => {
     const recordObj = item as QGetWalks_getWalks_data;
     const isSelected = selectedRecord === recordObj.id;
@@ -190,7 +233,7 @@ function WalkRecordsScreen() {
         {isSelected ? (
           <TouchableOpacity
             key={recordObj.id}
-            onPress={() => console.log('Close')}
+            onPress={() => deleteWalkHandler(recordObj.id, recordObj.startTime)}
             style={{
               ...styles.recordBlock,
               ...styles.selectedRecord,
