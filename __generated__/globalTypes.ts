@@ -19,6 +19,10 @@ export enum LoginStrategy {
   LOCAL = "LOCAL",
 }
 
+export interface DeleteWalkInputDto {
+  walkId: string;
+}
+
 export interface FileInputDto {
   filename: string;
   fileType: FileType;

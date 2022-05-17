@@ -25,3 +25,12 @@ export const GET_WALK_RECORD = gql`
     }
   }
 `;
+
+export const DELETE_WALK_RECORD = gql`
+  mutation MDeleteWalk($args: DeleteWalkInputDto!) {
+    deleteWalk(args: $args) {
+      ok
+      error
+    }
+  }
+`;
