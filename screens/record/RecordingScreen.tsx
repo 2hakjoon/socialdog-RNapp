@@ -26,6 +26,7 @@ import {ME} from '../../apollo-gqls/auth';
 import VIForegroundService from '@voximplant/react-native-foreground-service';
 import appConfig from '../../app.json';
 import {gpsFilter} from '../../App';
+import * as lzstring from 'lz-string';
 
 interface latlngObj {
   latitude: number;
@@ -91,8 +92,18 @@ function RecordingScreen() {
   const saveRecordingAndReset = async () => {
     try {
       const now = Date.now();
-      const walkRecord = JSON.stringify(locations);
+      // 기록의 사이즈를 줄이기 위해 키를 제거함.
+      const simplifiedRecord = locations.map(val => [
+        +val.latitude.toFixed(6),
+        +val.longitude.toFixed(6),
+      ]);
+      //console.log(simplifiedRecord);
 
+      // 압축하기 전에, 배열을 문자열로 변경함
+      const stringData = JSON.stringify(simplifiedRecord);
+
+      // 압축.
+      const compressed = lzstring.compressToEncodedURIComponent(stringData);
       if (!startTime) {
         throw new Error();
       }
@@ -101,7 +112,7 @@ function RecordingScreen() {
           startTime: trimMilSec(startTime),
           walkingTime: timer,
           finishTime: trimMilSec(now),
-          walkRecord,
+          walkRecord: compressed,
         },
       });
       setRecording(false);

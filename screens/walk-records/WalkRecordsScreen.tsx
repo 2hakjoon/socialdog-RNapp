@@ -41,6 +41,7 @@ import {
   MDeleteWalkVariables,
 } from '../../__generated__/MDeleteWalk';
 import dayjs from 'dayjs';
+import * as lzstring from 'lz-string';
 
 interface latlngObj {
   latitude: number;
@@ -67,7 +68,6 @@ function WalkRecordsScreen() {
     (state: RootState) => state.geolocation.geolocation,
   );
   const refMapView = useRef<RNMapView>(null);
-  console.log(recordDays);
 
   const makeRecordsToDayes = (walkRecords: QGetWalks) => {
     let daysObj: IRecordData = {};
@@ -100,7 +100,29 @@ function WalkRecordsScreen() {
     {
       onCompleted: async data => {
         if (data.getWalk.data?.walkRecord) {
-          setLocations(JSON.parse(data.getWalk.data?.walkRecord));
+          console.log(data.getWalk.data?.walkRecord);
+          try {
+            const decompressedLocations =
+              lzstring.decompressFromEncodedURIComponent(
+                data.getWalk.data?.walkRecord,
+              );
+            console.log(decompressedLocations);
+            if (decompressedLocations === null) {
+              throw new Error('압축해제에 실패했습니다.');
+            }
+            const parsed = JSON.parse(decompressedLocations);
+            console.log(parsed);
+            const locationsWithKey = parsed.map(
+              ([latitude, longitude]: [number, number]) => ({
+                latitude,
+                longitude,
+              }),
+            );
+            console.log(locationsWithKey);
+            setLocations(locationsWithKey);
+          } catch (e) {
+            console.log(e);
+          }
         }
       },
     },
