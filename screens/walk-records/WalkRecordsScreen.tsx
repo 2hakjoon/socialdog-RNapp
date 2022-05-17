@@ -20,7 +20,7 @@ import {
   formatWalkingTime,
 } from '../../utils/dataformat/timeformat';
 import {colors} from '../../utils/colors';
-import {gql, useLazyQuery, useQuery} from '@apollo/client';
+import {useLazyQuery, useQuery} from '@apollo/client';
 import {now_yyyy_mm_dd} from '../../utils/dataformat/dateformat';
 import {
   QGetWalks,
@@ -31,6 +31,7 @@ import {QMe} from '../../__generated__/QMe';
 import {geolocationCofig} from '../components/GeolocationComponent';
 import {GET_WALK_RECORD, GET_WALK_RECORDS} from '../../apollo-gqls/walks';
 import {ME} from '../../apollo-gqls/auth';
+import AntDesignIcon from '../components/Icons/AntDesign';
 
 interface latlngObj {
   latitude: number;
@@ -183,22 +184,44 @@ function WalkRecordsScreen() {
 
   const walkItems = ({item}: any) => {
     const recordObj = item as QGetWalks_getWalks_data;
+    const isSelected = selectedRecord === recordObj.id;
     return (
-      <TouchableOpacity
-        key={recordObj.id}
-        onPress={() => setSelectedRecord(recordObj.id)}
-        style={{
-          ...styles.recordBlock,
-          ...(selectedRecord === recordObj.id && styles.selectedRecord),
-        }}>
-        <TextComp
-          text={formatRcordKeyToTime(
-            recordObj.startTime,
-            recordObj.walkingTime,
-          )}
-          color={colors.PWhite}
-        />
-      </TouchableOpacity>
+      <>
+        {isSelected ? (
+          <TouchableOpacity
+            key={recordObj.id}
+            onPress={() => console.log('Close')}
+            style={{
+              ...styles.recordBlock,
+              ...styles.selectedRecord,
+            }}>
+            <TextComp
+              text={formatRcordKeyToTime(
+                recordObj.startTime,
+                recordObj.walkingTime,
+              )}
+              color={colors.PWhite}
+              style={{paddingRight: 5}}
+            />
+            {isSelected && (
+              <AntDesignIcon name="close" color={'white'} size={18} />
+            )}
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            key={recordObj.id}
+            onPress={() => setSelectedRecord(recordObj.id)}
+            style={styles.recordBlock}>
+            <TextComp
+              text={formatRcordKeyToTime(
+                recordObj.startTime,
+                recordObj.walkingTime,
+              )}
+              color={colors.PWhite}
+            />
+          </TouchableOpacity>
+        )}
+      </>
     );
   };
 
@@ -278,6 +301,8 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     marginHorizontal: 10,
     borderRadius: 15,
+    flexDirection: 'row',
+    alignContent: 'center',
   },
   selectedRecord: {
     backgroundColor: colors.PBlue,
