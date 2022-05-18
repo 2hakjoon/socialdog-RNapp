@@ -27,7 +27,7 @@ function WeatherScreen() {
   const geolocation = useSelector(
     (state: RootState) => state.geolocation.geolocation,
   );
-  const APIkey = 'c426ab12a65113b5edf8fa2bc8bf914f';
+  const OpenWeatherAPIkey = 'c426ab12a65113b5edf8fa2bc8bf914f';
 
   const navigation = useNavigation<UseNavigationProp<'WalkTab'>>();
 
@@ -36,19 +36,22 @@ function WeatherScreen() {
       const response = await Promise.all([
         //날씨정보
         await fetch(
-          `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely,alerts&units=metric&appid=${APIkey}`,
-        ).then(r => r.json()),
+          `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely,alerts&units=metric&appid=${OpenWeatherAPIkey}`,
+        )
+          .then(r => r.json())
+          .catch(e => console.log(e)),
         //미세먼지
         await fetch(
-          `https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=${latitude}&lon=${longitude}&appid=${APIkey}`,
-        ).then(r => r.json()),
+          `https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=${latitude}&lon=${longitude}&appid=${OpenWeatherAPIkey}`,
+        )
+          .then(r => r.json())
+          .catch(e => console.log(e)),
         //주소정보
         await getAddressFromLatLng({
           lat: latitude,
           lng: longitude,
         }),
       ]);
-      console.log(response);
       setWeatherData(response);
       storeWeatherData(response);
     } catch (e) {
@@ -58,8 +61,7 @@ function WeatherScreen() {
 
   useEffect(() => {
     getWeatherData().then(data => {
-      // console.log(data);
-      if (data) {
+      if (data !== null) {
         setWeatherData(data);
       }
     });

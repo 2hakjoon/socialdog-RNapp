@@ -1,59 +1,67 @@
 interface openWeatherMapOneCall {
-  current:{
-    uvi:number
-    temp:number
-    feels_like:number
-    weather:[{
-      main:string
-    }]
-  }
-  hourly:[
+  current: {
+    uvi: number;
+    temp: number;
+    feels_like: number;
+    weather: [
+      {
+        main: string;
+      },
+    ];
+  };
+  hourly: [
     {
-      uvi:number
-      temp:number
-      dt:number
-      weather:[{
-        main:string
-      }]
-    }
-  ]
-  daily:[
+      uvi: number;
+      temp: number;
+      dt: number;
+      weather: [
+        {
+          main: string;
+        },
+      ];
+    },
+  ];
+  daily: [
     {
-      uvi:number
-      dt:number
-      temp:{
-        day: number
-        eve: number
-        max: number
-        min: number
-        morn: number
-        night: number
-      }
-      weather:[{
-        main:string
-      }]
-    }
-  ]
+      uvi: number;
+      dt: number;
+      temp: {
+        day: number;
+        eve: number;
+        max: number;
+        min: number;
+        morn: number;
+        night: number;
+      };
+      weather: [
+        {
+          main: string;
+        },
+      ];
+    },
+  ];
 }
 
-export type openWeather = openWeatherMapOneCall | null | undefined
+export type openWeather = openWeatherMapOneCall | null | undefined;
 
 interface openWeatherAirPolution {
-  list:[{
-    main:{
-      aqi:number
-    }
-    components : {
-      pm2_5: number
-      pm10: number
-    }
-  }]
+  list: [
+    {
+      main: {
+        aqi: number;
+      };
+      components: {
+        pm2_5: number;
+        pm10: number;
+      };
+    },
+  ];
 }
 
-export type openAqi = openWeatherAirPolution | null | undefined
+export type openAqi = openWeatherAirPolution | null | undefined;
 
-
-{/*
+{
+  /*
 {
   "lat": 33.44,
   "lon": -94.04,
@@ -173,4 +181,5 @@ export type openAqi = openWeatherAirPolution | null | undefined
     },
     ...
   ]
-*/}
+*/
+}
