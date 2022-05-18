@@ -22,7 +22,10 @@ function AuthScreen() {
   const [accessToken, setAccessToken] = useState<string>();
 
   const [meQuery, {loading: meQueryLoading}] = useLazyQuery<QMe>(ME, {
-    onError: () => Alert.alert('오류', '회원정보를 찾을수 없습니다.'),
+    onError: e => {
+      console.log(e);
+      Alert.alert('로그인 실패', '회원정보를 찾을수 없습니다.');
+    },
   });
 
   useEffect(() => {

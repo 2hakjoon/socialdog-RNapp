@@ -83,8 +83,9 @@ const errorLink = onError(
                 value: data.data.reissueAccessToken.accessToken,
               });
             }
-            // refreshToken이 만료되었다면, 캐시를 전부 지우고, 로그인 해제
-            if (data.data?.reissueAccessToken.isRefreshTokenExpired) {
+            // refreshToken이 만료되었거나, 리프레시 토큰이 불일치 하다면,
+            // 캐시를 전부 지우고, 로그인 해제
+            if (data.data?.reissueAccessToken.error) {
               Alert.alert(
                 '다시 로그인 해주시요.',
                 '보안을 위해서 다시 로그인해주세요.',
@@ -122,5 +123,5 @@ const errorLink = onError(
 
 export const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link: from([authMiddleware, errorLink.concat(httpLink)]),
+  link: from([authMiddleware, errorLink, httpLink]),
 });
