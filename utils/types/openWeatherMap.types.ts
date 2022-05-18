@@ -60,8 +60,7 @@ interface openWeatherAirPolution {
 
 export type openAqi = openWeatherAirPolution | null | undefined;
 
-{
-  /*
+/*
 {
   "lat": 33.44,
   "lon": -94.04,
@@ -182,4 +181,3 @@ export type openAqi = openWeatherAirPolution | null | undefined;
     ...
   ]
 */
-}
