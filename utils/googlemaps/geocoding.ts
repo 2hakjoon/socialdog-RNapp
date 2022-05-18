@@ -15,7 +15,7 @@ export const getAddressFromLatLng = async ({
   );
   //console.log(response);
   const json = await response.json();
-  //console.log(json);
-  const [_, country, city] = json.plus_code.compound_code.split(' ');
-  return country + ' ' + city;
+  console.log(json);
+  const [_, country, province, city] = json.plus_code.compound_code.split(' ');
+  return country + ' ' + province + ' ' + city;
 };
