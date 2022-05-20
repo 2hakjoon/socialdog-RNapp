@@ -91,6 +91,7 @@ const errorLink = onError(
                 '보안을 위해서 다시 로그인해주세요.',
               );
               deleteTokens();
+              client.stop();
               client.resetStore();
             }
           }),
