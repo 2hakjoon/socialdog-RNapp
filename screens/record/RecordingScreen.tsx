@@ -27,6 +27,7 @@ import VIForegroundService from '@voximplant/react-native-foreground-service';
 import appConfig from '../../app.json';
 import {gpsFilter} from '../../App';
 import * as lzstring from 'lz-string';
+import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
 
 interface latlngObj {
   latitude: number;

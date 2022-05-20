@@ -31,6 +31,7 @@ import {client, mVLoginState} from './apollo-setup';
 import WalkRecordsScreen from './screens/walk-records/WalkRecordsScreen';
 import {colors} from './utils/colors';
 import {GpsFilter} from './utils/filter/gpsFilter';
+import BgTracking from './screens/record/Test';
 
 const RootTab = createBottomTabNavigator<RootTabNavigator>();
 const WalkStack = createNativeStackNavigator<WalkStackList>();
@@ -84,7 +85,7 @@ const App = () => {
           />
 
           <GeolocationComponent />
-
+          <BgTracking />
           <NavigationContainer>
             {!loginState ? (
               <AuthScreen />
