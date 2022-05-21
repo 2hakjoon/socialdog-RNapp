@@ -43,6 +43,5 @@
                 android:scheme="kakaofbe8f38ac3b3616f9a30a104ae0dc9fa" />
         </intent-filter>
       </activity>
-      <service android:name="com.voximplant.foregroundservice.VIForegroundService"> </service>
     </application>
 </manifest>

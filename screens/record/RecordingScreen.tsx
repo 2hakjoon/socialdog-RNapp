@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Alert, Platform, StyleSheet, Text, View} from 'react-native';
 import RNMapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
-import Geolocation from 'react-native-geolocation-service';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../module';
@@ -18,15 +17,11 @@ import {
 import Foundation from '../components/Icons/Foundation';
 import {QMe} from '../../__generated__/QMe';
 import ProfilePhoto from '../components/ProfilePhoto';
-import {
-  geolocationCofig,
-  hasLocationPermission,
-} from '../components/GeolocationComponent';
 import {ME} from '../../apollo-gqls/auth';
-import VIForegroundService from '@voximplant/react-native-foreground-service';
 import appConfig from '../../app.json';
 import {gpsFilter} from '../../App';
 import * as lzstring from 'lz-string';
+import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
 
 interface latlngObj {
   latitude: number;
@@ -74,15 +69,10 @@ function RecordingScreen() {
     MCreateWalkVariables
   >(CREATE_WALK);
 
-  const watchId = useRef(-1);
-
   const startRecording = async () => {
     setRecording(true);
     setStartTime(Date.now());
     gpsFilter.clearFilter();
-    if (Platform.OS === 'android') {
-      await startForegroundService();
-    }
   };
 
   const toggleRecording = () => {
@@ -141,7 +131,6 @@ function RecordingScreen() {
         {
           text: '끝났어요',
           onPress: () => {
-            removeLocationUpdates();
             saveRecordingAndReset();
           },
         },
@@ -149,75 +138,71 @@ function RecordingScreen() {
     );
   };
 
-  const startForegroundService = async () => {
-    if (Platform.Version >= 26) {
-      await VIForegroundService.createNotificationChannel({
-        id: 'locationChannel',
-        name: 'Location Tracking Channel',
-        description: 'Tracks location of user',
-        enableVibration: false,
-        // importance: 5,
-      });
-    }
-
-    return VIForegroundService.startService({
-      channelId: 'locationChannel',
-      id: 420,
-      title: appConfig.displayName,
-      text: '산책 기록중입니다.',
-      icon: 'ic_launcher',
-      // priority: 2,
-    });
+  const startGeolocationSubscribe = async () => {
+    BackgroundGeolocation.start();
   };
 
+  const removeGeolocationListener = useCallback(() => {
+    BackgroundGeolocation.removeAllListeners();
+  }, []);
+
   const stopForegroundService = useCallback(() => {
-    if (Platform.OS === 'android') {
-      VIForegroundService.stopService().catch((err: any) => console.log(err));
-    }
+    BackgroundGeolocation.stop();
   }, []);
 
   const getLocation = () =>
-    Geolocation.getCurrentPosition(
-      position => {
+    BackgroundGeolocation.getCurrentLocation(
+      location => {
         setLocation({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
+          latitude: location.latitude,
+          longitude: location.longitude,
         });
         if (!pause && recording) {
           setLocations(prev =>
             prev.concat([
               {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
+                latitude: location.latitude,
+                longitude: location.longitude,
               },
             ]),
           );
         }
-        console.log(position);
+        console.log(location);
       },
       error => {
         console.log(error);
       },
-      geolocationCofig,
     );
 
-  const getLocationUpdates = async () => {
-    const hasPermission = await hasLocationPermission();
-
-    if (!hasPermission) {
-      return;
+  useEffect(() => {
+    if (geolocaton?.latitude && geolocaton.longitude) {
+      setLocation({...geolocaton});
     }
+  }, []);
 
-    Geolocation.clearWatch(watchId.current);
+  useEffect(() => {
+    startGeolocationSubscribe();
+  }, []);
 
-    watchId.current = Geolocation.watchPosition(
-      position => {
+  useFocusEffect(
+    useCallback(() => {
+      if (recording) {
+        getLocation();
+      }
+      if (!recording) {
+        getLocation();
+      }
+      BackgroundGeolocation.removeAllListeners();
+      BackgroundGeolocation.on('location', location => {
+        console.log(Platform.OS, location);
+
         const [latitude, longitude] = gpsFilter.filterNewData([
-          position.coords.latitude,
-          position.coords.longitude,
+          location.latitude,
+          location.longitude,
         ]);
+
         if (!pause && recording) {
-          console.log(position);
+          console.log('recorded');
           setLocations(prev => {
             const {latitude: prevLat, longitude: prevLong} =
               prev[prev.length - 1];
@@ -234,7 +219,6 @@ function RecordingScreen() {
                 Math.abs(latitude - prevLat) + Math.abs(longitude - prevLong) <
                 0.0003
               ) {
-                console.log('recorded');
                 setMoveFastCount(0);
                 return prev.concat([
                   {
@@ -254,55 +238,17 @@ function RecordingScreen() {
           longitude,
         });
         // console.log(position);
-      },
-      error => {
-        console.log(error);
-      },
-      {
-        accuracy: {
-          android: 'high',
-          ios: 'best',
-        },
-        enableHighAccuracy: true,
-        distanceFilter: 0,
-        interval: 1000,
-        fastestInterval: 500,
-        // 아랫줄 코드 적용시 동작안함.
-        // forceRequestLocation: true,
-        // forceLocationManager: true,
-        showLocationDialog: true,
-        useSignificantChanges: false,
-      },
-    );
-    // console.log(watchId);
-  };
 
-  const removeLocationUpdates = useCallback(() => {
-    if (watchId.current !== -1) {
-      stopForegroundService();
-      Geolocation.clearWatch(watchId.current);
-      watchId.current = -1;
-    }
-  }, [watchId]);
-
-  useEffect(() => {
-    if (geolocaton?.latitude && geolocaton.longitude) {
-      setLocation({...geolocaton});
-    }
-  }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      if (recording) {
-        getLocation();
-      }
-      getLocationUpdates();
-      if (!recording) {
-        getLocation();
-      }
-      return () => {
-        stopForegroundService();
-      };
+        // handle your locations here
+        // to perform long running operation on iOS
+        // you need to create background task
+        BackgroundGeolocation.startTask(taskKey => {
+          // execute long running task
+          // eg. ajax post location
+          // IMPORTANT: task has to be ended by endTask
+          BackgroundGeolocation.endTask(taskKey);
+        });
+      });
     }, [recording, pause]),
   );
 
@@ -317,7 +263,6 @@ function RecordingScreen() {
 
   useEffect(() => {
     if (moveFastCount > 10) {
-      removeLocationUpdates();
       saveRecordingAndReset();
       Alert.alert(
         '기록 종료',
