@@ -1,5 +1,5 @@
 import React, {Component, useEffect} from 'react';
-import {Alert} from 'react-native';
+import {Alert, Platform} from 'react-native';
 import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
 
 function BgTracking() {
@@ -8,6 +8,7 @@ function BgTracking() {
     // to perform long running operation on iOS
     // you need to create background task
     BackgroundGeolocation.startTask(taskKey => {
+      console.log(Platform.OS, location);
       // execute long running task
       // eg. ajax post location
       // IMPORTANT: task has to be ended by endTask
@@ -97,6 +98,7 @@ function BgTracking() {
       BackgroundGeolocation.start(); //triggers start on start event
     }
   });
+  BackgroundGeolocation.start(); //triggers start on start event
 
   useEffect(() => {
     //리스너 제거
@@ -104,11 +106,12 @@ function BgTracking() {
       desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
       stationaryRadius: 50,
       distanceFilter: 50,
+      startForeground: true,
       notificationTitle: 'Background tracking',
       notificationText: 'enabled',
       debug: true,
       startOnBoot: false,
-      stopOnTerminate: true,
+      stopOnTerminate: false,
       locationProvider: BackgroundGeolocation.ACTIVITY_PROVIDER,
       interval: 1000,
       fastestInterval: 1000,
@@ -126,7 +129,7 @@ function BgTracking() {
       // },
     });
 
-    return BackgroundGeolocation.removeAllListeners();
+    //return BackgroundGeolocation.removeAllListeners();
   }, []);
   return <></>;
 }
