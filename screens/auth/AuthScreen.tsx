@@ -21,12 +21,7 @@ const LoginStack = createNativeStackNavigator<AuthStackList>();
 function AuthScreen() {
   const [accessToken, setAccessToken] = useState<string>();
 
-  const [meQuery, {loading: meQueryLoading}] = useLazyQuery<QMe>(ME, {
-    onError: e => {
-      console.log(e);
-      Alert.alert('로그인 실패', '회원정보를 찾을수 없습니다.');
-    },
-  });
+  const [meQuery, {loading: meQueryLoading}] = useLazyQuery<QMe>(ME);
 
   useEffect(() => {
     if (accessToken) {
@@ -37,6 +32,8 @@ function AuthScreen() {
           // console.log(user);
           if (user) {
             mVLoginState(true);
+          } else if (!data.data?.me.ok) {
+            Alert.alert('로그인 실패', '회원정보를 찾을수 없습니다.');
           }
         });
       });
