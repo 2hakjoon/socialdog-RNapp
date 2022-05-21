@@ -11,7 +11,6 @@ import {
 import RNMapView, {Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../module';
-import Geolocation from 'react-native-geolocation-service';
 import LineCalendar from './components/LineCalendar';
 import {useFocusEffect} from '@react-navigation/core';
 import TextComp from '../components/TextComp';
@@ -28,7 +27,6 @@ import {
 } from '../../__generated__/QGetWalks';
 import {QGetWalk, QGetWalkVariables} from '../../__generated__/QGetWalk';
 import {QMe} from '../../__generated__/QMe';
-import {geolocationCofig} from '../components/GeolocationComponent';
 import {
   DELETE_WALK_RECORD,
   GET_WALK_RECORD,
@@ -42,6 +40,7 @@ import {
 } from '../../__generated__/MDeleteWalk';
 import dayjs from 'dayjs';
 import * as lzstring from 'lz-string';
+import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
 
 interface latlngObj {
   latitude: number;
@@ -129,16 +128,19 @@ function WalkRecordsScreen() {
   );
 
   const getLocation = () =>
-    Geolocation.getCurrentPosition(
-      position => {
+    BackgroundGeolocation.getCurrentLocation(
+      location => {
+        console.log('geoComp:', location);
+
         setLocation({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
+          latitude: location.latitude,
+          longitude: location.longitude,
         });
-        // console.log(position);
       },
-      error => Alert.alert('Error', JSON.stringify(error)),
-      geolocationCofig,
+      error => {
+        console.log(error);
+        Alert.alert('Error', '위치정보를 불러오는데 실패했습니다.');
+      },
     );
 
   //키에 담긴 내용을 포멧팅해서 산책시작시간, 산책시간이 담긴 문자열로 리턴함
