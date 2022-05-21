@@ -1,5 +1,5 @@
 import React, {Component, useEffect} from 'react';
-import {Alert, Platform} from 'react-native';
+import {Alert} from 'react-native';
 import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
 
 function BgTracking() {
@@ -7,7 +7,6 @@ function BgTracking() {
     // handle your locations here
     // to perform long running operation on iOS
     // you need to create background task
-    console.log(Platform.OS, 'action');
     BackgroundGeolocation.startTask(taskKey => {
       // execute long running task
       // eg. ajax post location
@@ -17,7 +16,6 @@ function BgTracking() {
   });
 
   BackgroundGeolocation.on('stationary', stationaryLocation => {
-    console.log(Platform.OS, 'stationary');
     // handle stationary locations here
     // Actions.sendLocation(stationaryLocation);
   });
@@ -100,30 +98,22 @@ function BgTracking() {
     }
   });
 
-  setInterval(() => {
-    BackgroundGeolocation.getCurrentLocation(() => console.log(Platform.OS));
-  }, 2000);
-
-  //BackgroundGeolocation.stop();
-
   useEffect(() => {
+    //리스너 제거
     BackgroundGeolocation.configure({
       desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
       stationaryRadius: 50,
       distanceFilter: 50,
-      notificationsEnabled: true,
-      startForeground: true,
       notificationTitle: 'Background tracking',
       notificationText: 'enabled',
-      debug: false,
+      debug: true,
       startOnBoot: false,
-      stopOnTerminate: false,
+      stopOnTerminate: true,
       locationProvider: BackgroundGeolocation.ACTIVITY_PROVIDER,
-      interval: 2000,
+      interval: 1000,
       fastestInterval: 1000,
-      activitiesInterval: 1000,
+      activitiesInterval: 10000,
       stopOnStillActivity: false,
-      postTemplate: null,
       // url: 'http://192.168.81.15:3000/location',
       // httpHeaders: {
       //   'X-FOO': 'bar',
@@ -136,8 +126,7 @@ function BgTracking() {
       // },
     });
 
-    //리스너 제거
-    //return BackgroundGeolocation.removeAllListeners();
+    return BackgroundGeolocation.removeAllListeners();
   }, []);
   return <></>;
 }
