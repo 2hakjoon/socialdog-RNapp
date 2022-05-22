@@ -1,5 +1,6 @@
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {LoginStrategy} from './__generated__/globalTypes';
 
@@ -63,4 +64,9 @@ export type AuthNavigationProp = StackNavigationProp<AuthStackList>;
 export type AuthRoutProp<RouteName extends keyof AuthStackList> = RouteProp<
   AuthStackList,
   RouteName
+>;
+
+export type RecordsScreenProps = NativeStackScreenProps<
+  WalkStackList,
+  'Record'
 >;

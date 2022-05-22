@@ -9,7 +9,13 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {StatusBar, StyleSheet} from 'react-native';
+import {
+  Button,
+  StatusBar,
+  StyleSheet,
+  Touchable,
+  TouchableOpacity,
+} from 'react-native';
 import RecordingScreen from './screens/record/RecordingScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -31,6 +37,9 @@ import {client, mVLoginState} from './apollo-setup';
 import WalkRecordsScreen from './screens/walk-records/WalkRecordsScreen';
 import {colors} from './utils/colors';
 import {GpsFilter} from './utils/filter/gpsFilter';
+import {Alert} from 'react-native';
+import AntDesignIcon from './screens/components/Icons/AntDesign';
+import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
 const RootTab = createBottomTabNavigator<RootTabNavigator>();
 const WalkStack = createNativeStackNavigator<WalkStackList>();
 const SnsStack = createNativeStackNavigator<SnsStackList>();
@@ -42,7 +51,10 @@ const App = () => {
   const loginState = useReactiveVar(mVLoginState);
   function Walk() {
     return (
-      <WalkStack.Navigator>
+      <WalkStack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}>
         <WalkStack.Screen
           options={{title: '오늘의 날씨'}}
           name={'Weather'}
@@ -55,7 +67,10 @@ const App = () => {
         />
         <WalkStack.Screen
           name={'Record'}
-          options={{title: '산책 하기'}}
+          options={{
+            headerLeft: () => null,
+            gestureEnabled: false,
+          }}
           component={RecordingScreen}
         />
       </WalkStack.Navigator>

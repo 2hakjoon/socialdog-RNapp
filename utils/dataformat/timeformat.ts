@@ -62,11 +62,11 @@ export const formatWalkingTime = (seconds: number) => {
     return '(1분 미만)';
   }
   if (seconds > 60 && seconds < 3600) {
-    const string = `(산책시간 : ${Math.floor(seconds / 60)}분)`;
+    const string = `(${Math.floor(seconds / 60)}분)`;
     return string;
   }
   if (seconds > 3600) {
-    let string = `(산책시간 : ${Math.floor(seconds / 3600)}시간 `;
+    let string = `(${Math.floor(seconds / 3600)}시간 `;
     string += `${Math.floor((seconds % 3600) / 60)}분)`;
     return string;
   }

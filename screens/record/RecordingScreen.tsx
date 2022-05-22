@@ -1,7 +1,14 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Alert, Platform, StyleSheet, Text, View} from 'react-native';
+import {
+  Alert,
+  BackHandler,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import RNMapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../module';
 import BtnRecord from './components/BtnRecord';
@@ -21,8 +28,8 @@ import {ME} from '../../apollo-gqls/auth';
 import {gpsFilter} from '../../App';
 import * as lzstring from 'lz-string';
 import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
-import TextComp from '../components/TextComp';
 import {geolocationConfig} from '../components/GeolocationComponent';
+import {RecordsScreenProps} from '../../routes';
 
 interface latlngObj {
   latitude: number;
@@ -50,7 +57,7 @@ const CREATE_WALK = gql`
   }
 `;
 
-function RecordingScreen() {
+function RecordingScreen({navigation}: RecordsScreenProps) {
   const [location, setLocation] = useState<latlngObj | null>(null);
   const [locations, setLocations] = useState<latlngObj[]>([]);
   const [mapZoom, setMapZoom] = useState<number>(17);
@@ -98,7 +105,7 @@ function RecordingScreen() {
       if (!startTime) {
         throw new Error();
       }
-      createWalk({
+      const res = await createWalk({
         variables: {
           startTime: trimMilSec(startTime),
           walkingTime: timer,
@@ -106,6 +113,11 @@ function RecordingScreen() {
           walkRecord: compressed,
         },
       });
+      if (res.data?.createWalk.error) {
+        console.log(res.data?.createWalk.error);
+        Alert.alert('에러', '오류가 발생했습니다.');
+        return;
+      }
       setRecording(false);
       setPause(false);
       setTimer(0);
@@ -117,27 +129,7 @@ function RecordingScreen() {
   };
 
   const stopRecording = () => {
-    setPause(true);
-    Alert.alert(
-      '산책이 끝났나요?',
-      `${timerFormatKor(timer)} 동안 산책했어요.`,
-      [
-        {
-          text: '아직이요',
-          onPress: () => {
-            setPause(false);
-          },
-          style: 'cancel',
-        },
-        {
-          text: '끝났어요',
-          onPress: () => {
-            saveRecordingAndReset();
-            stopForegroundNotification();
-          },
-        },
-      ],
-    );
+    navigation.goBack();
   };
 
   const startGeolocationSubscribe = async () => {
@@ -171,14 +163,12 @@ function RecordingScreen() {
           longitude: location.longitude,
         });
         if (!pause && recording) {
-          setLocations(prev =>
-            prev.concat([
-              {
-                latitude: location.latitude,
-                longitude: location.longitude,
-              },
-            ]),
-          );
+          setLocations([
+            {
+              latitude: location.latitude,
+              longitude: location.longitude,
+            },
+          ]);
         }
         // console.log(location);
       },
@@ -194,6 +184,7 @@ function RecordingScreen() {
   }, []);
 
   useEffect(() => {
+    startRecording();
     startGeolocationSubscribe();
   }, []);
 
@@ -213,30 +204,21 @@ function RecordingScreen() {
           location.latitude,
           location.longitude,
         ]);
-
         if (!pause && recording) {
-          setLocations([
-            {
-              latitude,
-              longitude,
-            },
-          ]);
+          setLocations(prev => {
+            return prev.concat([
+              {
+                latitude,
+                longitude,
+              },
+            ]);
+          });
         }
         setLocation({
           latitude,
           longitude,
         });
         // console.log(position);
-
-        // handle your locations here
-        // to perform long running operation on iOS
-        // you need to create background task
-        BackgroundGeolocation.startTask(taskKey => {
-          // execute long running task
-          // eg. ajax post location
-          // IMPORTANT: task has to be ended by endTask
-          BackgroundGeolocation.endTask(taskKey);
-        });
       });
     }, [recording, pause]),
   );
@@ -249,6 +231,48 @@ function RecordingScreen() {
       }
     }, [timer]),
   );
+
+  useEffect(() => {
+    const onBackPress = (e: any) => {
+      setPause(true);
+      Alert.alert(
+        '산책이 끝났나요?',
+        `${timerFormatKor(timer)} 동안 산책했어요.`,
+        [
+          {
+            text: '아니요',
+            style: 'cancel',
+            onPress: () => {
+              setPause(false);
+            },
+          },
+          {
+            text: '네',
+            style: 'default',
+            onPress: async () => {
+              await saveRecordingAndReset();
+              await stopForegroundNotification();
+              navigation.dispatch(e.data.action);
+            },
+          },
+        ],
+      );
+    };
+    navigation.addListener('beforeRemove', e => {
+      // Prevent default behavior of leaving the screen
+      e.preventDefault();
+      onBackPress(e);
+    });
+    return () => {
+      navigation.removeListener('beforeRemove', onBackPress);
+    };
+  }, [navigation, timer]);
+
+  useEffect(() => {
+    console.log(locations);
+    console.log(timer);
+    console.log(startTime);
+  }, [locations]);
 
   return (
     <>

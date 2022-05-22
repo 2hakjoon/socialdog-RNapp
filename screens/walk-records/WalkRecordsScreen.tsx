@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Alert,
   FlatList,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -68,89 +67,6 @@ function WalkRecordsScreen() {
   );
   const refMapView = useRef<RNMapView>(null);
 
-  const makeRecordsToDayes = (walkRecords: QGetWalks) => {
-    let daysObj: IRecordData = {};
-    if (walkRecords.getWalks.data) {
-      walkRecords.getWalks.data.forEach(record => {
-        const date = now_yyyy_mm_dd(new Date(record.startTime * 1000));
-        if (daysObj[`${date}`]) {
-          daysObj[`${date}`].push({
-            ...record,
-          });
-        } else {
-          daysObj[`${date}`] = [
-            {
-              ...record,
-            },
-          ];
-        }
-      });
-    }
-    setRecordDays(daysObj);
-  };
-
-  const {data, loading, error} = useQuery<QGetWalks>(GET_WALK_RECORDS, {
-    onCompleted: makeRecordsToDayes,
-    fetchPolicy: 'network-only',
-  });
-
-  const [getWalkRecord] = useLazyQuery<QGetWalk, QGetWalkVariables>(
-    GET_WALK_RECORD,
-    {
-      onCompleted: async data => {
-        if (data.getWalk.data?.walkRecord) {
-          console.log(data.getWalk.data?.walkRecord);
-          try {
-            const decompressedLocations =
-              lzstring.decompressFromEncodedURIComponent(
-                data.getWalk.data?.walkRecord,
-              );
-            console.log(decompressedLocations);
-            if (decompressedLocations === null) {
-              throw new Error('압축해제에 실패했습니다.');
-            }
-            const parsed = JSON.parse(decompressedLocations);
-            console.log(parsed);
-            const locationsWithKey = parsed.map(
-              ([latitude, longitude]: [number, number]) => ({
-                latitude,
-                longitude,
-              }),
-            );
-            console.log(locationsWithKey);
-            setLocations(locationsWithKey);
-          } catch (e) {
-            console.log(e);
-          }
-        }
-      },
-    },
-  );
-
-  const getLocation = () =>
-    BackgroundGeolocation.getCurrentLocation(
-      location => {
-        console.log('geoComp:', location);
-
-        setLocation({
-          latitude: location.latitude,
-          longitude: location.longitude,
-        });
-      },
-      error => {
-        console.log(error);
-        Alert.alert('Error', '위치정보를 불러오는데 실패했습니다.');
-      },
-    );
-
-  //키에 담긴 내용을 포멧팅해서 산책시작시간, 산책시간이 담긴 문자열로 리턴함
-  const formatRcordKeyToTime = (startTime: number, walkingtime: number) => {
-    // console.log(startTime);
-    const startHour = new Date(startTime).getHours();
-    const walkingTime = walkingtime;
-    return `${formatAmPmHour(startHour)} ${formatWalkingTime(walkingTime)}`;
-  };
-
   //날짜를 선택할때마다 해당 날짜의 산책데이터 리스트를 recordList에 넣어줌.
   useEffect(() => {
     if (selectedDate.trim()) {
@@ -211,7 +127,88 @@ function WalkRecordsScreen() {
     }
   }, [locations]);
 
-  // console.log(recordDays);
+  const makeRecordsToDayes = (walkRecords: QGetWalks) => {
+    let daysObj: IRecordData = {};
+    if (walkRecords.getWalks.data) {
+      walkRecords.getWalks.data.forEach(record => {
+        const date = now_yyyy_mm_dd(new Date(record.startTime * 1000));
+        if (daysObj[`${date}`]) {
+          daysObj[`${date}`].push({
+            ...record,
+          });
+        } else {
+          daysObj[`${date}`] = [
+            {
+              ...record,
+            },
+          ];
+        }
+      });
+    }
+    setRecordDays(daysObj);
+  };
+
+  const {data, loading, error} = useQuery<QGetWalks>(GET_WALK_RECORDS, {
+    onCompleted: makeRecordsToDayes,
+    fetchPolicy: 'network-only',
+  });
+
+  const [getWalkRecord] = useLazyQuery<QGetWalk, QGetWalkVariables>(
+    GET_WALK_RECORD,
+    {
+      onCompleted: async data => {
+        if (data.getWalk.data?.walkRecord) {
+          //console.log(data.getWalk.data?.walkRecord);
+          try {
+            const decompressedLocations =
+              lzstring.decompressFromEncodedURIComponent(
+                data.getWalk.data?.walkRecord,
+              );
+            //console.log(decompressedLocations);
+            if (decompressedLocations === null) {
+              throw new Error('압축해제에 실패했습니다.');
+            }
+            const parsed = JSON.parse(decompressedLocations);
+            //console.log(parsed);
+            const locationsWithKey = parsed.map(
+              ([latitude, longitude]: [number, number]) => ({
+                latitude,
+                longitude,
+              }),
+            );
+            //console.log(locationsWithKey);
+            setLocations(locationsWithKey);
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      },
+    },
+  );
+
+  const getLocation = () =>
+    BackgroundGeolocation.getCurrentLocation(
+      location => {
+        //console.log('geoComp:', location);
+
+        setLocation({
+          latitude: location.latitude,
+          longitude: location.longitude,
+        });
+      },
+      error => {
+        console.log(error);
+        Alert.alert('Error', '위치정보를 불러오는데 실패했습니다.');
+      },
+    );
+
+  //키에 담긴 내용을 포멧팅해서 산책시작시간, 산책시간이 담긴 문자열로 리턴함
+  const formatRcordKeyToTime = (startTime: number, walkingtime: number) => {
+    // console.log(startTime);
+    const startHour = new Date(startTime).getHours();
+    const walkingTime = walkingtime;
+    return `${formatAmPmHour(startHour)} ${formatWalkingTime(walkingTime)}`;
+  };
 
   const flatListRef = useRef<FlatList>(null);
 

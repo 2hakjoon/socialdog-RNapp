@@ -55,6 +55,8 @@ const authMiddleware = new ApolloLink((operation, forward) => {
 
 const errorLink = onError(
   ({graphQLErrors, networkError, operation, forward}) => {
+    console.log(graphQLErrors);
+    console.log(networkError);
     if (
       client &&
       graphQLErrors?.filter(error => error.message === 'Unauthorized').length
