@@ -18,10 +18,11 @@ import Foundation from '../components/Icons/Foundation';
 import {QMe} from '../../__generated__/QMe';
 import ProfilePhoto from '../components/ProfilePhoto';
 import {ME} from '../../apollo-gqls/auth';
-import appConfig from '../../app.json';
 import {gpsFilter} from '../../App';
 import * as lzstring from 'lz-string';
 import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
+import TextComp from '../components/TextComp';
+import {geolocationConfig} from '../components/GeolocationComponent';
 
 interface latlngObj {
   latitude: number;
@@ -52,12 +53,11 @@ const CREATE_WALK = gql`
 function RecordingScreen() {
   const [location, setLocation] = useState<latlngObj | null>(null);
   const [locations, setLocations] = useState<latlngObj[]>([]);
-  const [mapZoom, setMapZoom] = useState<number>(18);
+  const [mapZoom, setMapZoom] = useState<number>(17);
   const [recording, setRecording] = useState(false);
   const [pause, setPause] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<number>();
   const [timer, setTimer] = useState<number>(0);
-  const [moveFastCount, setMoveFastCount] = useState(0);
   const {data} = useQuery<QMe>(ME);
   const user = data?.me.data;
   const geolocaton = useSelector(
@@ -73,6 +73,7 @@ function RecordingScreen() {
     setRecording(true);
     setStartTime(Date.now());
     gpsFilter.clearFilter();
+    startForegroundNotification();
   };
 
   const toggleRecording = () => {
@@ -132,6 +133,7 @@ function RecordingScreen() {
           text: '끝났어요',
           onPress: () => {
             saveRecordingAndReset();
+            stopForegroundNotification();
           },
         },
       ],
@@ -146,8 +148,19 @@ function RecordingScreen() {
     BackgroundGeolocation.removeAllListeners();
   }, []);
 
-  const stopForegroundService = useCallback(() => {
-    BackgroundGeolocation.stop();
+  const startForegroundNotification = useCallback(() => {
+    BackgroundGeolocation.configure({
+      ...geolocationConfig,
+      startForeground: true,
+      notificationsEnabled: true,
+    });
+  }, []);
+  const stopForegroundNotification = useCallback(() => {
+    BackgroundGeolocation.configure({
+      ...geolocationConfig,
+      startForeground: false,
+      notificationsEnabled: false,
+    });
   }, []);
 
   const getLocation = () =>
@@ -202,35 +215,13 @@ function RecordingScreen() {
         ]);
 
         if (!pause && recording) {
-          console.log('recorded');
           setLocations(prev => {
-            const {latitude: prevLat, longitude: prevLong} =
-              prev[prev.length - 1];
-
-            // 소수점 5번째 자리는 1m
-            // 5미터 이상 움직였을때만 기록.
-            if (
-              Math.abs(latitude - prevLat) + Math.abs(longitude - prevLong) >
-              0.00008
-            ) {
-              // 1초안에 30미터 이상 움직인 데이터는 gps값이 튄것으로 판단.
-              // 초속 5미터를 기준.
-              if (
-                Math.abs(latitude - prevLat) + Math.abs(longitude - prevLong) <
-                0.0003
-              ) {
-                setMoveFastCount(0);
-                return prev.concat([
-                  {
-                    latitude,
-                    longitude,
-                  },
-                ]);
-              } else {
-                setMoveFastCount(prev => prev + 1);
-              }
-            }
-            return prev;
+            return prev.concat([
+              {
+                latitude,
+                longitude,
+              },
+            ]);
           });
         }
         setLocation({
@@ -260,16 +251,6 @@ function RecordingScreen() {
       }
     }, [timer]),
   );
-
-  useEffect(() => {
-    if (moveFastCount > 10) {
-      saveRecordingAndReset();
-      Alert.alert(
-        '기록 종료',
-        '자전거, 자동차를 탑승하신것으로 확인되어, 산책 기록을 종료힙니다.',
-      );
-    }
-  }, [moveFastCount]);
 
   return (
     <>

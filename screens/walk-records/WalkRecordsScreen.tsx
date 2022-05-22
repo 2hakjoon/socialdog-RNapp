@@ -304,7 +304,7 @@ function WalkRecordsScreen() {
             center: location,
             heading: 0,
             pitch: 0,
-            zoom: 18,
+            zoom: 16,
           }}
           camera={{
             altitude: 15000,

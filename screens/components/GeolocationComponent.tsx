@@ -3,9 +3,32 @@ import {Alert} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {setGeolocation} from '../../module/geolocation';
 import {getData, storeData} from '../../utils/asyncStorage';
-import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
+import BackgroundGeolocation, {
+  ConfigureOptions,
+} from '@mauron85/react-native-background-geolocation';
+import appConfig from '../../app.json';
 
 const LOCATION = 'LOCATION';
+
+export const geolocationConfig: ConfigureOptions = {
+  desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
+  stationaryRadius: 15,
+  distanceFilter: 15,
+  startForeground: false,
+  notificationsEnabled: false,
+  notificationIconLarge: 'ic_launcher_round',
+  notificationIconSmall: 'ic_launcher_round',
+  notificationTitle: appConfig.name,
+  notificationText: '산책 기록 중 입니다...',
+  debug: false,
+  startOnBoot: false,
+  stopOnTerminate: true,
+  locationProvider: BackgroundGeolocation.ACTIVITY_PROVIDER,
+  interval: 5000,
+  fastestInterval: 2000,
+  activitiesInterval: 1000,
+  stopOnStillActivity: false,
+};
 
 function GeolocationComponent() {
   const dispatch = useDispatch();
@@ -46,22 +69,7 @@ function GeolocationComponent() {
 
   useEffect(() => {
     //리스너 제거
-    BackgroundGeolocation.configure({
-      desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
-      stationaryRadius: 10,
-      distanceFilter: 10,
-      startForeground: true,
-      notificationTitle: 'Background tracking',
-      notificationText: 'enabled',
-      debug: false,
-      startOnBoot: false,
-      stopOnTerminate: true,
-      locationProvider: BackgroundGeolocation.ACTIVITY_PROVIDER,
-      interval: 5000,
-      fastestInterval: 2000,
-      activitiesInterval: 1000,
-      stopOnStillActivity: false,
-    });
+    BackgroundGeolocation.configure(geolocationConfig);
   });
 
   return null;
