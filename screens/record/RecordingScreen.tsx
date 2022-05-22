@@ -180,7 +180,7 @@ function RecordingScreen() {
             ]),
           );
         }
-        console.log(location);
+        // console.log(location);
       },
       error => {
         console.log(error);
@@ -207,7 +207,7 @@ function RecordingScreen() {
       }
       BackgroundGeolocation.removeAllListeners();
       BackgroundGeolocation.on('location', location => {
-        console.log(Platform.OS, location);
+        // console.log(Platform.OS, location);
 
         const [latitude, longitude] = gpsFilter.filterNewData([
           location.latitude,
@@ -215,14 +215,12 @@ function RecordingScreen() {
         ]);
 
         if (!pause && recording) {
-          setLocations(prev => {
-            return prev.concat([
-              {
-                latitude,
-                longitude,
-              },
-            ]);
-          });
+          setLocations([
+            {
+              latitude,
+              longitude,
+            },
+          ]);
         }
         setLocation({
           latitude,
