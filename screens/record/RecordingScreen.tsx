@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import RNMapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../module';
 import BtnRecord from './components/BtnRecord';
@@ -140,6 +140,10 @@ function RecordingScreen({navigation}: RecordsScreenProps) {
     BackgroundGeolocation.removeAllListeners();
   }, []);
 
+  const stopGeolocationSubscribe = () => {
+    BackgroundGeolocation.stop();
+  };
+
   const startForegroundNotification = useCallback(() => {
     BackgroundGeolocation.configure({
       ...geolocationConfig,
@@ -162,15 +166,6 @@ function RecordingScreen({navigation}: RecordsScreenProps) {
           latitude: location.latitude,
           longitude: location.longitude,
         });
-        if (!pause && recording) {
-          setLocations([
-            {
-              latitude: location.latitude,
-              longitude: location.longitude,
-            },
-          ]);
-        }
-        // console.log(location);
       },
       error => {
         console.log(error);
@@ -186,6 +181,9 @@ function RecordingScreen({navigation}: RecordsScreenProps) {
   useEffect(() => {
     startRecording();
     startGeolocationSubscribe();
+    return () => {
+      stopGeolocationSubscribe();
+    };
   }, []);
 
   useFocusEffect(
@@ -267,12 +265,6 @@ function RecordingScreen({navigation}: RecordsScreenProps) {
       navigation.removeListener('beforeRemove', onBackPress);
     };
   }, [navigation, timer]);
-
-  useEffect(() => {
-    console.log(locations);
-    console.log(timer);
-    console.log(startTime);
-  }, [locations]);
 
   return (
     <>
