@@ -176,7 +176,7 @@ function RecordingScreen({navigation}: RecordsScreenProps) {
     if (geolocaton?.latitude && geolocaton.longitude) {
       setLocation({...geolocaton});
     }
-  }, []);
+  }, [geolocaton]);
 
   useEffect(() => {
     startRecording();
@@ -188,12 +188,6 @@ function RecordingScreen({navigation}: RecordsScreenProps) {
 
   useFocusEffect(
     useCallback(() => {
-      if (recording) {
-        getLocation();
-      }
-      if (!recording) {
-        getLocation();
-      }
       BackgroundGeolocation.removeAllListeners();
       BackgroundGeolocation.on('location', location => {
         // console.log(Platform.OS, location);

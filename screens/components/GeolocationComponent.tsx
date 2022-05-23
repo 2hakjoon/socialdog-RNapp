@@ -35,15 +35,15 @@ function GeolocationComponent() {
 
   const getLocation = async () => {
     BackgroundGeolocation.getCurrentLocation(
-      location => {
-        console.log('geoComp:', location);
+      async location => {
+        // console.log('geoComp:', location);
         dispatch(
           setGeolocation({
             latitude: location.latitude,
             longitude: location.longitude,
           }),
         );
-        storeData({
+        await storeData({
           key: LOCATION,
           value: {
             latitude: location.latitude,
@@ -59,16 +59,17 @@ function GeolocationComponent() {
   };
 
   useEffect(() => {
-    getData({key: LOCATION}).then(data => {
-      if (data) {
-        dispatch(setGeolocation({...data}));
-      }
-    });
+    getData({key: LOCATION}).then(
+      (data: {latitude: number; longitude: number}) => {
+        if (data.latitude && data.longitude) {
+          dispatch(setGeolocation({...data}));
+        }
+      },
+    );
     getLocation();
   }, []);
 
   useEffect(() => {
-    //리스너 제거
     BackgroundGeolocation.configure(geolocationConfig);
   });
 
