@@ -20,7 +20,6 @@ export const ME = gql`
       data {
         loginStrategy
         username
-        dogname
         photo
         id
       }

@@ -19,13 +19,34 @@ export enum LoginStrategy {
   LOCAL = "LOCAL",
 }
 
+export interface CreateDogInputDto {
+  name: string;
+  photo: string;
+  birthDay?: string | null;
+}
+
+export interface DeleteDogInputDto {
+  id: string;
+}
+
 export interface DeleteWalkInputDto {
   walkId: string;
+}
+
+export interface EditDogInputDto {
+  name?: string | null;
+  photo?: string | null;
+  birthDay?: string | null;
+  id: string;
 }
 
 export interface FileInputDto {
   filename: string;
   fileType: FileType;
+}
+
+export interface GetDogInputDto {
+  id: string;
 }
 
 //==============================================================

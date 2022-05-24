@@ -8,7 +8,7 @@ type editProfileParam = {
   username: string | null | undefined;
   dogname: string | null | undefined;
   loginStrategy: LoginStrategy | undefined;
-  id: number | null | undefined;
+  id: string | null | undefined;
   photo: string | null | undefined;
 };
 
@@ -46,7 +46,7 @@ export type ProfileStackList = {
 
 export type RootTabNavigator = {
   WalkTab: undefined;
-  //ProfileTab: undefined;
+  ProfileTab: undefined;
   SocialTab: undefined;
 };
 
