@@ -1,5 +1,5 @@
 import {useEffect, useRef} from 'react';
-import {Alert} from 'react-native';
+import {Alert, Platform} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {setGeolocation} from '../../module/geolocation';
 import {getData, storeData} from '../../utils/asyncStorage';
@@ -23,7 +23,10 @@ export const geolocationConfig: ConfigureOptions = {
   debug: false,
   startOnBoot: false,
   stopOnTerminate: true,
-  locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
+  locationProvider:
+    Platform.OS === 'android'
+      ? BackgroundGeolocation.DISTANCE_FILTER_PROVIDER
+      : BackgroundGeolocation.ACTIVITY_PROVIDER,
   interval: 5000,
   fastestInterval: 0,
   activitiesInterval: 1000,
