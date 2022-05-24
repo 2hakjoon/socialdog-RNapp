@@ -2,8 +2,10 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {WalkHomeScreenProps} from '../../routes';
 import {colors} from '../../utils/colors';
+import Foundation from '../components/Icons/Foundation';
 import TextComp from '../components/TextComp';
 import WeatherCard from '../weather/template/WeatherCard';
+import SelectDogTemplate from './template/SelectDogTemplate';
 
 function WalkHomeScreen({navigation}: WalkHomeScreenProps) {
   return (
@@ -12,7 +14,7 @@ function WalkHomeScreen({navigation}: WalkHomeScreenProps) {
         <WeatherCard />
       </View>
       <View style={styles.dogProfile}>
-        <TextComp text={'강아지 선택'} />
+        <SelectDogTemplate />
       </View>
       <View style={styles.bottomContainer}>
         <View style={styles.buttonContainer}>

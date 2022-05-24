@@ -21,19 +21,9 @@ import {
 import {ME} from '../../apollo-gqls/auth';
 
 const EDIT_PROFILE = gql`
-  mutation MEditProfile(
-    $username: String
-    $dogname: String
-    $password: String
-    $photo: String
-  ) {
+  mutation MEditProfile($username: String, $password: String, $photo: String) {
     editProfile(
-      args: {
-        username: $username
-        dogname: $dogname
-        password: $password
-        photo: $photo
-      }
+      args: {username: $username, password: $password, photo: $photo}
     ) {
       ok
       error

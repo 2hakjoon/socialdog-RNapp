@@ -1,13 +1,9 @@
 import React from 'react';
 import FdIcon from 'react-native-vector-icons/Foundation';
+import {IconProps} from 'react-native-vector-icons/Icon';
 
-interface IFoundation {
-  size: number;
-  name: string;
-}
-
-function Foundation({size, name}: IFoundation) {
-  return <FdIcon name={name} size={size} />;
+function Foundation({size, name, color, style}: IconProps) {
+  return <FdIcon name={name} size={size} color={color} style={style} />;
 }
 
 export default Foundation;

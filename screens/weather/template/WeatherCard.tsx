@@ -120,7 +120,7 @@ function WeatherCard() {
 
 const styles = StyleSheet.create({
   wrapper: {
-    padding: 12,
+    padding: 16,
   },
   tempContainer: {
     flexDirection: 'row',
