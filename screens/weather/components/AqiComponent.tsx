@@ -12,35 +12,34 @@ const MORDERATE = '보통';
 const BAD = '나쁨';
 const VERYBAD = '매우나쁨';
 
+export const pm2_5Level = (pm2_5: number) => {
+  if (pm2_5 < 0) {
+    return '알수없음';
+  } else if (pm2_5 < 15) {
+    return GOOD;
+  } else if (pm2_5 > 16 && pm2_5 < 35) {
+    return MORDERATE;
+  } else if (pm2_5 > 36 && pm2_5 < 75) {
+    return BAD;
+  } else {
+    return VERYBAD;
+  }
+};
+
+export const pm10Level = (pm10: number) => {
+  if (pm10 < 0) {
+    return '알수없음';
+  } else if (pm10 < 30) {
+    return GOOD;
+  } else if (pm10 > 31 && pm10 < 80) {
+    return MORDERATE;
+  } else if (pm10 > 81 && pm10 < 150) {
+    return BAD;
+  } else {
+    return VERYBAD;
+  }
+};
 function AqiComponent({pm2_5, pm10}: IAqiComponent) {
-  const pm2_5Level = (pm2_5: number) => {
-    if (pm2_5 < 0) {
-      return '알수없음';
-    } else if (pm2_5 < 15) {
-      return GOOD;
-    } else if (pm2_5 > 16 && pm2_5 < 35) {
-      return MORDERATE;
-    } else if (pm2_5 > 36 && pm2_5 < 75) {
-      return BAD;
-    } else {
-      return VERYBAD;
-    }
-  };
-
-  const pm10Level = (pm10: number) => {
-    if (pm10 < 0) {
-      return '알수없음';
-    } else if (pm10 < 30) {
-      return GOOD;
-    } else if (pm10 > 31 && pm10 < 80) {
-      return MORDERATE;
-    } else if (pm10 > 81 && pm10 < 150) {
-      return BAD;
-    } else {
-      return VERYBAD;
-    }
-  };
-
   return (
     <View style={styles.outerWrapper}>
       <TextComp text={'미세먼지'} size={25} weight={'600'} />

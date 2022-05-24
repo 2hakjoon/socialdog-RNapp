@@ -3,10 +3,17 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {WalkHomeScreenProps} from '../../routes';
 import {colors} from '../../utils/colors';
 import TextComp from '../components/TextComp';
+import WeatherCard from '../weather/template/WeatherCard';
 
 function WalkHomeScreen({navigation}: WalkHomeScreenProps) {
   return (
     <View style={styles.wapper}>
+      <View style={styles.weather}>
+        <WeatherCard />
+      </View>
+      <View style={styles.dogProfile}>
+        <TextComp text={'강아지 선택'} />
+      </View>
       <View style={styles.bottomContainer}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -32,7 +39,14 @@ function WalkHomeScreen({navigation}: WalkHomeScreenProps) {
 
 const styles = StyleSheet.create({
   wapper: {
-    flex: 10,
+    flex: 1,
+    backgroundColor: colors.PWhite,
+  },
+  weather: {
+    flex: 1.2,
+  },
+  dogProfile: {
+    flex: 6,
   },
   bottomContainer: {
     height: 60,
