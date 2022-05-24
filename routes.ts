@@ -20,6 +20,7 @@ export type AuthStackList = {
 
 export type RootStackList = {
   Record: undefined;
+  WalkHome: undefined;
   WalkRecords: undefined;
   Weather: undefined;
   Profile: undefined;
@@ -28,6 +29,7 @@ export type RootStackList = {
 };
 
 export type WalkStackList = {
+  WalkHome: undefined;
   Record: undefined;
   WalkRecords: undefined;
   Weather: undefined;
@@ -44,7 +46,7 @@ export type ProfileStackList = {
 
 export type RootTabNavigator = {
   WalkTab: undefined;
-  ProfileTab: undefined;
+  //ProfileTab: undefined;
   SocialTab: undefined;
 };
 
@@ -69,4 +71,9 @@ export type AuthRoutProp<RouteName extends keyof AuthStackList> = RouteProp<
 export type RecordsScreenProps = NativeStackScreenProps<
   WalkStackList,
   'Record'
+>;
+
+export type WalkHomeScreenProps = NativeStackScreenProps<
+  WalkStackList,
+  'WalkHome'
 >;

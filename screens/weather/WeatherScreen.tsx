@@ -172,25 +172,6 @@ function WeatherScreen() {
           </View>
         )}
       </ScrollView>
-      <View style={styles.bottomContainer}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.bottomButton}
-            onPress={() => {
-              navigation.navigate('WalkRecords');
-            }}>
-            <TextComp text="산책기록 보기" size={18} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.bottomButton}
-            onPress={() => {
-              navigation.navigate('Record');
-            }}>
-            <TextComp text="산책하러 가기" size={18} />
-          </TouchableOpacity>
-        </View>
-      </View>
     </>
   );
 }
@@ -262,27 +243,6 @@ const styles = StyleSheet.create({
   profileContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  bottomContainer: {
-    height: 60,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    backgroundColor: 'white',
-    borderTopWidth: 2,
-    borderTopColor: colors.PLightGray,
-  },
-  buttonContainer: {
-    width: '100%',
-    marginLeft: 'auto',
-    justifyContent: 'space-around',
-    flexDirection: 'row',
-  },
-  bottomButton: {
-    flex: 1,
-    alignItems: 'center',
-    width: '100%',
-    height: '100%',
   },
 });
 

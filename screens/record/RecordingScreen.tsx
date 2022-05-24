@@ -191,7 +191,7 @@ function RecordingScreen({navigation}: RecordsScreenProps) {
     useCallback(() => {
       BackgroundGeolocation.removeAllListeners();
       BackgroundGeolocation.on('location', location => {
-        console.log(Platform.OS, location);
+        //console.log(Platform.OS, location);
 
         const [latitude, longitude] = gpsFilter.filterNewData([
           location.latitude,
