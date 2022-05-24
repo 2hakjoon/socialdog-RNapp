@@ -23,9 +23,9 @@ export const geolocationConfig: ConfigureOptions = {
   debug: false,
   startOnBoot: false,
   stopOnTerminate: true,
-  locationProvider: BackgroundGeolocation.ACTIVITY_PROVIDER,
+  locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
   interval: 5000,
-  fastestInterval: 2000,
+  fastestInterval: 0,
   activitiesInterval: 1000,
   stopOnStillActivity: false,
 };

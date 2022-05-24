@@ -173,12 +173,13 @@ function RecordingScreen({navigation}: RecordsScreenProps) {
     );
 
   useEffect(() => {
-    if (geolocaton?.latitude && geolocaton.longitude) {
+    if (geolocaton?.latitude && geolocaton.longitude && !location) {
       setLocation({...geolocaton});
     }
   }, [geolocaton]);
 
   useEffect(() => {
+    getLocation();
     startRecording();
     startGeolocationSubscribe();
     return () => {
@@ -190,7 +191,7 @@ function RecordingScreen({navigation}: RecordsScreenProps) {
     useCallback(() => {
       BackgroundGeolocation.removeAllListeners();
       BackgroundGeolocation.on('location', location => {
-        // console.log(Platform.OS, location);
+        console.log(Platform.OS, location);
 
         const [latitude, longitude] = gpsFilter.filterNewData([
           location.latitude,
