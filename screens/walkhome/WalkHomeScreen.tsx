@@ -1,5 +1,11 @@
 import React from 'react';
-import {Platform, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {WalkHomeScreenProps} from '../../routes';
 import {colors} from '../../utils/colors';
 import Foundation from '../components/Icons/Foundation';
@@ -8,6 +14,13 @@ import WeatherCard from '../weather/template/WeatherCard';
 import SelectDogTemplate from './template/SelectDogTemplate';
 
 function WalkHomeScreen({navigation}: WalkHomeScreenProps) {
+  const moveToRecord = () => {
+    Alert.alert('산책시작', '산책을 시작하시겠습니까?', [
+      {text: '아니요', onPress: () => {}},
+      {text: '네', onPress: () => navigation.navigate('Record')},
+    ]);
+  };
+
   return (
     <View style={styles.wapper}>
       <View style={styles.weather}>
@@ -30,9 +43,14 @@ function WalkHomeScreen({navigation}: WalkHomeScreenProps) {
             <TouchableOpacity
               style={styles.bottomButton}
               onPress={() => {
-                navigation.navigate('Record');
+                moveToRecord();
               }}>
-              <TextComp text="산책하러 가기" size={18} />
+              <TextComp
+                text="산책하러 가기"
+                size={18}
+                weight={'600'}
+                color={colors.PBlue}
+              />
             </TouchableOpacity>
           </View>
         </View>

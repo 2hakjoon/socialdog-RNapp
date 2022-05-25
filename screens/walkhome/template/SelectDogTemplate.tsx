@@ -98,7 +98,7 @@ function SelectDogTemplate() {
               <AntDesignIcon name="close" size={30} />
             </TouchableOpacity>
             <DogProfilePhoto size={150} url={item.photo} />
-            <TextComp text={item.name} size={30} style={{paddingTop: 40}} />
+            <TextComp text={item.name} size={30} style={{paddingTop: 20}} />
           </View>
         ) : (
           <View style={styles.dogsWrapper}>
@@ -178,10 +178,12 @@ const styles = StyleSheet.create({
     }),
   },
   textWrappr: {
-    paddingTop: 60,
+    flex: 2,
+    justifyContent: 'center',
   },
   buttonWrapper: {
-    paddingTop: 40,
+    flex: 2,
+    justifyContent: 'center',
     width: '60%',
   },
   dogsWrapper: {
