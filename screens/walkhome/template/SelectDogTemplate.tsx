@@ -1,6 +1,8 @@
 import React from 'react';
 import {Image, Platform, StyleSheet, View} from 'react-native';
 import {colors} from '../../../utils/colors';
+import BasicButton from '../../components/BasicButton';
+import TextComp from '../../components/TextComp';
 
 function SelectDogTemplate() {
   return (
@@ -11,6 +13,12 @@ function SelectDogTemplate() {
             style={styles.dogImg}
             source={require('../../../assets/png/dog_default_photo.png')}
           />
+        </View>
+        <View style={styles.textWrappr}>
+          <TextComp text={'반려견의 프로필을 등록할 수 있어요!'} />
+        </View>
+        <View style={styles.buttonWrapper}>
+          <BasicButton title="반려견 등록하기" onPress={() => {}} />
         </View>
       </View>
     </View>
@@ -42,8 +50,8 @@ const styles = StyleSheet.create({
     }),
   },
   imgWrapper: {
-    width: 300,
-    height: 300,
+    width: 200,
+    height: 200,
     borderWidth: 6,
     borderColor: colors.PDarkGray,
     alignItems: 'center',
@@ -52,8 +60,15 @@ const styles = StyleSheet.create({
   },
   dogImg: {
     opacity: 0.5,
-    width: 250,
-    height: 250,
+    width: 150,
+    height: 150,
+  },
+  textWrappr: {
+    paddingTop: 60,
+  },
+  buttonWrapper: {
+    paddingTop: 40,
+    width: '60%',
   },
 });
 export default SelectDogTemplate;

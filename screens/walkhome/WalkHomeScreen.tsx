@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Platform, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {WalkHomeScreenProps} from '../../routes';
 import {colors} from '../../utils/colors';
 import Foundation from '../components/Icons/Foundation';
@@ -16,23 +16,25 @@ function WalkHomeScreen({navigation}: WalkHomeScreenProps) {
       <View style={styles.dogProfile}>
         <SelectDogTemplate />
       </View>
-      <View style={styles.bottomContainer}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.bottomButton}
-            onPress={() => {
-              navigation.navigate('WalkRecords');
-            }}>
-            <TextComp text="산책기록 보기" size={18} />
-          </TouchableOpacity>
+      <View style={styles.bottomOutterWrapper}>
+        <View style={styles.bottomContainer}>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.bottomButton}
+              onPress={() => {
+                navigation.navigate('WalkRecords');
+              }}>
+              <TextComp text="산책기록 보기" size={18} />
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.bottomButton}
-            onPress={() => {
-              navigation.navigate('Record');
-            }}>
-            <TextComp text="산책하러 가기" size={18} />
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.bottomButton}
+              onPress={() => {
+                navigation.navigate('Record');
+              }}>
+              <TextComp text="산책하러 가기" size={18} />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>
@@ -45,22 +47,41 @@ const styles = StyleSheet.create({
     backgroundColor: colors.PWhite,
   },
   weather: {
-    flex: 1.2,
+    flex: 1.4,
   },
   dogProfile: {
     flex: 6,
   },
+  bottomOutterWrapper: {
+    padding: 16,
+    flex: 1,
+  },
   bottomContainer: {
-    height: 60,
+    height: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 10,
+    borderRadius: 30,
     backgroundColor: 'white',
-    borderTopWidth: 2,
-    borderTopColor: colors.PLightGray,
+    ...Platform.select({
+      ios: {
+        shadowOpacity: 0.1,
+        shadowRadius: 30,
+        shadowOffset: {
+          height: 15,
+          width: 0,
+        },
+      },
+      //android
+      android: {
+        elevation: 5,
+      },
+    }),
   },
   buttonContainer: {
     width: '100%',
+    height: '100%',
+    alignItems: 'center',
     marginLeft: 'auto',
     justifyContent: 'space-around',
     flexDirection: 'row',
@@ -68,6 +89,7 @@ const styles = StyleSheet.create({
   bottomButton: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
     width: '100%',
     height: '100%',
   },
