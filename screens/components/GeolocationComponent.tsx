@@ -12,8 +12,8 @@ const LOCATION = 'LOCATION';
 
 export const geolocationConfig: ConfigureOptions = {
   desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
-  stationaryRadius: 7,
-  distanceFilter: 7,
+  stationaryRadius: 10,
+  distanceFilter: 10,
   startForeground: false,
   notificationsEnabled: false,
   notificationIconLarge: 'ic_launcher_round',

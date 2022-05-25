@@ -60,7 +60,7 @@ const CREATE_WALK = gql`
 function RecordingScreen({navigation}: RecordsScreenProps) {
   const [location, setLocation] = useState<latlngObj | null>(null);
   const [locations, setLocations] = useState<latlngObj[]>([]);
-  const [mapZoom, setMapZoom] = useState<number>(17);
+  const [mapZoom, setMapZoom] = useState<number>(16);
   const [recording, setRecording] = useState(false);
   const [pause, setPause] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<number>();
