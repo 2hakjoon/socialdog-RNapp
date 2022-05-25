@@ -12,8 +12,8 @@ const LOCATION = 'LOCATION';
 
 export const geolocationConfig: ConfigureOptions = {
   desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
-  stationaryRadius: 15,
-  distanceFilter: 15,
+  stationaryRadius: 7,
+  distanceFilter: 7,
   startForeground: false,
   notificationsEnabled: false,
   notificationIconLarge: 'ic_launcher_round',
@@ -27,7 +27,7 @@ export const geolocationConfig: ConfigureOptions = {
     Platform.OS === 'android'
       ? BackgroundGeolocation.DISTANCE_FILTER_PROVIDER
       : BackgroundGeolocation.ACTIVITY_PROVIDER,
-  interval: 5000,
+  interval: 2000,
   fastestInterval: 0,
   activitiesInterval: 1000,
   stopOnStillActivity: false,
