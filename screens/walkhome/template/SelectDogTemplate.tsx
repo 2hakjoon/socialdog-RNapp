@@ -1,10 +1,18 @@
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {Image, Platform, StyleSheet, View} from 'react-native';
+import {UseNavigationProp} from '../../../routes';
 import {colors} from '../../../utils/colors';
 import BasicButton from '../../components/BasicButton';
 import TextComp from '../../components/TextComp';
 
 function SelectDogTemplate() {
+  const navigation = useNavigation<UseNavigationProp<'WalkTab'>>();
+
+  const moveToEditDogProfileScreen = () => {
+    navigation.navigate('EditDogProfile');
+  };
+
   return (
     <View style={styles.wapper}>
       <View style={styles.InnerWrapper}>
@@ -18,7 +26,12 @@ function SelectDogTemplate() {
           <TextComp text={'반려견의 프로필을 등록할 수 있어요!'} />
         </View>
         <View style={styles.buttonWrapper}>
-          <BasicButton title="반려견 등록하기" onPress={() => {}} />
+          <BasicButton
+            title="반려견 등록하기"
+            onPress={() => {
+              moveToEditDogProfileScreen();
+            }}
+          />
         </View>
       </View>
     </View>

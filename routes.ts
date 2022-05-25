@@ -26,6 +26,7 @@ export type RootStackList = {
   Profile: undefined;
   Social: undefined;
   EditProfile: editProfileParam;
+  EditDogProfile: undefined;
 };
 
 export type WalkStackList = {
@@ -33,6 +34,7 @@ export type WalkStackList = {
   Record: undefined;
   WalkRecords: undefined;
   Weather: undefined;
+  EditDogProfile: undefined;
 };
 
 export type SnsStackList = {
@@ -76,4 +78,9 @@ export type RecordsScreenProps = NativeStackScreenProps<
 export type WalkHomeScreenProps = NativeStackScreenProps<
   WalkStackList,
   'WalkHome'
+>;
+
+export type EditDogProfileScreenProps = NativeStackScreenProps<
+  WalkStackList,
+  'EditDogProfile'
 >;

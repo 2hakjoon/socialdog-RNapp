@@ -32,6 +32,7 @@ import WalkRecordsScreen from './screens/walk-records/WalkRecordsScreen';
 import {colors} from './utils/colors';
 import {GpsFilter} from './utils/filter/gpsFilter';
 import WalkHomeScreen from './screens/walkhome/WalkHomeScreen';
+import EditDogProfileScreen from './screens/edit-dog-profile/EditDogProfileScreen';
 
 const RootTab = createBottomTabNavigator<RootTabNavigator>();
 const WalkStack = createNativeStackNavigator<WalkStackList>();
@@ -53,6 +54,10 @@ const App = () => {
           options={{title: '오늘의 날씨'}}
           name={'Weather'}
           component={WeatherScreen}
+        />
+        <WalkStack.Screen
+          name="EditDogProfile"
+          component={EditDogProfileScreen}
         />
         <WalkStack.Screen
           name={'WalkRecords'}
