@@ -1,6 +1,6 @@
 import {useMutation, useQuery} from '@apollo/client';
-import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import React, {useCallback, useState} from 'react';
 import {
   Alert,
   Platform,
@@ -38,7 +38,7 @@ const emptyDogProfile: QGetDogs_getMyDogs_data = {
 function SelectDogTemplate() {
   const navigation = useNavigation<UseNavigationProp<'WalkTab'>>();
 
-  const {data} = useQuery<QGetDogs>(GET_DOGS);
+  const {data, refetch} = useQuery<QGetDogs>(GET_DOGS);
   const evictCache = useEvictCache();
   const dogsData = data?.getMyDogs.data ? data.getMyDogs.data.slice() : [];
   //마지막 자리는 새로운 반려견 추가 컴포넌트.
@@ -50,6 +50,12 @@ function SelectDogTemplate() {
 
   //console.log(dogsData);
   const [slideIndex, setSlideIndex] = useState<number>(0);
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, []),
+  );
 
   const deleteDogProfileHandler = async (id: string, typename: string) => {
     Alert.alert('반려견 프로필 삭제', '반려견의 프로필을 삭제하시겠습니까?', [
@@ -65,6 +71,14 @@ function SelectDogTemplate() {
         },
       },
     ]);
+  };
+
+  const moveToEditDogProfileScreen = () => {
+    navigation.navigate('EditDogProfile');
+  };
+
+  const onCarouselSnap = (e: number) => {
+    setSlideIndex(e);
   };
 
   const renderItem = ({
@@ -84,7 +98,7 @@ function SelectDogTemplate() {
               <AntDesignIcon name="close" size={30} />
             </TouchableOpacity>
             <DogProfilePhoto size={150} url={item.photo} />
-            <TextComp text={item.name} size={30} />
+            <TextComp text={item.name} size={30} style={{paddingTop: 40}} />
           </View>
         ) : (
           <View style={styles.dogsWrapper}>
@@ -104,14 +118,6 @@ function SelectDogTemplate() {
         )}
       </>
     );
-  };
-
-  const moveToEditDogProfileScreen = () => {
-    navigation.navigate('EditDogProfile');
-  };
-
-  const onCarouselSnap = (e: number) => {
-    setSlideIndex(e);
   };
 
   return (

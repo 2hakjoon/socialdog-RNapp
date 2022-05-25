@@ -87,7 +87,7 @@ function EditDogProfileScreen() {
   };
 
   const onSubmit = async (formData: EditDogInputDto) => {
-    console.log(formData);
+    //console.log(formData);
     try {
       const file = newPhoto ? await uploadPhotoToS3(newPhoto) : undefined;
       if (!formData.name) {
@@ -145,17 +145,7 @@ function EditDogProfileScreen() {
           maxLength={20}
         />
       </View>
-      {/* <FormInputBox
-        title="반려견 생일"
-        name="dogname"
-        control={control}
-        rules={{
-          required: '내용을 입력해주세요.',
-        }}
-        errors={formState.errors.birthDay?.message}
-        maxLength={20}
-      /> */}
-      <BasicButton title="변경하기" onPress={handleSubmit(onSubmit)} />
+      <BasicButton title="저장하기" onPress={handleSubmit(onSubmit)} />
     </View>
   );
 }
