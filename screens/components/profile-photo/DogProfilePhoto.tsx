@@ -9,19 +9,27 @@ interface IDogProfilePhoto {
 
 function DogProfilePhoto({size, url}: IDogProfilePhoto) {
   return (
-    <View style={{...styles.imgWrapper, width: size * 1.2, height: size * 1.2}}>
+    <>
       {url ? (
         <Image
-          style={{...styles.dogImg, width: size, height: size}}
+          style={{...styles.dogPhoto, width: size * 1.2, height: size * 1.2}}
           source={{uri: url}}
         />
       ) : (
-        <Image
-          style={{...styles.dogImg, width: size, height: size}}
-          source={require('../../../assets/png/dog_default_photo.png')}
-        />
+        <View
+          style={{
+            ...styles.imgWrapper,
+            width: size * 1.2,
+            height: size * 1.2,
+            borderWidth: Math.ceil(size / 30),
+          }}>
+          <Image
+            style={{...styles.dogIcon, width: size, height: size}}
+            source={require('../../../assets/png/dog_default_photo.png')}
+          />
+        </View>
       )}
-    </View>
+    </>
   );
 }
 
@@ -34,12 +42,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 150,
+    overflow: 'hidden',
   },
-  dogImg: {
+  dogIcon: {
     opacity: 0.5,
     width: 150,
     height: 150,
   },
+  dogPhoto: {overflow: 'hidden', borderRadius: 1000},
 });
 
 export default DogProfilePhoto;

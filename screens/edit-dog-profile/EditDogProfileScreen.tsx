@@ -1,8 +1,8 @@
 import {gql, useApolloClient, useMutation} from '@apollo/client';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {useForm} from 'react-hook-form';
-import {Button, StyleSheet, View} from 'react-native';
+import {UseControllerProps, useForm} from 'react-hook-form';
+import {Alert, Button, StyleSheet, View} from 'react-native';
 import {Asset, launchImageLibrary} from 'react-native-image-picker';
 import {RootRouteProps, UseNavigationProp} from '../../routes';
 import BasicButton from '../components/BasicButton';
@@ -17,6 +17,8 @@ import {
 import {CREATE_PRESIGNED_URL} from '../../apollo-gqls/upload';
 import {CREATE_DOG} from '../../apollo-gqls/dogs';
 import {MCreateDog, MCreateDogVariables} from '../../__generated__/MCreateDog';
+import SmallButton from '../components/SmallButton';
+import DogProfilePhoto from '../components/profile-photo/DogProfilePhoto';
 
 function EditDogProfileScreen() {
   const {params: user} = useRoute<RootRouteProps<'EditDogProfile'>>();
@@ -24,7 +26,6 @@ function EditDogProfileScreen() {
   const client = useApolloClient();
   const {control, formState, handleSubmit, setValue} =
     useForm<EditDogInputDto>();
-
   const [createDog] = useMutation<MCreateDog, MCreateDogVariables>(CREATE_DOG);
 
   const [createPreSignedUrl] = useMutation<
@@ -86,29 +87,30 @@ function EditDogProfileScreen() {
   };
 
   const onSubmit = async (formData: EditDogInputDto) => {
-    // try {
-    //   const file = newPhoto ? await uploadPhotoToS3(newPhoto) : undefined;
-    //   // Todo CREATE DOG요청
-    //   if (res.data?.editProfile.ok) {
-    //     //Todo 캐시 반영.
-    //     Alert.alert('변경 완료', '변경사항이 반영되었습니다.', [
-    //       {
-    //         text: '확인',
-    //         onPress: () => {
-    //           goBackToProfile();
-    //         },
-    //       },
-    //     ]);
-    //   } else {
-    //     Alert.alert('변경 실패', '오류가 발생했습니다.', [
-    //       {
-    //         text: '확인',
-    //       },
-    //     ]);
-    //   }
-    // } catch (e) {
-    //   Alert.alert('오류', '사용자 정보 변경중에 오류가 발생했습니다.');
-    // }
+    console.log(formData);
+    try {
+      const file = newPhoto ? await uploadPhotoToS3(newPhoto) : undefined;
+      if (!formData.name) {
+        return;
+      }
+      if (!file) {
+        Alert.alert('사진 등록', '반려견 사진을 업로드해주세요.');
+        return;
+      }
+      const res = await createDog({
+        variables: {args: {name: formData.name, photo: file}},
+      });
+      console.log(res);
+      if (res.data?.createDog.error) {
+        Alert.alert('오류', res.data?.createDog.error);
+        return;
+      }
+      await Alert.alert('반려견 등록 성공', '반려견 프로필이 등록되었습니다.', [
+        {text: '확인', onPress: () => navigation.goBack()},
+      ]);
+    } catch (e) {
+      Alert.alert('오류', '반려견 프로필 등록중 오류가 발생했습니다.');
+    }
   };
 
   const changeProfilePhoto = async () => {
@@ -122,25 +124,27 @@ function EditDogProfileScreen() {
     if (!result.didCancel) {
       setNewPhoto(result.assets?.[0]);
     }
-    console.log(result.assets?.[0]);
+    // console.log(result.assets?.[0]);
   };
 
   return (
     <View style={styles.wrapper}>
       <View style={styles.photoContainer}>
-        <UserProfilePhoto url={newPhoto?.uri} />
-        <Button title="사진등록" onPress={changeProfilePhoto} />
+        <DogProfilePhoto size={130} url={newPhoto?.uri} />
+        <SmallButton title="사진등록" onPress={changeProfilePhoto} />
       </View>
-      <FormInputBox
-        title="반려견 이름"
-        name="name"
-        control={control}
-        rules={{
-          required: '내용을 입력해주세요.',
-        }}
-        errors={formState.errors.name?.message}
-        maxLength={20}
-      />
+      <View style={styles.inputWrapper}>
+        <FormInputBox
+          title="반려견 이름"
+          name="name"
+          control={control}
+          rules={{
+            required: '내용을 입력해주세요.',
+          }}
+          errors={formState.errors.name?.message}
+          maxLength={20}
+        />
+      </View>
       {/* <FormInputBox
         title="반려견 생일"
         name="dogname"
@@ -151,7 +155,7 @@ function EditDogProfileScreen() {
         errors={formState.errors.birthDay?.message}
         maxLength={20}
       /> */}
-      <BasicButton title="변경하기" onPress={() => handleSubmit(onSubmit)} />
+      <BasicButton title="변경하기" onPress={handleSubmit(onSubmit)} />
     </View>
   );
 }
@@ -164,6 +168,12 @@ const styles = StyleSheet.create({
   },
   photoContainer: {
     alignItems: 'center',
+    height: 250,
+    justifyContent: 'space-around',
+  },
+  inputWrapper: {
+    height: 160,
+    justifyContent: 'center',
   },
 });
 
