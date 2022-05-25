@@ -6,7 +6,7 @@ import {ME} from '../../apollo-gqls/auth';
 import {UseNavigationProp} from '../../routes';
 import {QMe} from '../../__generated__/QMe';
 import AntDesignIcon from '../components/Icons/AntDesign';
-import ProfilePhoto from '../components/ProfilePhoto';
+import UserProfilePhoto from '../components/profile-photo/UserProfilePhoto';
 import TextComp from '../components/TextComp';
 
 function ProfileScreen() {
@@ -19,7 +19,7 @@ function ProfileScreen() {
   const navigateToEditProfile = () => {
     naviation.navigate('EditProfile', {
       username: user?.username,
-      dogname: user?.dogname,
+      dogname: null,
       loginStrategy: user?.loginStrategy,
       id: user?.id,
       photo: user?.photo,
@@ -32,7 +32,7 @@ function ProfileScreen() {
         <AntDesignIcon name="setting" size={30} />
       </TouchableOpacity>
       <View style={styles.avatarContainer}>
-        <ProfilePhoto url={user?.photo} size={100} />
+        <UserProfilePhoto url={user?.photo} size={100} />
         {user?.username ? (
           <View style={styles.rowBox}>
             <TextComp text={'보호자:'} />
@@ -41,7 +41,6 @@ function ProfileScreen() {
         ) : (
           <TextComp text={'보호자이름을 설정해주세요.'} />
         )}
-        {user?.dogname && <TextComp text={user?.dogname} />}
       </View>
     </View>
   );

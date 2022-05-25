@@ -4,6 +4,7 @@ import {Image, Platform, StyleSheet, View} from 'react-native';
 import {UseNavigationProp} from '../../../routes';
 import {colors} from '../../../utils/colors';
 import BasicButton from '../../components/BasicButton';
+import DogProfilePhoto from '../../components/profile-photo/DogProfilePhoto';
 import TextComp from '../../components/TextComp';
 
 function SelectDogTemplate() {
@@ -16,12 +17,7 @@ function SelectDogTemplate() {
   return (
     <View style={styles.wapper}>
       <View style={styles.InnerWrapper}>
-        <View style={styles.imgWrapper}>
-          <Image
-            style={styles.dogImg}
-            source={require('../../../assets/png/dog_default_photo.png')}
-          />
-        </View>
+        <DogProfilePhoto size={150} />
         <View style={styles.textWrappr}>
           <TextComp text={'반려견의 프로필을 등록할 수 있어요!'} />
         </View>
@@ -61,20 +57,6 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
-  },
-  imgWrapper: {
-    width: 200,
-    height: 200,
-    borderWidth: 6,
-    borderColor: colors.PDarkGray,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 150,
-  },
-  dogImg: {
-    opacity: 0.5,
-    width: 150,
-    height: 150,
   },
   textWrappr: {
     paddingTop: 60,

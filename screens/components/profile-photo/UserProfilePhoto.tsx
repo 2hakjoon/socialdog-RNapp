@@ -1,13 +1,13 @@
 import React from 'react';
 import {Image} from 'react-native';
-import EvilIcon from './Icons/EvilIcons';
+import EvilIcon from '../Icons/EvilIcons';
 
 interface IProfilePhoto {
   url: string | undefined | null;
   size?: number;
 }
 
-function ProfilePhoto({url, size = 100}: IProfilePhoto) {
+function UserProfilePhoto({url, size = 100}: IProfilePhoto) {
   return (
     <>
       {url ? (
@@ -22,4 +22,4 @@ function ProfilePhoto({url, size = 100}: IProfilePhoto) {
   );
 }
 
-export default ProfilePhoto;
+export default UserProfilePhoto;

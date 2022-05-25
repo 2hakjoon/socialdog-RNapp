@@ -11,7 +11,7 @@ import {
 } from '../../__generated__/MEditProfile';
 import BasicButton from '../components/BasicButton';
 import FormInputBox from '../components/Input/FormInputBox';
-import ProfilePhoto from '../components/ProfilePhoto';
+import UserProfilePhoto from '../components/profile-photo/UserProfilePhoto';
 import {FileType} from '../../__generated__/globalTypes';
 import {AWS_S3_ENDPOINT} from '../../config';
 import {
@@ -172,7 +172,7 @@ function EditProfileScreen() {
 
   return (
     <View style={styles.wrapper}>
-      <ProfilePhoto url={newPhoto?.uri || user.photo} />
+      <UserProfilePhoto url={newPhoto?.uri || user.photo} />
       <Button title="프사변경" onPress={changeProfilePhoto} />
       <FormInputBox
         title="이름"

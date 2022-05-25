@@ -23,7 +23,7 @@ import {
 } from '../../__generated__/MCreateWalk';
 import Foundation from '../components/Icons/Foundation';
 import {QMe} from '../../__generated__/QMe';
-import ProfilePhoto from '../components/ProfilePhoto';
+import UserProfilePhoto from '../components/profile-photo/UserProfilePhoto';
 import {ME} from '../../apollo-gqls/auth';
 import {gpsFilter} from '../../App';
 import * as lzstring from 'lz-string';
@@ -290,7 +290,7 @@ function RecordingScreen({navigation}: RecordsScreenProps) {
           <Marker coordinate={location} anchor={{x: 0.5, y: 0.5}}>
             <View style={styles.walkMarker}>
               {user?.photo ? (
-                <ProfilePhoto url={user.photo} />
+                <UserProfilePhoto url={user.photo} />
               ) : (
                 <Foundation name="guide-dog" size={30} />
               )}
