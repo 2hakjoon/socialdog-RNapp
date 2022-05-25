@@ -130,20 +130,22 @@ function WalkRecordsScreen() {
   const makeRecordsToDayes = (walkRecords: QGetWalks) => {
     let daysObj: IRecordData = {};
     if (walkRecords.getWalks.data) {
-      walkRecords.getWalks.data.forEach(record => {
-        const date = now_yyyy_mm_dd(new Date(record.startTime * 1000));
-        if (daysObj[`${date}`]) {
-          daysObj[`${date}`].push({
-            ...record,
-          });
-        } else {
-          daysObj[`${date}`] = [
-            {
+      walkRecords.getWalks.data
+        .sort((a, b) => a.startTime - b.startTime)
+        .forEach(record => {
+          const date = now_yyyy_mm_dd(new Date(record.startTime * 1000));
+          if (daysObj[`${date}`]) {
+            daysObj[`${date}`].push({
               ...record,
-            },
-          ];
-        }
-      });
+            });
+          } else {
+            daysObj[`${date}`] = [
+              {
+                ...record,
+              },
+            ];
+          }
+        });
     }
     setRecordDays(daysObj);
   };
@@ -205,7 +207,7 @@ function WalkRecordsScreen() {
   //키에 담긴 내용을 포멧팅해서 산책시작시간, 산책시간이 담긴 문자열로 리턴함
   const formatRcordKeyToTime = (startTime: number, walkingtime: number) => {
     // console.log(startTime);
-    const startHour = new Date(startTime).getHours();
+    const startHour = new Date(startTime * 1000).getHours();
     const walkingTime = walkingtime;
     return `${formatAmPmHour(startHour)} ${formatWalkingTime(walkingTime)}`;
   };
