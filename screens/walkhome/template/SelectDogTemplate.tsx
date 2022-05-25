@@ -1,15 +1,14 @@
-import {useQuery} from '@apollo/client';
+import {useMutation, useQuery} from '@apollo/client';
 import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {
-  Image,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
+  Alert,
   Platform,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from 'react-native';
-import {GET_DOGS} from '../../../apollo-gqls/dogs';
+import {DELETE_DOG, GET_DOGS} from '../../../apollo-gqls/dogs';
 import {UseNavigationProp} from '../../../routes';
 import {colors} from '../../../utils/colors';
 import {
@@ -20,10 +19,13 @@ import BasicButton from '../../components/BasicButton';
 import DogProfilePhoto from '../../components/profile-photo/DogProfilePhoto';
 import TextComp from '../../components/TextComp';
 import Carousel from 'react-native-snap-carousel';
-import OcticonsIcon from '../../components/Icons/Octicons';
-import EntypoIcon from '../../components/Icons/Entypo';
 import FontAwesomeIcon from '../../components/Icons/FontAwesome';
 import AntDesignIcon from '../../components/Icons/AntDesign';
+import {
+  MDeleteDog,
+  MDeleteDogVariables,
+} from '../../../__generated__/MDeleteDog';
+import useEvictCache from '../../../hooks/useEvictCache';
 
 const emptyDogProfile: QGetDogs_getMyDogs_data = {
   __typename: 'Dogs',
@@ -37,14 +39,33 @@ function SelectDogTemplate() {
   const navigation = useNavigation<UseNavigationProp<'WalkTab'>>();
 
   const {data} = useQuery<QGetDogs>(GET_DOGS);
+  const evictCache = useEvictCache();
   const dogsData = data?.getMyDogs.data ? data.getMyDogs.data.slice() : [];
   //마지막 자리는 새로운 반려견 추가 컴포넌트.
   if (dogsData.length < 10) {
     dogsData.push(emptyDogProfile);
   }
 
+  const [deleteDog] = useMutation<MDeleteDog, MDeleteDogVariables>(DELETE_DOG);
+
   //console.log(dogsData);
   const [slideIndex, setSlideIndex] = useState<number>(0);
+
+  const deleteDogProfileHandler = async (id: string, typename: string) => {
+    Alert.alert('반려견 프로필 삭제', '반려견의 프로필을 삭제하시겠습니까?', [
+      {text: '아니요', onPress: () => {}},
+      {
+        text: '네',
+        onPress: async () => {
+          const res = await deleteDog({variables: {args: {id}}});
+          if (res.data?.deleteDog.error) {
+            Alert.alert('오류', res.data?.deleteDog.error);
+          }
+          evictCache(id, typename);
+        },
+      },
+    ]);
+  };
 
   const renderItem = ({
     item,
@@ -56,10 +77,12 @@ function SelectDogTemplate() {
     return (
       <>
         {item.photo.length ? (
-          <View style={styles.dogsWrapper}>
-            <View style={styles.closeWrapper}>
+          <View style={styles.dogsWrapper} key={item.id}>
+            <TouchableOpacity
+              style={styles.closeWrapper}
+              onPress={() => deleteDogProfileHandler(item.id, item.__typename)}>
               <AntDesignIcon name="close" size={30} />
-            </View>
+            </TouchableOpacity>
             <DogProfilePhoto size={150} url={item.photo} />
             <TextComp text={item.name} size={30} />
           </View>
@@ -106,7 +129,7 @@ function SelectDogTemplate() {
         <View style={styles.dotsWrapper}>
           {dogsData.map((_, idx) => {
             return (
-              <View style={{paddingHorizontal: 10}}>
+              <View style={{paddingHorizontal: 10}} key={Math.random()}>
                 {idx === slideIndex ? (
                   <>
                     <FontAwesomeIcon name="circle" />
