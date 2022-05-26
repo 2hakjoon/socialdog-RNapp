@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "build:android": "cd android && ./gradlew buildRelease && cd ../ && npx react-native run-android --variant=release",
+    "dev:android": "rm .env && cp .env.development .env && react-native run-android",
+    "build:android": "rm .env && cp .env.production .env && cd android && ./gradlew buildRelease && cd ../ && npx react-native run-android --variant=release",
     "ios": "react-native run-ios",
-    "ios:dev": "react-native run-ios --scheme socialdogDev",
+    "dev:ios": "rm .env && cp .env.development .env && react-native run-ios",
+    "build:ios": "rm .env && cp .env.production .env && cd android && ./gradlew buildRelease && cd ../ && npx react-native run-android --variant=release",
     "start": "react-native start",
     "test": "jest",
     "codegen": "sudo apollo client:codegen __generated__ --target=typescript --outputFlat",
