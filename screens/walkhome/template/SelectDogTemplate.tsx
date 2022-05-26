@@ -1,6 +1,12 @@
 import {useMutation, useQuery} from '@apollo/client';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import React, {useCallback, useState} from 'react';
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import {
   Alert,
   Platform,
@@ -10,7 +16,6 @@ import {
 } from 'react-native';
 import {DELETE_DOG, GET_DOGS} from '../../../apollo-gqls/dogs';
 import {UseNavigationProp} from '../../../routes';
-import {colors} from '../../../utils/colors';
 import {
   QGetDogs,
   QGetDogs_getMyDogs_data,
@@ -26,25 +31,28 @@ import {
   MDeleteDogVariables,
 } from '../../../__generated__/MDeleteDog';
 import useEvictCache from '../../../hooks/useEvictCache';
+import {TypenameAndId} from '../../../apollo-setup';
 
 const emptyDogProfile: QGetDogs_getMyDogs_data = {
   __typename: 'Dogs',
-  id: '' + Math.random(),
+  id: '',
   birthDay: '',
   name: '',
   photo: '',
 };
 
-function SelectDogTemplate() {
+interface ISelectedDogTemplate {
+  setSeletedDogId: Dispatch<SetStateAction<TypenameAndId | undefined>>;
+}
+
+function SelectDogTemplate({setSeletedDogId}: ISelectedDogTemplate) {
   const navigation = useNavigation<UseNavigationProp<'WalkTab'>>();
 
   const {data, refetch} = useQuery<QGetDogs>(GET_DOGS);
   const evictCache = useEvictCache();
-  const dogsData = data?.getMyDogs.data ? data.getMyDogs.data.slice() : [];
-  //마지막 자리는 새로운 반려견 추가 컴포넌트.
-  if (dogsData.length < 10) {
-    dogsData.push(emptyDogProfile);
-  }
+  const [dogsData, setDogsData] = useState<QGetDogs_getMyDogs_data[]>([
+    emptyDogProfile,
+  ]);
 
   const [deleteDog] = useMutation<MDeleteDog, MDeleteDogVariables>(DELETE_DOG);
 
@@ -56,6 +64,20 @@ function SelectDogTemplate() {
       refetch();
     }, []),
   );
+  useEffect(() => {
+    const slicedDogsData = data?.getMyDogs.data
+      ? data.getMyDogs.data.slice()
+      : [];
+    //마지막 자리는 새로운 반려견 추가 컴포넌트.
+    if (slicedDogsData.length < 10) {
+      slicedDogsData.push(emptyDogProfile);
+    }
+    setDogsData(slicedDogsData);
+    setSeletedDogId({
+      id: slicedDogsData[slideIndex].id,
+      __typename: slicedDogsData[slideIndex].__typename,
+    });
+  }, [data]);
 
   const deleteDogProfileHandler = async (id: string, typename: string) => {
     Alert.alert('반려견 프로필 삭제', '반려견의 프로필을 삭제하시겠습니까?', [
@@ -79,6 +101,7 @@ function SelectDogTemplate() {
 
   const onCarouselSnap = (e: number) => {
     setSlideIndex(e);
+    setSeletedDogId({id: dogsData[e].id, __typename: dogsData[e].__typename});
   };
 
   const renderItem = ({

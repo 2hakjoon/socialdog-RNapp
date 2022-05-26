@@ -32,6 +32,11 @@ export const mVLoginState = makeVar(false);
 let ApolloLinkAccessToken = '';
 let ApolloLinkRefreshToken = '';
 
+export interface TypenameAndId {
+  id: string;
+  __typename: string;
+}
+
 const httpLink = new HttpLink({
   uri: 'http://121.154.94.120/graphql',
   // uri: 'https://socialdog-backend.herokuapp.com/graphql',

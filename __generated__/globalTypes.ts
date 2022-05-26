@@ -25,6 +25,14 @@ export interface CreateDogInputDto {
   birthDay?: string | null;
 }
 
+export interface CreateWalkInputDto {
+  walkingTime: number;
+  startTime: number;
+  finishTime: number;
+  walkRecord: string;
+  dogId?: string | null;
+}
+
 export interface DeleteDogInputDto {
   id: string;
 }

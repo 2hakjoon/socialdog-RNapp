@@ -34,3 +34,12 @@ export const DELETE_WALK_RECORD = gql`
     }
   }
 `;
+
+export const CREATE_WALK = gql`
+  mutation MCreateWalk($args: CreateWalkInputDto!) {
+    createWalk(args: $args) {
+      ok
+      error
+    }
+  }
+`;

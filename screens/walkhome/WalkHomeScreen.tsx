@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Alert,
   Platform,
@@ -6,18 +6,24 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {TypenameAndId} from '../../apollo-setup';
 import {WalkHomeScreenProps} from '../../routes';
 import {colors} from '../../utils/colors';
-import Foundation from '../components/Icons/Foundation';
 import TextComp from '../components/TextComp';
 import WeatherCard from '../weather/template/WeatherCard';
 import SelectDogTemplate from './template/SelectDogTemplate';
 
 function WalkHomeScreen({navigation}: WalkHomeScreenProps) {
+  const [selectedDogId, setSeletedDogId] = useState<
+    TypenameAndId | undefined
+  >();
   const moveToRecord = () => {
     Alert.alert('산책시작', '산책을 시작하시겠습니까?', [
       {text: '아니요', onPress: () => {}},
-      {text: '네', onPress: () => navigation.navigate('Record')},
+      {
+        text: '네',
+        onPress: () => navigation.navigate('Record', selectedDogId),
+      },
     ]);
   };
 
@@ -27,7 +33,7 @@ function WalkHomeScreen({navigation}: WalkHomeScreenProps) {
         <WeatherCard />
       </View>
       <View style={styles.dogProfile}>
-        <SelectDogTemplate />
+        <SelectDogTemplate setSeletedDogId={setSeletedDogId} />
       </View>
       <View style={styles.bottomOutterWrapper}>
         <View style={styles.bottomContainer}>

@@ -3,6 +3,8 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { CreateWalkInputDto } from "./globalTypes";
+
 // ====================================================
 // GraphQL mutation operation: MCreateWalk
 // ====================================================
@@ -18,8 +20,5 @@ export interface MCreateWalk {
 }
 
 export interface MCreateWalkVariables {
-  walkingTime: number;
-  startTime: number;
-  finishTime: number;
-  walkRecord: string;
+  args: CreateWalkInputDto;
 }

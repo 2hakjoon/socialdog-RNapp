@@ -19,6 +19,7 @@ import {
   MCreatePreSignedUrlsVariables,
 } from '../../__generated__/MCreatePreSignedUrls';
 import {ME} from '../../apollo-gqls/auth';
+import {CREATE_PRESIGNED_URL} from '../../apollo-gqls/upload';
 
 const EDIT_PROFILE = gql`
   mutation MEditProfile($username: String, $password: String, $photo: String) {
@@ -30,16 +31,6 @@ const EDIT_PROFILE = gql`
     }
   }
 `;
-
-const CREATE_PRESIGNED_URL = gql`
-  mutation MCreatePreSignedUrls($files: [FileInputDto!]!) {
-    createPreSignedUrls(args: {files: $files}) {
-      ok
-      urls
-    }
-  }
-`;
-
 function EditProfileScreen() {
   const {params: user} = useRoute<RootRouteProps<'EditProfile'>>();
   const navigation = useNavigation<UseNavigationProp<'ProfileTab'>>();
@@ -58,7 +49,6 @@ function EditProfileScreen() {
 
   useEffect(() => {
     setValue('username', user.username);
-    setValue('dogname', user.dogname);
   }, []);
 
   const goBackToProfile = () => {
@@ -127,7 +117,6 @@ function EditProfileScreen() {
               data: {
                 __typename: 'UserProfile',
                 username: formData.username,
-                dogname: formData.dogname,
                 loginStrategy: user.loginStrategy,
                 id: user.id,
                 photo: file ? file : user.photo,

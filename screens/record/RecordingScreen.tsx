@@ -1,12 +1,5 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {
-  Alert,
-  BackHandler,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Alert, StyleSheet, Text, View} from 'react-native';
 import RNMapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
@@ -16,7 +9,7 @@ import TimerComp from './components/TimerComp';
 import BtnPause from './components/BtnPause';
 import {timerFormatKor, trimMilSec} from '../../utils/dataformat/timeformat';
 import {colors} from '../../utils/colors';
-import {gql, useMutation, useQuery} from '@apollo/client';
+import {gql, useApolloClient, useMutation, useQuery} from '@apollo/client';
 import {
   MCreateWalk,
   MCreateWalkVariables,
@@ -30,34 +23,14 @@ import * as lzstring from 'lz-string';
 import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
 import {geolocationConfig} from '../components/GeolocationComponent';
 import {RecordsScreenProps} from '../../routes';
+import {CREATE_WALK} from '../../apollo-gqls/walks';
 
 interface latlngObj {
   latitude: number;
   longitude: number;
 }
 
-const CREATE_WALK = gql`
-  mutation MCreateWalk(
-    $walkingTime: Int!
-    $startTime: Int!
-    $finishTime: Int!
-    $walkRecord: String!
-  ) {
-    createWalk(
-      args: {
-        walkingTime: $walkingTime
-        startTime: $startTime
-        finishTime: $finishTime
-        walkRecord: $walkRecord
-      }
-    ) {
-      ok
-      error
-    }
-  }
-`;
-
-function RecordingScreen({navigation}: RecordsScreenProps) {
+function RecordingScreen({route, navigation}: RecordsScreenProps) {
   const [location, setLocation] = useState<latlngObj | null>(null);
   const [locations, setLocations] = useState<latlngObj[]>([]);
   const [mapZoom, setMapZoom] = useState<number>(16);
@@ -70,6 +43,23 @@ function RecordingScreen({navigation}: RecordsScreenProps) {
   const geolocaton = useSelector(
     (state: RootState) => state.geolocation.geolocation,
   );
+  const client = useApolloClient();
+  const isParamExsist = Boolean(route.params?.id.length);
+  //console.log(`${route.params?.__typename}:${route.params?.id}`);
+  const dogData = isParamExsist
+    ? client.readFragment({
+        id: `${route.params?.__typename}:${route.params?.id}`,
+        fragment: gql`
+          fragment dogs on Dogs {
+            id
+            name
+            photo
+          }
+        `,
+      })
+    : null;
+
+  console.log(dogData);
 
   const [createWalk, {error: createWalkError}] = useMutation<
     MCreateWalk,
@@ -107,10 +97,13 @@ function RecordingScreen({navigation}: RecordsScreenProps) {
       }
       const res = await createWalk({
         variables: {
-          startTime: trimMilSec(startTime),
-          walkingTime: timer,
-          finishTime: trimMilSec(now),
-          walkRecord: compressed,
+          args: {
+            startTime: trimMilSec(startTime),
+            walkingTime: timer,
+            finishTime: trimMilSec(now),
+            walkRecord: compressed,
+            dogId: dogData?.id ? dogData.id : null,
+          },
         },
       });
       if (res.data?.createWalk.error) {

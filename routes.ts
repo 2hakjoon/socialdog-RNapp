@@ -2,6 +2,7 @@ import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {TypenameAndId} from './apollo-setup';
 import {LoginStrategy} from './__generated__/globalTypes';
 
 type editProfileParam = {
@@ -31,7 +32,7 @@ export type RootStackList = {
 
 export type WalkStackList = {
   WalkHome: undefined;
-  Record: undefined;
+  Record: TypenameAndId | undefined;
   WalkRecords: undefined;
   Weather: undefined;
   EditDogProfile: undefined;
