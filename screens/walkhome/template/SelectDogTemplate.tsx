@@ -148,6 +148,7 @@ function SelectDogTemplate({setSeletedDogId}: ISelectedDogTemplate) {
       <View style={styles.InnerWrapper}>
         {dogsData && (
           <Carousel
+            vertical={false}
             data={dogsData}
             renderItem={renderItem}
             sliderWidth={300}

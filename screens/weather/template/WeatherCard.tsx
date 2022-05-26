@@ -1,12 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Platform,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import EvIcon from 'react-native-vector-icons/EvilIcons';
+import {Platform, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import WeatherIcon from './WeatherIcon';
 import {getAddressFromLatLng} from '../../../utils/googlemaps/geocoding';
@@ -16,7 +9,6 @@ import AqiComponent, {pm10Level, pm2_5Level} from '../components/AqiComponent';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../module';
 import {Geolocation} from '../../../module/geolocation';
-import {colors} from '../../../utils/colors';
 import {UseNavigationProp} from '../../../routes';
 import {useQuery} from '@apollo/client';
 import {QMe} from '../../../__generated__/QMe';
@@ -65,6 +57,10 @@ function WeatherCard() {
     }
   };
 
+  const moveToWeatherScreen = () => {
+    navigation.push('Weather');
+  };
+
   useEffect(() => {
     getWeatherData().then(data => {
       if (data !== null) {
@@ -80,7 +76,9 @@ function WeatherCard() {
     <View style={styles.wrapper}>
       {weather?.current ? (
         <>
-          <View style={styles.tempContainer}>
+          <TouchableOpacity
+            style={styles.tempContainer}
+            onPress={() => moveToWeatherScreen()}>
             <WeatherIcon size={40} weather={weather.current.weather[0].main} />
             <View style={styles.currTemp}>
               <View style={styles.tempText}>
@@ -101,7 +99,7 @@ function WeatherCard() {
                 />
               </View>
             )}
-          </View>
+          </TouchableOpacity>
         </>
       ) : (
         <View
