@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Alert, StyleSheet, Text, View} from 'react-native';
+import {Alert, Image, StyleSheet, Text, View} from 'react-native';
 import RNMapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
@@ -59,7 +59,7 @@ function RecordingScreen({route, navigation}: RecordsScreenProps) {
       })
     : null;
 
-  console.log(dogData);
+  // console.log(dogData);
 
   const [createWalk, {error: createWalkError}] = useMutation<
     MCreateWalk,
@@ -282,8 +282,11 @@ function RecordingScreen({route, navigation}: RecordsScreenProps) {
           }}>
           <Marker coordinate={location} anchor={{x: 0.5, y: 0.5}}>
             <View style={styles.walkMarker}>
-              {user?.photo ? (
-                <UserProfilePhoto url={user.photo} />
+              {dogData?.photo ? (
+                <Image
+                  source={{uri: dogData?.photo}}
+                  style={{width: 30, height: 30}}
+                />
               ) : (
                 <Foundation name="guide-dog" size={30} />
               )}
