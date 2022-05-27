@@ -9,7 +9,6 @@ import BasicButton from '../components/BasicButton';
 import FormInputBox from '../components/Input/FormInputBox';
 import UserProfilePhoto from '../components/profile-photo/UserProfilePhoto';
 import {EditDogInputDto, FileType} from '../../__generated__/globalTypes';
-import {AWS_S3_ENDPOINT} from '../../config';
 import {
   MCreatePreSignedUrls,
   MCreatePreSignedUrlsVariables,
@@ -19,6 +18,7 @@ import {CREATE_DOG} from '../../apollo-gqls/dogs';
 import {MCreateDog, MCreateDogVariables} from '../../__generated__/MCreateDog';
 import SmallButton from '../components/SmallButton';
 import DogProfilePhoto from '../components/profile-photo/DogProfilePhoto';
+import Config from 'react-native-config';
 
 function EditDogProfileScreen() {
   const {params: user} = useRoute<RootRouteProps<'EditDogProfile'>>();
@@ -80,7 +80,7 @@ function EditDogProfileScreen() {
       if (awsUploadresult.status !== 200) {
         throw new Error('파일 업로드 실패');
       }
-      return AWS_S3_ENDPOINT + filename;
+      return Config.AWS_S3_ENDPOINT + '/' + filename;
     } catch (e) {
       throw new Error('파일 업로드 실패');
     }

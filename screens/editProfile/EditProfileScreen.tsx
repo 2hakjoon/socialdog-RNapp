@@ -13,13 +13,13 @@ import BasicButton from '../components/BasicButton';
 import FormInputBox from '../components/Input/FormInputBox';
 import UserProfilePhoto from '../components/profile-photo/UserProfilePhoto';
 import {FileType} from '../../__generated__/globalTypes';
-import {AWS_S3_ENDPOINT} from '../../config';
 import {
   MCreatePreSignedUrls,
   MCreatePreSignedUrlsVariables,
 } from '../../__generated__/MCreatePreSignedUrls';
 import {ME} from '../../apollo-gqls/auth';
 import {CREATE_PRESIGNED_URL} from '../../apollo-gqls/upload';
+import Config from 'react-native-config';
 
 const EDIT_PROFILE = gql`
   mutation MEditProfile($username: String, $password: String, $photo: String) {
@@ -91,7 +91,7 @@ function EditProfileScreen() {
       if (awsUploadresult.status !== 200) {
         throw new Error('파일 업로드 실패');
       }
-      return AWS_S3_ENDPOINT + filename;
+      return Config.AWS_S3_ENDPOINT + '/' + filename;
     } catch (e) {
       throw new Error('파일 업로드 실패');
     }
