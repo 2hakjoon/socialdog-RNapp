@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {ActivityIndicator, Alert, StyleSheet, View} from 'react-native';
+import Config from 'react-native-config';
 import WebView from 'react-native-webview';
 import {mVUserAccessToken, mVUserRefreshToken} from '../../apollo-setup';
 import {colors} from '../../utils/colors';
@@ -36,8 +37,7 @@ function SocialScreen() {
         </View>
       ) : (
         <WebView
-          source={{uri: 'http://121.154.94.120:4000'}}
-          //source={{uri: 'https://oursocialdog.com'}}
+          source={{uri: Config.SOCIALDOG_FRONTEND}}
           style={{height: '100%', width: '100%'}}
           javaScriptEnabled={true}
           // userAgent={'SOCIALDOG_APP'}
