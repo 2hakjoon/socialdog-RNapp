@@ -5,9 +5,12 @@
   "scripts": {
     "android": "react-native run-android",
     "dev:android": "rm .env && cp .env.development .env && react-native run-android",
+    "test:android": "rm .env && cp .env.development .env && cd android && ./gradlew buildRelease && cd ../ && npx react-native run-android --variant=release",
     "build:android": "rm .env && cp .env.production .env && cd android && ./gradlew buildRelease && cd ../ && npx react-native run-android --variant=release",
+    
     "ios": "react-native run-ios",
     "dev:ios": "rm .env && cp .env.development .env && react-native run-ios",
+    "test:ios": "rm .env && cp .env.development .env && cd android && ./gradlew buildRelease && cd ../ && npx react-native run-android --variant=release",
     "build:ios": "rm .env && cp .env.production .env && cd android && ./gradlew buildRelease && cd ../ && npx react-native run-android --variant=release",
     "start": "react-native start",
     "test": "jest",
