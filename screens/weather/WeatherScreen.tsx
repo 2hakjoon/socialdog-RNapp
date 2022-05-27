@@ -16,6 +16,7 @@ import {useQuery} from '@apollo/client';
 import {QMe} from '../../__generated__/QMe';
 import {ME} from '../../apollo-gqls/auth';
 import {getWeatherData, storeWeatherData} from '../../utils/asyncStorage';
+import Config from 'react-native-config';
 
 function WeatherScreen() {
   //0:onecall날씨정보, 1:미세먼지 2:주소
@@ -27,7 +28,6 @@ function WeatherScreen() {
   const geolocation = useSelector(
     (state: RootState) => state.geolocation.geolocation,
   );
-  const OpenWeatherAPIkey = 'c426ab12a65113b5edf8fa2bc8bf914f';
 
   const navigation = useNavigation<UseNavigationProp<'WalkTab'>>();
 
@@ -36,13 +36,13 @@ function WeatherScreen() {
       const response = await Promise.all([
         //날씨정보
         await fetch(
-          `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely,alerts&units=metric&appid=${OpenWeatherAPIkey}`,
+          `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely,alerts&units=metric&appid=${Config.OPEN_API_KEY}`,
         )
           .then(r => r.json())
           .catch(e => console.log(e)),
         //미세먼지
         await fetch(
-          `https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=${latitude}&lon=${longitude}&appid=${OpenWeatherAPIkey}`,
+          `https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=${latitude}&lon=${longitude}&appid=${Config.OPEN_API_KEY}`,
         )
           .then(r => r.json())
           .catch(e => console.log(e)),

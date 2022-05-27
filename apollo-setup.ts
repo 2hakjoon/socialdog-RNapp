@@ -38,7 +38,8 @@ export interface TypenameAndId {
 }
 
 const httpLink = new HttpLink({
-  uri: 'http://121.154.94.120/graphql',
+  uri: Config.AWS_S3_ENDPOINT,
+  // uri: 'http://121.154.94.120/graphql',
   // uri: 'https://socialdog-backend.herokuapp.com/graphql',
 });
 
