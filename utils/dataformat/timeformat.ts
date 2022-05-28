@@ -11,12 +11,6 @@ export const timerFormat = (time: number) => {
     formatedTime += 0;
   }
   formatedTime += Math.floor(time / 60) + ':';
-  time = time % 60;
-
-  if (time % 60 < 10) {
-    formatedTime += 0;
-  }
-  formatedTime += Math.floor(time % 60);
 
   return formatedTime;
 };

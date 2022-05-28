@@ -127,7 +127,7 @@ const errorLink = onError(
     if (networkError) {
       Alert.alert(
         '네트워크 오류',
-        '서버와의 연결에 실패했습니다. 잠시 후 다시 시도해주세요.',
+        '서버와의 연결에 실패했습니다. \n 잠시 후 다시 시도해주세요.',
       );
     }
   },

@@ -48,7 +48,7 @@ function TimerComp({recording, timer, setTimer, pause}: ITimerCompProps) {
 
   return (
     <View style={{width: 60}}>
-      <TextComp text={timerFormat(timer)} size={16} />
+      <TextComp text={timerFormat(timer)} size={20} weight={'600'} />
     </View>
   );
 }
