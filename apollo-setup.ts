@@ -125,7 +125,10 @@ const errorLink = onError(
       `[GraphQL error]: Message: ${graphQLErrors?.[0].message}, Location: ${graphQLErrors?.[0].locations}, Path: ${graphQLErrors?.[0].path}`,
     );
     if (networkError) {
-      console.log(`[Network error]: ${networkError}`);
+      Alert.alert(
+        '네트워크 오류',
+        '서버와의 연결에 실패했습니다. 잠시 후 다시 시도해주세요.',
+      );
     }
   },
 );
