@@ -3,14 +3,16 @@ export const TwoDays = 172800000;
 
 export const timerFormat = (time: number) => {
   let formatedTime = '';
-
-  formatedTime += Math.floor(time / 3600) + ':';
-  time = time % 3600;
-
   if (time / 60 < 10) {
     formatedTime += 0;
   }
   formatedTime += Math.floor(time / 60) + ':';
+  time = time % 60;
+
+  if (time % 60 < 10) {
+    formatedTime += 0;
+  }
+  formatedTime += Math.floor(time % 60);
 
   return formatedTime;
 };

@@ -62,15 +62,18 @@ function WeatherCard() {
   };
 
   useEffect(() => {
+    if (geolocation?.latitude && geolocation.longitude) {
+      getWeather({...geolocation});
+    }
+  }, [geolocation]);
+
+  useEffect(() => {
     getWeatherData().then(data => {
       if (data !== null) {
         setWeatherData(data);
       }
     });
-    if (geolocation?.latitude && geolocation.longitude) {
-      getWeather({...geolocation});
-    }
-  }, [geolocation]);
+  }, []);
 
   return (
     <View style={styles.wrapper}>

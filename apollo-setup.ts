@@ -16,7 +16,7 @@ import {
   getData,
   storeData,
 } from './utils/asyncStorage';
-import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from './utils/constants';
+import {USER_ACCESS_TOKEN} from './utils/constants';
 import Config from 'react-native-config';
 import {
   MReissueAccessToken,
@@ -37,6 +37,7 @@ export interface TypenameAndId {
   __typename: string;
 }
 
+console.log(Config);
 const httpLink = new HttpLink({
   uri: Config.BACKEND_API_URL,
   // uri: 'http://121.154.94.120/graphql',
