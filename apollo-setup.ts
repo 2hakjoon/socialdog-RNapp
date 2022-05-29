@@ -37,7 +37,7 @@ export interface TypenameAndId {
   __typename: string;
 }
 
-console.log(Config);
+// console.log(Config);
 const httpLink = new HttpLink({
   uri: Config.BACKEND_API_URL,
   // uri: 'http://121.154.94.120/graphql',

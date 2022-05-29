@@ -39,7 +39,7 @@ function GeolocationComponent() {
   const getLocation = async () => {
     BackgroundGeolocation.getCurrentLocation(
       async location => {
-        console.log('geoComp:', location);
+        // console.log('geoComp:', location);
         dispatch(
           setGeolocation({
             latitude: location.latitude,

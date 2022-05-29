@@ -2,7 +2,17 @@ import {gql, useApolloClient, useMutation} from '@apollo/client';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {UseControllerProps, useForm} from 'react-hook-form';
-import {Alert, Button, StyleSheet, View} from 'react-native';
+import {
+  Alert,
+  Button,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {Asset, launchImageLibrary} from 'react-native-image-picker';
 import {RootRouteProps, UseNavigationProp} from '../../routes';
 import BasicButton from '../components/BasicButton';
@@ -128,28 +138,38 @@ function EditDogProfileScreen() {
   };
 
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.photoContainer}>
-        <DogProfilePhoto size={130} url={newPhoto?.uri} />
-        <SmallButton title="사진등록" onPress={changeProfilePhoto} />
-      </View>
-      <View style={styles.inputWrapper}>
-        <FormInputBox
-          title="반려견 이름"
-          name="name"
-          control={control}
-          rules={{
-            required: '내용을 입력해주세요.',
-          }}
-          errors={formState.errors.name?.message}
-          maxLength={20}
-        />
-      </View>
-      <BasicButton title="저장하기" onPress={handleSubmit(onSubmit)} />
-    </View>
+    <ScrollView style={styles.outerWrapper}>
+      <KeyboardAvoidingView
+        //behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior="padding"
+        style={styles.wrapper}>
+        <View style={styles.photoContainer}>
+          <DogProfilePhoto size={130} url={newPhoto?.uri} />
+          <SmallButton title="사진등록" onPress={changeProfilePhoto} />
+        </View>
+        <View style={styles.inputWrapper}>
+          <FormInputBox
+            title="반려견 이름"
+            name="name"
+            control={control}
+            rules={{
+              required: '내용을 입력해주세요.',
+            }}
+            errors={formState.errors.name?.message}
+            maxLength={20}
+          />
+        </View>
+        <BasicButton title="저장하기" onPress={handleSubmit(onSubmit)} />
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 }
 const styles = StyleSheet.create({
+  outerWrapper: {
+    backgroundColor: 'white',
+    width: '100%',
+    height: '100%',
+  },
   wrapper: {
     backgroundColor: 'white',
     paddingVertical: 30,
