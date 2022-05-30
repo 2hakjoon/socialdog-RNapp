@@ -16,7 +16,6 @@ import {
 } from '../../__generated__/MCreateWalk';
 import Foundation from '../components/Icons/Foundation';
 import {QMe} from '../../__generated__/QMe';
-import UserProfilePhoto from '../components/profile-photo/UserProfilePhoto';
 import {ME} from '../../apollo-gqls/auth';
 import {gpsFilter} from '../../App';
 import * as lzstring from 'lz-string';
@@ -24,6 +23,7 @@ import BackgroundGeolocation from '@mauron85/react-native-background-geolocation
 import {geolocationConfig} from '../components/GeolocationComponent';
 import {RecordsScreenProps} from '../../routes';
 import {CREATE_WALK} from '../../apollo-gqls/walks';
+import TextComp from '../components/TextComp';
 
 interface latlngObj {
   latitude: number;
@@ -33,7 +33,7 @@ interface latlngObj {
 function RecordingScreen({route, navigation}: RecordsScreenProps) {
   const [location, setLocation] = useState<latlngObj | null>(null);
   const [locations, setLocations] = useState<latlngObj[]>([]);
-  const [mapZoom, setMapZoom] = useState<number>(16);
+  const [mapZoom, setMapZoom] = useState<number>(17);
   const [recording, setRecording] = useState(false);
   const [pause, setPause] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<number>();
@@ -67,9 +67,9 @@ function RecordingScreen({route, navigation}: RecordsScreenProps) {
   >(CREATE_WALK);
 
   const startRecording = async () => {
+    gpsFilter.clearFilter();
     setRecording(true);
     setStartTime(Date.now());
-    gpsFilter.clearFilter();
     startForegroundNotification();
   };
 
@@ -152,19 +152,6 @@ function RecordingScreen({route, navigation}: RecordsScreenProps) {
     });
   }, []);
 
-  const getLocation = () =>
-    BackgroundGeolocation.getCurrentLocation(
-      location => {
-        setLocation({
-          latitude: location.latitude,
-          longitude: location.longitude,
-        });
-      },
-      error => {
-        console.log(error);
-      },
-    );
-
   useEffect(() => {
     if (geolocaton?.latitude && geolocaton.longitude && !location) {
       setLocation({...geolocaton});
@@ -172,7 +159,6 @@ function RecordingScreen({route, navigation}: RecordsScreenProps) {
   }, [geolocaton]);
 
   useEffect(() => {
-    getLocation();
     startRecording();
     startGeolocationSubscribe();
     return () => {
@@ -185,6 +171,9 @@ function RecordingScreen({route, navigation}: RecordsScreenProps) {
       BackgroundGeolocation.removeAllListeners();
       BackgroundGeolocation.on('location', location => {
         //console.log(Platform.OS, location);
+        if (location.accuracy >= 20) {
+          return;
+        }
 
         const [latitude, longitude] = gpsFilter.filterNewData([
           location.latitude,

@@ -39,7 +39,8 @@ const WalkStack = createNativeStackNavigator<WalkStackList>();
 const SnsStack = createNativeStackNavigator<SnsStackList>();
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
 
-export const gpsFilter = new GpsFilter({round: 10, prevWeight: 0.8});
+export const gpsFilter = new GpsFilter({round: 3});
+
 const App = () => {
   const loginState = useReactiveVar(mVLoginState);
   function Walk() {

@@ -39,7 +39,7 @@ function GeolocationComponent() {
   const getLocation = async () => {
     BackgroundGeolocation.getCurrentLocation(
       async location => {
-        // console.log('geoComp:', location);
+        //console.log('geoComp:', location);
         dispatch(
           setGeolocation({
             latitude: location.latitude,
@@ -58,6 +58,10 @@ function GeolocationComponent() {
         console.log(error);
         Alert.alert('Error', '위치정보를 불러오는데 실패했습니다.');
       },
+      {
+        maximumAge: 0,
+        enableHighAccuracy: false,
+      },
     );
   };
 
@@ -67,9 +71,9 @@ function GeolocationComponent() {
         if (data?.latitude && data?.longitude) {
           dispatch(setGeolocation({...data}));
         }
+        getLocation();
       },
     );
-    getLocation();
   }, []);
 
   useEffect(() => {

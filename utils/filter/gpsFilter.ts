@@ -32,7 +32,7 @@ export class GpsFilter {
     if (this.prevDataArr.length === 0) {
       this.prevDataArr.push(data);
       return data;
-    } else if (this.prevDataArr.length < 2) {
+    } else if (this.prevDataArr.length === 1) {
       gapSum[0] += data[0] - this.prevDataArr[0][0];
       gapSum[1] += data[1] - this.prevDataArr[0][1];
 
