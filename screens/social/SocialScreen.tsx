@@ -2,19 +2,24 @@ import React, {useState} from 'react';
 import {ActivityIndicator, Alert, StyleSheet, View} from 'react-native';
 import Config from 'react-native-config';
 import WebView from 'react-native-webview';
+import {useSelector} from 'react-redux';
 import {mVUserAccessToken, mVUserRefreshToken} from '../../apollo-setup';
+import {RootState} from '../../module';
 import {colors} from '../../utils/colors';
 import EmotionSadCry from '../components/Icons/EmotionSadCry';
 import TextComp from '../components/TextComp';
 
 function SocialScreen() {
   const [onError, setOnError] = useState(false);
+  const geolocation = useSelector(
+    (state: RootState) => state.geolocation.geolocation,
+  );
   // console.log('accessToken', mVUserAccessToken());
   // console.log('refreshToken', mVUserRefreshToken());
-
   const injectJsToWebView = `
-    window.localStorage.setItem('USER_ACCESS_TOKEN', '${mVUserAccessToken()}');
-    window.localStorage.setItem('USER_REFRESH_TOKEN', '${mVUserRefreshToken()}');
+  window.localStorage.setItem('USER_ACCESS_TOKEN', '${mVUserAccessToken()}');
+  window.localStorage.setItem('USER_REFRESH_TOKEN', '${mVUserRefreshToken()}');
+  window.localStorage.setItem('GEOLOCATION', '${JSON.stringify(geolocation)}');
   `;
 
   return (
@@ -40,7 +45,7 @@ function SocialScreen() {
           source={{uri: Config.SOCIALDOG_FRONTEND}}
           style={{height: '100%', width: '100%'}}
           javaScriptEnabled={true}
-          // userAgent={'SOCIALDOG_APP'}
+          userAgent={'SOCIALDOG_APP'}
           injectedJavaScriptBeforeContentLoaded={injectJsToWebView}
           renderLoading={() => (
             <ActivityIndicator
