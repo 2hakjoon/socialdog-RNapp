@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, Image, StyleSheet, Text, View} from 'react-native';
 import RNMapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import {useFocusEffect} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../module';
 import BtnRecord from './components/BtnRecord';
 import TimerComp from './components/TimerComp';
@@ -24,6 +24,8 @@ import {geolocationConfig} from '../components/GeolocationComponent';
 import {RecordsScreenProps} from '../../routes';
 import {CREATE_WALK} from '../../apollo-gqls/walks';
 import TextComp from '../components/TextComp';
+import {setGeolocation} from '../../module/geolocation';
+import {storeData} from '../../utils/asyncStorage';
 
 interface latlngObj {
   latitude: number;
@@ -40,6 +42,7 @@ function RecordingScreen({route, navigation}: RecordsScreenProps) {
   const [timer, setTimer] = useState<number>(0);
   const {data} = useQuery<QMe>(ME);
   const user = data?.me.data;
+  const dispatch = useDispatch();
   const geolocaton = useSelector(
     (state: RootState) => state.geolocation.geolocation,
   );
@@ -152,6 +155,32 @@ function RecordingScreen({route, navigation}: RecordsScreenProps) {
     });
   }, []);
 
+  const getLocation = async () => {
+    BackgroundGeolocation.getCurrentLocation(
+      async location => {
+        //console.log('geoComp:', location);
+        const geoObj = {
+          latitude: location.latitude,
+          longitude: location.longitude,
+        };
+        dispatch(setGeolocation(geoObj));
+        setLocation(geoObj);
+        await storeData({
+          key: 'LOCATION',
+          value: geoObj,
+        });
+      },
+      error => {
+        console.log(error);
+        Alert.alert('Error', '위치정보를 불러오는데 실패했습니다.');
+      },
+      {
+        maximumAge: 0,
+        enableHighAccuracy: false,
+      },
+    );
+  };
+
   useEffect(() => {
     if (geolocaton?.latitude && geolocaton.longitude && !location) {
       setLocation({...geolocaton});
@@ -160,6 +189,7 @@ function RecordingScreen({route, navigation}: RecordsScreenProps) {
 
   useEffect(() => {
     startRecording();
+    getLocation();
     startGeolocationSubscribe();
     return () => {
       stopGeolocationSubscribe();
@@ -179,6 +209,7 @@ function RecordingScreen({route, navigation}: RecordsScreenProps) {
           location.latitude,
           location.longitude,
         ]);
+        // const {latitude, longitude} = location;
         if (!pause && recording) {
           setLocations(prev => {
             return prev.concat([

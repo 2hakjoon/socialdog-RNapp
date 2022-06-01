@@ -12,7 +12,7 @@ const LOCATION = 'LOCATION';
 
 export const geolocationConfig: ConfigureOptions = {
   desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
-  stationaryRadius: 10,
+  stationaryRadius: 2,
   distanceFilter: 10,
   startForeground: false,
   notificationsEnabled: false,
@@ -22,11 +22,8 @@ export const geolocationConfig: ConfigureOptions = {
   notificationText: '산책 기록 중 입니다...',
   debug: false,
   startOnBoot: false,
-  stopOnTerminate: true,
-  locationProvider:
-    Platform.OS === 'android'
-      ? BackgroundGeolocation.DISTANCE_FILTER_PROVIDER
-      : BackgroundGeolocation.ACTIVITY_PROVIDER,
+  stopOnTerminate: false,
+  locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
   interval: 2000,
   fastestInterval: 0,
   activitiesInterval: 1000,
