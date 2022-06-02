@@ -812,6 +812,8 @@ PODS:
     - React-Core
   - react-native-safe-area-context (3.3.2):
     - React-Core
+  - react-native-splash-screen (3.3.0):
+    - React-Core
   - react-native-webview (11.17.1):
     - React-Core
   - React-perflogger (0.66.4)
@@ -966,6 +968,7 @@ DEPENDENCIES:
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -1096,6 +1099,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-maps"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-splash-screen:
+    :path: "../node_modules/react-native-splash-screen"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-perflogger:
@@ -1218,6 +1223,7 @@ SPEC CHECKSUMS:
   react-native-image-picker: 4e6008ad8c2321622affa2c85432a5ebd02d480c
   react-native-maps: d752b0dd0e1951d815b1336332835aab6b4a836f
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
+  react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-webview: 162b6453d074e0b1c7025242bb7a939b6f72b9e7
   React-perflogger: 93075d8931c32cd1fce8a98c15d2d5ccc4d891bd
   React-RCTActionSheet: 7d3041e6761b4f3044a37079ddcb156575fb6d89
@@ -1244,6 +1250,6 @@ SPEC CHECKSUMS:
   Yoga: e7dc4e71caba6472ff48ad7d234389b91dadc280
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: b98b462324b9e23194a2651f42da369243ae3731
+PODFILE CHECKSUM: 6b2941f5695fdcc4d738f7efa373ba66bc792569
 
 COCOAPODS: 1.11.2

@@ -33,6 +33,7 @@ import {colors} from './utils/colors';
 import {GpsFilter} from './utils/filter/gpsFilter';
 import WalkHomeScreen from './screens/walkhome/WalkHomeScreen';
 import EditDogProfileScreen from './screens/edit-dog-profile/EditDogProfileScreen';
+import SplashScreen from 'react-native-splash-screen';
 
 const RootTab = createBottomTabNavigator<RootTabNavigator>();
 const WalkStack = createNativeStackNavigator<WalkStackList>();
@@ -42,6 +43,9 @@ const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
 export const gpsFilter = new GpsFilter({round: 3, prevWeight: 0.3});
 
 const App = () => {
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
   const loginState = useReactiveVar(mVLoginState);
   function Walk() {
     return (
