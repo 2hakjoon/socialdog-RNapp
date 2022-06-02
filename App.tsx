@@ -94,7 +94,11 @@ const App = () => {
   return (
     <ApolloProvider client={client}>
       <Provider store={store}>
-        <SafeAreaView style={{height: '100%'}}>
+        <SafeAreaView
+          style={{
+            height: '100%',
+            backgroundColor: !loginState ? colors.PBlue : 'white',
+          }}>
           <StatusBar
             backgroundColor={!loginState ? colors.PBlue : 'white'}
             barStyle={!loginState ? 'light-content' : 'dark-content'}
@@ -103,7 +107,10 @@ const App = () => {
           <GeolocationComponent />
           <NavigationContainer>
             {!loginState ? (
-              <AuthScreen />
+              <>
+                <AuthScreen />
+                <SafeAreaView style={{backgroundColor: colors.PBlue}} />
+              </>
             ) : (
               <RootTab.Navigator>
                 <RootTab.Screen
