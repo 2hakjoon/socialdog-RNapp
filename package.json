@@ -10,7 +10,7 @@
     "ios": "react-native run-ios",
     "dev:ios": "rm .env && cp .env.development .env && react-native run-ios",
     "test:ios": "rm .env && cp .env.development .env && cd android && ./gradlew buildRelease && cd ../ && npx react-native run-ios --device --configuration Release",
-    "build:ios": "rm .env && cp .env.production .env && cd android && ./gradlew buildRelease && cd ../ && npx react-native run-ios --configuration Release",
+    "build:ios": "rm .env && cp .env.production .env && cd android && ./gradlew buildRelease && cd ../ && npx react-native run-ios --device --configuration Release",
     "start": "react-native start",
     "test": "jest",
     "codegen": "sudo apollo client:codegen __generated__ --target=typescript --outputFlat",

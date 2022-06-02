@@ -48,6 +48,7 @@ const authMiddleware = new ApolloLink((operation, forward) => {
   // add the authorization to the headers
   const promises = fromPromise(getAuthTokens());
   return promises.flatMap(({accessToken, refreshToken}) => {
+    // console.log('apollo setup', accessToken, refreshToken);
     ApolloLinkAccessToken = accessToken;
     ApolloLinkRefreshToken = refreshToken;
     operation.setContext(({headers = {}}) => ({

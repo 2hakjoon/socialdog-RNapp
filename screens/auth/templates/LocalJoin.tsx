@@ -4,14 +4,9 @@ import {gql, useLazyQuery, useMutation} from '@apollo/client';
 import {regexEmail, regexPassword, regexVerifyCode} from '../../../utils/regex';
 import {Alert, StyleSheet, TextInput, View} from 'react-native';
 import {useForm, Controller} from 'react-hook-form';
-
-import TextComp from '../../components/TextComp';
 import BasicButton from '../../components/BasicButton';
-
-import SmallButton from '../../components/SmallButton';
 import {useNavigation} from '@react-navigation/native';
 import {AuthNavigationProp} from '../../../routes';
-import FormInput from '../../components/Input/FormInput';
 import FormInputBox from '../../components/Input/FormInputBox';
 import FormBtnInputBox from '../../components/Input/FormBtnInputBox';
 import {

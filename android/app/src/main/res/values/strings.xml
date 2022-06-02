@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">socialdog</string>
+    <string name="app_name">소셜독</string>
     <string name="kakao_app_key">fbe8f38ac3b3616f9a30a104ae0dc9fa</string>
 </resources>
