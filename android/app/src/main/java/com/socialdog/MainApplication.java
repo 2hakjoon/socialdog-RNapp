@@ -11,9 +11,9 @@ import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.marianhello.bgloc.react.BackgroundGeolocationPackage;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import com.marianhello.bgloc.react.BackgroundGeolocationPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
