@@ -59,7 +59,6 @@ function LocalLogin() {
     const res = await login({
       variables: {email, password},
     });
-    console.log(res);
     if (res.data?.localLogin.error) {
       Alert.alert('로그인 실패', res.data?.localLogin.error);
     }
@@ -81,11 +80,6 @@ function LocalLogin() {
       setValue('password', route.params.password);
     }
   }, [route]);
-
-  useEffect(() => {
-    // setValue('email', 'dlgkrwns1021@naver.com');
-    // setValue('password', 'test1234!');
-  }, []);
 
   return (
     <View style={styles.wrapper}>

@@ -10,9 +10,11 @@ import TextComp from './TextComp';
 interface ISmallButton extends TouchableOpacityProps {
   title: string;
   style?: {};
+  textColor?: string;
 }
 
 function SmallButton({
+  textColor = 'white',
   title,
   onPress,
   disabled = false,
@@ -23,7 +25,7 @@ function SmallButton({
       style={{...styles.default, ...(disabled && styles.disable), ...style}}
       onPress={onPress}
       disabled={disabled}>
-      <TextComp text={title} color="white" size={15} />
+      <TextComp text={title} color={textColor} size={15} />
     </TouchableOpacity>
   );
 }

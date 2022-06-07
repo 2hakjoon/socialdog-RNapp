@@ -152,16 +152,10 @@ function LocalJoin() {
     }
   };
 
-  useEffect(() => {
-    // setValue('email', 'dlgkrwns1021@naver.com');
-    // setValue('password1', 'test1234!');
-    // setValue('password2', 'test1234!');
-    // setValue('code', '491012');
-  }, []);
-
   return (
     <View style={styles.wrapper}>
       <FormBtnInputBox
+        titleColor={colors.PWhite}
         input={{
           title: '이메일',
           control,
@@ -177,6 +171,7 @@ function LocalJoin() {
           editable: enableEmail && !verifyDone,
         }}
         button={{
+          buttonColor: colors.PWhite,
           disabled:
             Boolean(formState?.errors?.email?.message) ||
             !getValues('email') ||
@@ -187,6 +182,7 @@ function LocalJoin() {
       />
 
       <FormBtnInputBox
+        titleColor={colors.PWhite}
         input={{
           title: '인증번호',
           control,
@@ -201,6 +197,7 @@ function LocalJoin() {
           editable: enableVerify && !verifyDone,
         }}
         button={{
+          buttonColor: colors.PWhite,
           disabled:
             (!enableVerify &&
               (Boolean(formState?.errors?.code?.message) ||
@@ -212,6 +209,7 @@ function LocalJoin() {
       />
 
       <FormInputBox
+        titleColor={colors.PWhite}
         title={'바말번호'}
         control={control}
         rules={{
@@ -232,6 +230,7 @@ function LocalJoin() {
         errors={formState.errors.password1?.message}
       />
       <FormInputBox
+        titleColor={colors.PWhite}
         title={'바말번호 확인'}
         control={control}
         rules={{
@@ -250,26 +249,37 @@ function LocalJoin() {
             : formState.errors.password2?.message
         }
       />
-      <BasicButton
-        style={styles.btnWrapper}
-        disable={
-          !(
-            Boolean(getValues('email')) &&
-            Boolean(getValues('password1')) &&
-            Boolean(getValues('password2')) &&
-            Boolean(getValues('code')) &&
-            !paswordError
-          )
-        }
-        title="회원가입"
-        onPress={handleSubmit(onSumbit)}
-      />
+      <>
+        {!(
+          Boolean(getValues('email')) &&
+          Boolean(getValues('password1')) &&
+          Boolean(getValues('password2')) &&
+          Boolean(getValues('code')) &&
+          !paswordError
+        ) ? (
+          <BasicButton
+            style={styles.btnWrapper}
+            disable={true}
+            title="회원가입"
+            onPress={handleSubmit(onSumbit)}
+          />
+        ) : (
+          <BasicButton
+            fontColor={colors.PBlack}
+            style={{...styles.btnWrapper, backgroundColor: 'white'}}
+            disable={false}
+            title="회원가입"
+            onPress={handleSubmit(onSumbit)}
+          />
+        )}
+      </>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   wrapper: {
+    backgroundColor: colors.PBlue,
     paddingHorizontal: '10%',
     height: '100%',
     justifyContent: 'center',

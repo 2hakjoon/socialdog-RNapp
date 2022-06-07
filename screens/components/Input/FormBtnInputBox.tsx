@@ -4,6 +4,7 @@ import {Controller} from 'react-hook-form';
 import TextComp from '../TextComp';
 import FormInput from './FormInput';
 import SmallButton from '../SmallButton';
+import {colors} from '../../../utils/colors';
 
 interface IFormInputComp extends TextInputProps {
   title: string;
@@ -12,14 +13,18 @@ interface IFormInputComp extends TextInputProps {
   rules: any;
   errors: string | undefined;
 }
-interface IFormButtonComp extends ButtonProps {}
+interface IFormButtonComp extends ButtonProps {
+  buttonColor?: string;
+}
 
 interface IFormBtnInputBox {
+  titleColor?: string;
   input: IFormInputComp;
   button: IFormButtonComp;
 }
 
 function FormBtnInputBox({
+  titleColor,
   input: {
     title: inputTitle,
     name,
@@ -30,11 +35,15 @@ function FormBtnInputBox({
     maxLength,
     editable,
   },
-  button: {title: btnTitle, onPress, disabled},
+  button: {title: btnTitle, onPress, disabled, buttonColor = colors.PBlue},
 }: IFormBtnInputBox) {
   return (
     <View style={styles.InputBox}>
-      <TextComp text={inputTitle} style={styles.sectionTitle} />
+      <TextComp
+        text={inputTitle}
+        style={styles.sectionTitle}
+        color={titleColor}
+      />
       <View style={styles.rowBox}>
         <Controller
           name={name}
@@ -53,7 +62,13 @@ function FormBtnInputBox({
             />
           )}
         />
-        <SmallButton disabled={disabled} title={btnTitle} onPress={onPress} />
+        <SmallButton
+          disabled={disabled}
+          title={btnTitle}
+          onPress={onPress}
+          textColor={disabled ? colors.PDarkGray : 'black'}
+          style={{backgroundColor: buttonColor}}
+        />
       </View>
       <TextComp text={errors} style={styles.errorText} color="red" />
     </View>

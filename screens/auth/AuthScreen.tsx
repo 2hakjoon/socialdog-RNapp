@@ -2,10 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
-  Button,
   Image,
   StyleSheet,
-  Touchable,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -14,7 +12,7 @@ import {colors} from '../../utils/colors';
 import {AuthScreenProps} from '../../routes';
 import TextComp from '../components/TextComp';
 import {mVLoginState, mVUserAccessToken} from '../../apollo-setup';
-import {getData, storeData} from '../../utils/asyncStorage';
+import {getData} from '../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN} from '../../utils/constants';
 import {useLazyQuery} from '@apollo/client';
 import {QMe} from '../../__generated__/QMe';
@@ -26,23 +24,23 @@ function AuthScreen({navigation}: AuthScreenProps<'AuthSelect'>) {
   const [checkingToken, setCheckingToken] = useState(true);
 
   useEffect(() => {
-    // getData({key: USER_ACCESS_TOKEN}).then(token => {
-    //   if (token) {
-    //     mVUserAccessToken(token);
-    //     setCheckingToken(false);
-    //     meQuery().then(data => {
-    //       const user = data.data?.me.data;
-    //       // console.log(user);
-    //       if (user) {
-    //         mVLoginState(true);
-    //       } else if (!data.data?.me.ok) {
-    //         Alert.alert('로그인 실패', '회원정보를 찾을수 없습니다.');
-    //       }
-    //     });
-    //   } else {
-    //     setCheckingToken(false);
-    //   }
-    // });
+    getData({key: USER_ACCESS_TOKEN}).then(token => {
+      if (token) {
+        mVUserAccessToken(token);
+        setCheckingToken(false);
+        meQuery().then(data => {
+          const user = data.data?.me.data;
+          // console.log(user);
+          if (user) {
+            mVLoginState(true);
+          } else if (!data.data?.me.ok) {
+            Alert.alert('로그인 실패', '회원정보를 찾을수 없습니다.');
+          }
+        });
+      } else {
+        setCheckingToken(false);
+      }
+    });
   }, []);
 
   return (
@@ -52,7 +50,7 @@ function AuthScreen({navigation}: AuthScreenProps<'AuthSelect'>) {
           style={styles.image}
           source={require('../../assets/png/login.png')}
         />
-        {!checkingToken ? (
+        {checkingToken ? (
           <View style={styles.empty} />
         ) : (
           <>
