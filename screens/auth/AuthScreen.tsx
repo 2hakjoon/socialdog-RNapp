@@ -22,28 +22,30 @@ import AntDesignIcon from '../components/Icons/AntDesign';
 function AuthScreen({navigation}: AuthScreenProps<'AuthSelect'>) {
   const [meQuery, {loading: meQueryLoading}] = useLazyQuery<QMe>(ME);
   const [loginLoading, setLoginLoading] = useState(false);
-  const [checkingToken, setCheckingToken] = useState<boolean>(false);
+  const [checkingToken, setCheckingToken] = useState<boolean>(true);
 
   useEffect(() => {
-    // getData({key: USER_ACCESS_TOKEN}).then(token => {
-    //   setLoginLoading(true);
-    //   if (token) {
-    //     mVUserAccessToken(token);
-    //     setCheckingToken(false);
-    //     meQuery().then(data => {
-    //       const user = data.data?.me.data;
-    //       // console.log(user);
-    //       if (user) {
-    //         mVLoginState(true);
-    //       } else if (!data.data?.me.ok) {
-    //         Alert.alert('로그인 실패', '회원정보를 찾을수 없습니다.');
-    //       }
-    //       setLoginLoading(false);
-    //     });
-    //   } else {
-    //     setCheckingToken(false);
-    //   }
-    // });
+    getData({key: USER_ACCESS_TOKEN}).then(token => {
+      setLoginLoading(true);
+      console.log(token);
+      if (token) {
+        setCheckingToken(false);
+        mVUserAccessToken(token);
+        meQuery().then(data => {
+          const user = data.data?.me.data;
+          // console.log(user);
+          if (user) {
+            mVLoginState(true);
+          } else if (!data.data?.me.ok) {
+            Alert.alert('로그인 실패', '회원정보를 찾을수 없습니다.');
+          }
+          setLoginLoading(false);
+        });
+      } else {
+        setLoginLoading(false);
+        setCheckingToken(false);
+      }
+    });
   }, []);
 
   return (
