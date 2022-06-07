@@ -5,23 +5,45 @@ import {
   Button,
   Image,
   StyleSheet,
+  Touchable,
+  TouchableOpacity,
   View,
 } from 'react-native';
+import KakaoLogin from './templates/KakaoLogin';
+import {colors} from '../../utils/colors';
+import {AuthScreenProps} from '../../routes';
+import TextComp from '../components/TextComp';
+import {mVLoginState, mVUserAccessToken} from '../../apollo-setup';
 import {getData, storeData} from '../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN} from '../../utils/constants';
 import {useLazyQuery} from '@apollo/client';
-import TextComp from '../components/TextComp';
-import KakaoLogin from './templates/KakaoLogin';
 import {QMe} from '../../__generated__/QMe';
-import {mVLoginState, mVUserAccessToken} from '../../apollo-setup';
-import {colors} from '../../utils/colors';
 import {ME} from '../../apollo-gqls/auth';
-import {AuthScreenProps} from '../../routes';
+import AntDesignIcon from '../components/Icons/AntDesign';
 
 function AuthScreen({navigation}: AuthScreenProps<'AuthSelect'>) {
-  const [authSelect, setAuthSelect] = useState<'kakao' | 'login' | 'join'>(
-    'kakao',
-  );
+  const [meQuery, {loading: meQueryLoading}] = useLazyQuery<QMe>(ME);
+  const [checkingToken, setCheckingToken] = useState(true);
+
+  useEffect(() => {
+    // getData({key: USER_ACCESS_TOKEN}).then(token => {
+    //   if (token) {
+    //     mVUserAccessToken(token);
+    //     setCheckingToken(false);
+    //     meQuery().then(data => {
+    //       const user = data.data?.me.data;
+    //       // console.log(user);
+    //       if (user) {
+    //         mVLoginState(true);
+    //       } else if (!data.data?.me.ok) {
+    //         Alert.alert('로그인 실패', '회원정보를 찾을수 없습니다.');
+    //       }
+    //     });
+    //   } else {
+    //     setCheckingToken(false);
+    //   }
+    // });
+  }, []);
 
   return (
     <View style={styles.wrapper}>
@@ -30,19 +52,48 @@ function AuthScreen({navigation}: AuthScreenProps<'AuthSelect'>) {
           style={styles.image}
           source={require('../../assets/png/login.png')}
         />
-
-        <View style={styles.AuthButton}>
-          <KakaoLogin />
-          <Button
-            title="소셜독 계정 로그인"
-            onPress={() => {
-              navigation.push('Login', {
-                email: undefined,
-                password: undefined,
-              });
-            }}
-          />
-        </View>
+        {!checkingToken ? (
+          <View style={styles.empty} />
+        ) : (
+          <>
+            {meQueryLoading ? (
+              <View style={styles.loading}>
+                <TextComp
+                  text={'로그인 중'}
+                  size={18}
+                  weight={'600'}
+                  color={'white'}
+                />
+                <ActivityIndicator
+                  size={'small'}
+                  color="white"
+                  style={{paddingLeft: 6}}
+                />
+              </View>
+            ) : (
+              <View style={styles.authButton}>
+                <KakaoLogin />
+                <TouchableOpacity
+                  style={styles.buttonWrapper}
+                  onPress={() => {
+                    navigation.push('Login', {
+                      email: undefined,
+                      password: undefined,
+                    });
+                  }}>
+                  <AntDesignIcon color="black" size={24} name={'user'} />
+                  <View style={styles.textWrapper}>
+                    <TextComp
+                      text={'소셜독 계정 로그인'}
+                      size={18}
+                      weight={'500'}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )}
+          </>
+        )}
       </>
     </View>
   );
@@ -60,16 +111,36 @@ const styles = StyleSheet.create({
     height: '10%',
     flex: 6,
   },
+  empty: {
+    flex: 1.5,
+    marginBottom: 50,
+  },
+  authButton: {
+    flex: 1.5,
+    justifyContent: 'center',
+    marginBottom: 50,
+    width: '100%',
+    alignItems: 'center',
+  },
+  buttonWrapper: {
+    alignItems: 'center',
+    height: 50,
+    width: '80%',
+    backgroundColor: colors.PWhite,
+    flexDirection: 'row',
+    borderRadius: 8,
+    paddingHorizontal: 20,
+  },
+  textWrapper: {
+    width: '90%',
+    alignItems: 'center',
+  },
   loading: {
     flex: 1,
     display: 'flex',
+    height: '100%',
     alignItems: 'flex-start',
     flexDirection: 'row',
-  },
-  AuthButton: {
-    flex: 1,
-    justifyContent: 'center',
-    marginBottom: 50,
   },
 });
 

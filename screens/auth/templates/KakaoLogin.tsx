@@ -23,6 +23,7 @@ import {
   MKakaoLoginVariables,
 } from '../../../__generated__/MKakaoLogin';
 import {QMe} from '../../../__generated__/QMe';
+import IconBubble from '../../components/Icons/IconBubble';
 import TextComp from '../../components/TextComp';
 
 const KAKAO_LOGIN = gql`
@@ -81,6 +82,7 @@ function KakaoLogin() {
           key: USER_REFRESH_TOKEN,
           value: refreshToken,
         });
+
         mVUserAccessToken(accessToken);
         meQuery().then(data => {
           const user = data.data?.me.data;
@@ -116,7 +118,7 @@ function KakaoLogin() {
 
   return (
     <View style={styles.wrapper}>
-      <TouchableOpacity style={styles.button} onPress={signInWithKakao}>
+      <TouchableOpacity onPress={signInWithKakao} style={styles.buttonWrapper}>
         {kakaoLoginLoading ? (
           <View style={styles.loading}>
             <TextComp
@@ -132,9 +134,17 @@ function KakaoLogin() {
             />
           </View>
         ) : (
-          <Image
-            source={require('../../../assets/png/kakao_login_button.png')}
-          />
+          <TouchableOpacity style={styles.button}>
+            <IconBubble color="black" size={24} />
+            <View style={styles.textWrapper}>
+              <TextComp
+                text={'카카오 로그인'}
+                color={'#000000'}
+                size={18}
+                weight={'500'}
+              />
+            </View>
+          </TouchableOpacity>
         )}
       </TouchableOpacity>
     </View>
@@ -148,7 +158,23 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
   },
-  button: {},
+  buttonWrapper: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  button: {
+    height: 50,
+    width: '80%',
+    backgroundColor: '#FEE500',
+    alignItems: 'center',
+    flexDirection: 'row',
+    borderRadius: 8,
+    paddingHorizontal: 20,
+  },
+  textWrapper: {
+    width: '90%',
+    alignItems: 'center',
+  },
   loading: {
     flex: 1,
     display: 'flex',

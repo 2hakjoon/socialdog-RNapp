@@ -8,7 +8,7 @@
  * @format
  */
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {StatusBar, StyleSheet} from 'react-native';
 import RecordingScreen from './screens/record/RecordingScreen';
 import {NavigationContainer} from '@react-navigation/native';
@@ -40,7 +40,6 @@ import WalkHomeScreen from './screens/walkhome/WalkHomeScreen';
 import EditDogProfileScreen from './screens/edit-dog-profile/EditDogProfileScreen';
 import SplashScreen from 'react-native-splash-screen';
 import LocalLogin from './screens/auth/templates/LocalLogin';
-import AuthHome from './screens/auth/templates/AuthHome';
 import LocalJoin from './screens/auth/templates/LocalJoin';
 
 const RootTab = createBottomTabNavigator<RootTabNavigator>();
