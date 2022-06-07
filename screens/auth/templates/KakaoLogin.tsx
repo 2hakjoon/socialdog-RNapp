@@ -100,7 +100,7 @@ function KakaoLogin({setLoginLoading}: IKakaoLogin) {
         });
       }
     } catch (e) {
-      console.log(e);
+      // Alert.alert('error', `${e}`);
       setLoginLoading(false);
     }
   };

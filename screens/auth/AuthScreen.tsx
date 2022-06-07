@@ -27,7 +27,6 @@ function AuthScreen({navigation}: AuthScreenProps<'AuthSelect'>) {
   useEffect(() => {
     getData({key: USER_ACCESS_TOKEN}).then(token => {
       setLoginLoading(true);
-      console.log(token);
       if (token) {
         setCheckingToken(false);
         mVUserAccessToken(token);
