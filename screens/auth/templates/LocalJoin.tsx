@@ -2,7 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {colors} from '../../../utils/colors';
 import {gql, useLazyQuery, useMutation} from '@apollo/client';
 import {regexEmail, regexPassword, regexVerifyCode} from '../../../utils/regex';
-import {Alert, StyleSheet, TextInput, View} from 'react-native';
+import {
+  Alert,
+  KeyboardAvoidingView,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
 import {useForm, Controller} from 'react-hook-form';
 import BasicButton from '../../components/BasicButton';
 import {useNavigation} from '@react-navigation/native';
@@ -153,137 +160,141 @@ function LocalJoin() {
   };
 
   return (
-    <View style={styles.wrapper}>
-      <FormBtnInputBox
-        titleColor={colors.PWhite}
-        input={{
-          title: '이메일',
-          control,
-          errors: formState.errors.email?.message,
-          name: 'email',
-          rules: {
-            required: '이메일을 입력해주세요.',
-            pattern: {
-              value: regexEmail,
-              message: '이메일 형식으로 입력해주세요.',
+    <ScrollView style={styles.wrapper}>
+      <KeyboardAvoidingView
+        //behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior="padding"
+        style={styles.wrapper}>
+        <FormBtnInputBox
+          titleColor={colors.PWhite}
+          input={{
+            title: '이메일',
+            control,
+            errors: formState.errors.email?.message,
+            name: 'email',
+            rules: {
+              required: '이메일을 입력해주세요.',
+              pattern: {
+                value: regexEmail,
+                message: '이메일 형식으로 입력해주세요.',
+              },
             },
-          },
-          editable: enableEmail && !verifyDone,
-        }}
-        button={{
-          buttonColor: colors.PWhite,
-          disabled:
-            Boolean(formState?.errors?.email?.message) ||
-            !getValues('email') ||
-            verifyDone,
-          title: '이메일 인증',
-          onPress: sendVerifyCode,
-        }}
-      />
+            editable: enableEmail && !verifyDone,
+          }}
+          button={{
+            buttonColor: colors.PWhite,
+            disabled:
+              Boolean(formState?.errors?.email?.message) ||
+              !getValues('email') ||
+              verifyDone,
+            title: '이메일 인증',
+            onPress: sendVerifyCode,
+          }}
+        />
 
-      <FormBtnInputBox
-        titleColor={colors.PWhite}
-        input={{
-          title: '인증번호',
-          control,
-          errors: formState.errors.code?.message,
-          name: 'code',
-          rules: {
-            pattern: {
-              value: regexVerifyCode,
-              message: '인증코드는 6자리입니다.',
+        <FormBtnInputBox
+          titleColor={colors.PWhite}
+          input={{
+            title: '인증번호',
+            control,
+            errors: formState.errors.code?.message,
+            name: 'code',
+            rules: {
+              pattern: {
+                value: regexVerifyCode,
+                message: '인증코드는 6자리입니다.',
+              },
             },
-          },
-          editable: enableVerify && !verifyDone,
-        }}
-        button={{
-          buttonColor: colors.PWhite,
-          disabled:
-            (!enableVerify &&
-              (Boolean(formState?.errors?.code?.message) ||
-                !getValues('code'))) ||
-            verifyDone,
-          title: '번호 확인',
-          onPress: checkVerifyCode,
-        }}
-      />
+            editable: enableVerify && !verifyDone,
+          }}
+          button={{
+            buttonColor: colors.PWhite,
+            disabled:
+              (!enableVerify &&
+                (Boolean(formState?.errors?.code?.message) ||
+                  !getValues('code'))) ||
+              verifyDone,
+            title: '번호 확인',
+            onPress: checkVerifyCode,
+          }}
+        />
 
-      <FormInputBox
-        titleColor={colors.PWhite}
-        title={'바말번호'}
-        control={control}
-        rules={{
-          required: '비밀번호를 입력해주세요',
-          pattern: {
-            value: regexPassword,
-            message:
-              '비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 입니다.',
-          },
-          validate: async () => {
-            trigger('password2');
-            return undefined;
-          },
-        }}
-        name="password1"
-        maxLength={20}
-        secureTextEntry={true}
-        errors={formState.errors.password1?.message}
-      />
-      <FormInputBox
-        titleColor={colors.PWhite}
-        title={'바말번호 확인'}
-        control={control}
-        rules={{
-          required: '비밀번호를 입력해주세요',
-          validate: value => {
-            setPasswordError(watch('password1') !== value);
-            return undefined;
-          },
-        }}
-        name="password2"
-        maxLength={20}
-        secureTextEntry={true}
-        errors={
-          paswordError && Boolean(getValues('password2'))
-            ? '비밀번호가 일치하지 않습니다.'
-            : formState.errors.password2?.message
-        }
-      />
-      <>
-        {!(
-          Boolean(getValues('email')) &&
-          Boolean(getValues('password1')) &&
-          Boolean(getValues('password2')) &&
-          Boolean(getValues('code')) &&
-          !paswordError
-        ) ? (
-          <BasicButton
-            style={styles.btnWrapper}
-            disable={true}
-            title="회원가입"
-            onPress={handleSubmit(onSumbit)}
-          />
-        ) : (
-          <BasicButton
-            fontColor={colors.PBlack}
-            style={{...styles.btnWrapper, backgroundColor: 'white'}}
-            disable={false}
-            title="회원가입"
-            onPress={handleSubmit(onSumbit)}
-          />
-        )}
-      </>
-    </View>
+        <FormInputBox
+          titleColor={colors.PWhite}
+          title={'바말번호'}
+          control={control}
+          rules={{
+            required: '비밀번호를 입력해주세요',
+            pattern: {
+              value: regexPassword,
+              message:
+                '비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 입니다.',
+            },
+            validate: async () => {
+              trigger('password2');
+              return undefined;
+            },
+          }}
+          name="password1"
+          maxLength={20}
+          secureTextEntry={true}
+          errors={formState.errors.password1?.message}
+        />
+        <FormInputBox
+          titleColor={colors.PWhite}
+          title={'바말번호 확인'}
+          control={control}
+          rules={{
+            required: '비밀번호를 입력해주세요',
+            validate: value => {
+              setPasswordError(watch('password1') !== value);
+              return undefined;
+            },
+          }}
+          name="password2"
+          maxLength={20}
+          secureTextEntry={true}
+          errors={
+            paswordError && Boolean(getValues('password2'))
+              ? '비밀번호가 일치하지 않습니다.'
+              : formState.errors.password2?.message
+          }
+        />
+        <>
+          {!(
+            Boolean(getValues('email')) &&
+            Boolean(getValues('password1')) &&
+            Boolean(getValues('password2')) &&
+            Boolean(getValues('code')) &&
+            !paswordError
+          ) ? (
+            <BasicButton
+              style={styles.btnWrapper}
+              disable={true}
+              title="회원가입"
+              onPress={handleSubmit(onSumbit)}
+            />
+          ) : (
+            <BasicButton
+              fontColor={colors.PBlack}
+              style={{...styles.btnWrapper, backgroundColor: 'white'}}
+              disable={false}
+              title="회원가입"
+              onPress={handleSubmit(onSumbit)}
+            />
+          )}
+        </>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   wrapper: {
+    paddingTop: '10%',
     backgroundColor: colors.PBlue,
-    paddingHorizontal: '10%',
+    paddingHorizontal: '5%',
     height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   rowBox: {
     width: '100%',

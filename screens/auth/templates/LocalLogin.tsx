@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, useEffect} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {KeyboardAvoidingView, ScrollView, StyleSheet, View} from 'react-native';
 import {colors} from '../../../utils/colors';
 import {gql, useMutation} from '@apollo/client';
 import {useForm} from 'react-hook-form';
@@ -82,56 +82,61 @@ function LocalLogin() {
   }, [route]);
 
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.formWrapper}>
-        <FormInputBox
-          titleColor={colors.PWhite}
-          title={'이메일'}
-          name={'email'}
-          control={control}
-          rules={{
-            required: '이메일을 입력해주세요.',
-            pattern: {
-              value: regexEmail,
-              message: '이메일 형식으로 입력해주세요.',
-            },
-          }}
-          errors={formState.errors.email?.message}
-        />
-        <FormInputBox
-          titleColor={colors.PWhite}
-          title={'비밀번호'}
-          name={'password'}
-          control={control}
-          rules={{
-            required: '비밀번호를 입력해주세요',
-            pattern: {
-              value: regexPassword,
-              message:
-                '비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 입니다.',
-            },
-          }}
-          secureTextEntry
-          errors={formState.errors.password?.message}
-        />
-        <BasicButton
-          title="로그인"
-          onPress={handleSubmit(onSumbit)}
-          fontColor={colors.PBlue}
-          fontWeight={'600'}
-          style={styles.buttonStyle}
-        />
-      </View>
-      <View style={styles.joinButtonWrapper}>
-        <BasicButton
-          title="회원가입"
-          onPress={moveToJoin}
-          fontColor={colors.PBlue}
-          fontWeight={'600'}
-          style={styles.buttonStyle}
-        />
-      </View>
-    </View>
+    <ScrollView style={styles.wrapper}>
+      <KeyboardAvoidingView
+        //behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior="padding"
+        style={styles.wrapper}>
+        <View style={styles.formWrapper}>
+          <FormInputBox
+            titleColor={colors.PWhite}
+            title={'이메일'}
+            name={'email'}
+            control={control}
+            rules={{
+              required: '이메일을 입력해주세요.',
+              pattern: {
+                value: regexEmail,
+                message: '이메일 형식으로 입력해주세요.',
+              },
+            }}
+            errors={formState.errors.email?.message}
+          />
+          <FormInputBox
+            titleColor={colors.PWhite}
+            title={'비밀번호'}
+            name={'password'}
+            control={control}
+            rules={{
+              required: '비밀번호를 입력해주세요',
+              pattern: {
+                value: regexPassword,
+                message:
+                  '비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 입니다.',
+              },
+            }}
+            secureTextEntry
+            errors={formState.errors.password?.message}
+          />
+          <BasicButton
+            title="로그인"
+            onPress={handleSubmit(onSumbit)}
+            fontColor={colors.PBlue}
+            fontWeight={'600'}
+            style={styles.buttonStyle}
+          />
+        </View>
+        <View style={styles.joinButtonWrapper}>
+          <BasicButton
+            title="회원가입"
+            onPress={moveToJoin}
+            fontColor={colors.PBlue}
+            fontWeight={'600'}
+            style={styles.buttonStyle}
+          />
+        </View>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 }
 
@@ -140,11 +145,11 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     backgroundColor: colors.PBlue,
-    paddingHorizontal: '10%',
+    paddingHorizontal: '5%',
   },
   formWrapper: {
-    flex: 5,
     width: '100%',
+    height: 500,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -155,10 +160,9 @@ const styles = StyleSheet.create({
   },
   joinButtonWrapper: {
     width: '100%',
-    flex: 1,
     backgroundColor: colors.PBlue,
     justifyContent: 'flex-end',
-    paddingBottom: '10%',
+    paddingBottom: '20%',
   },
 });
 
