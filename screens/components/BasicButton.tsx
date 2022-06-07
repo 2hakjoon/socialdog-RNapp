@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Platform,
   StyleSheet,
   TouchableOpacity,
   TouchableOpacityProps,
@@ -11,16 +12,28 @@ interface IBasicButton extends TouchableOpacityProps {
   title: string;
   onPress: () => void;
   disable?: boolean;
+  fontColor?: string;
+  fontWeight?: string;
   style?: {};
 }
 
-function BasicButton({title, onPress, disable = false, style}: IBasicButton) {
+function BasicButton({
+  title,
+  onPress,
+  disable = false,
+  style,
+  fontColor = 'white',
+  fontWeight = '400',
+}: IBasicButton) {
   return (
     <TouchableOpacity
-      style={{...(disable ? styles.disabledButton : styles.button), ...style}}
+      style={{
+        ...(disable ? styles.disabledButton : styles.button),
+        ...style,
+      }}
       onPress={onPress}
       disabled={disable}>
-      <TextComp text={title} color="white" size={20} />
+      <TextComp text={title} color={fontColor} size={20} weight={fontWeight} />
     </TouchableOpacity>
   );
 }

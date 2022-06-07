@@ -1,48 +1,27 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, Alert, Image, StyleSheet, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Button,
+  Image,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {getData, storeData} from '../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN} from '../../utils/constants';
 import {useLazyQuery} from '@apollo/client';
 import TextComp from '../components/TextComp';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {AuthStackList} from '../../routes';
 import KakaoLogin from './templates/KakaoLogin';
 import {QMe} from '../../__generated__/QMe';
 import {mVLoginState, mVUserAccessToken} from '../../apollo-setup';
 import {colors} from '../../utils/colors';
 import {ME} from '../../apollo-gqls/auth';
+import {AuthScreenProps} from '../../routes';
 
-interface IAuthScreenProps {
-  setLoginState: Function;
-}
-
-const LoginStack = createNativeStackNavigator<AuthStackList>();
-
-function AuthScreen() {
-  const [accessToken, setAccessToken] = useState<string>();
-
-  const [meQuery, {loading: meQueryLoading}] = useLazyQuery<QMe>(ME);
-
-  useEffect(() => {
-    if (accessToken) {
-      mVUserAccessToken(accessToken);
-      storeData({key: USER_ACCESS_TOKEN, value: accessToken}).then(async () => {
-        meQuery().then(data => {
-          const user = data.data?.me.data;
-          // console.log(user);
-          if (user) {
-            mVLoginState(true);
-          } else if (!data.data?.me.ok) {
-            Alert.alert('로그인 실패', '회원정보를 찾을수 없습니다.');
-          }
-        });
-      });
-    } else {
-      getData({key: USER_ACCESS_TOKEN}).then(token => {
-        setAccessToken(token);
-      });
-    }
-  }, [accessToken]);
+function AuthScreen({navigation}: AuthScreenProps<'AuthSelect'>) {
+  const [authSelect, setAuthSelect] = useState<'kakao' | 'login' | 'join'>(
+    'kakao',
+  );
 
   return (
     <View style={styles.wrapper}>
@@ -51,30 +30,19 @@ function AuthScreen() {
           style={styles.image}
           source={require('../../assets/png/login.png')}
         />
-        {meQueryLoading ? (
-          <View style={styles.loading}>
-            <TextComp
-              text={'로그인 정보 확인 중'}
-              size={18}
-              weight={'600'}
-              color={'white'}
-            />
-            <ActivityIndicator
-              size={'small'}
-              color="white"
-              style={{paddingLeft: 6}}
-            />
-          </View>
-        ) : (
-          <KakaoLogin setAccessToken={setAccessToken} />
-        )}
-        {/* <LoginStack.Navigator>
-            <LoginStack.Screen name={'AuthSelect'} component={AuthHome} />
-            <LoginStack.Screen name={'Login'}>
-              {() => <LocalLogin setAccessToken={setAccessToken} />}
-            </LoginStack.Screen>
-            <LoginStack.Screen name={'Join'} component={LocalJoin} />
-          </LoginStack.Navigator> */}
+
+        <View style={styles.AuthButton}>
+          <KakaoLogin />
+          <Button
+            title="소셜독 계정 로그인"
+            onPress={() => {
+              navigation.push('Login', {
+                email: undefined,
+                password: undefined,
+              });
+            }}
+          />
+        </View>
       </>
     </View>
   );
@@ -97,6 +65,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'flex-start',
     flexDirection: 'row',
+  },
+  AuthButton: {
+    flex: 1,
+    justifyContent: 'center',
+    marginBottom: 50,
   },
 });
 

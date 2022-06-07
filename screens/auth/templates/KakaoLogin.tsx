@@ -1,4 +1,4 @@
-import {gql, useMutation} from '@apollo/client';
+import {gql, useLazyQuery, useMutation} from '@apollo/client';
 import {
   KakaoOAuthToken,
   getProfile as getKakaoProfile,
@@ -7,23 +7,23 @@ import {
 import React, {useState} from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Button,
   Image,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
+import {ME} from '../../../apollo-gqls/auth';
+import {mVLoginState, mVUserAccessToken} from '../../../apollo-setup';
 import {storeData} from '../../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from '../../../utils/constants';
 import {
   MKakaoLogin,
   MKakaoLoginVariables,
 } from '../../../__generated__/MKakaoLogin';
+import {QMe} from '../../../__generated__/QMe';
 import TextComp from '../../components/TextComp';
-
-interface IKakaoLoginProps {
-  setAccessToken: Function;
-}
 
 const KAKAO_LOGIN = gql`
   mutation MKakaoLogin(
@@ -50,11 +50,12 @@ const KAKAO_LOGIN = gql`
   }
 `;
 
-function KakaoLogin({setAccessToken}: IKakaoLoginProps) {
+function KakaoLogin() {
   const [kakaoLogin, {loading: kakaoLoginLoading}] = useMutation<
     MKakaoLogin,
     MKakaoLoginVariables
   >(KAKAO_LOGIN);
+  const [meQuery, {loading: meQueryLoading}] = useLazyQuery<QMe>(ME);
 
   const signInWithKakao = async (): Promise<void> => {
     try {
@@ -80,13 +81,21 @@ function KakaoLogin({setAccessToken}: IKakaoLoginProps) {
           key: USER_REFRESH_TOKEN,
           value: refreshToken,
         });
-        setAccessToken(accessToken);
+        mVUserAccessToken(accessToken);
+        meQuery().then(data => {
+          const user = data.data?.me.data;
+          // console.log(user);
+          if (user) {
+            mVLoginState(true);
+          } else if (!data.data?.me.ok) {
+            Alert.alert('로그인 실패', '회원정보를 찾을수 없습니다.');
+          }
+        });
       }
     } catch (e) {
       console.log(e);
     }
   };
-
   // const signOutWithKakao = async (): Promise<void> => {
   //   const message = await logout();
 

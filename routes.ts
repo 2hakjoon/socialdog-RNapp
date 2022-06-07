@@ -2,6 +2,7 @@ import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {Dispatch, SetStateAction} from 'react';
 import {TypenameAndId} from './apollo-setup';
 import {LoginStrategy} from './__generated__/globalTypes';
 
@@ -15,7 +16,11 @@ type editProfileParam = {
 
 export type AuthStackList = {
   AuthSelect: undefined;
-  Login: {email: string | undefined; password: string | undefined};
+  Login: {
+    email: string | undefined;
+    password: string | undefined;
+    setAccessToken?: Dispatch<SetStateAction<string>>;
+  };
   Join: undefined;
 };
 
@@ -28,6 +33,12 @@ export type RootStackList = {
   Social: undefined;
   EditProfile: editProfileParam;
   EditDogProfile: undefined;
+  Login: {
+    email: string | undefined;
+    password: string | undefined;
+    setAccessToken?: Dispatch<SetStateAction<string>>;
+  };
+  Join: undefined;
 };
 
 export type WalkStackList = {
@@ -51,6 +62,7 @@ export type RootTabNavigator = {
   WalkTab: undefined;
   ProfileTab: undefined;
   SocialTab: undefined;
+  AuthTab: undefined;
 };
 
 export type UseNavigationProp<TabName extends keyof RootTabNavigator> =
@@ -66,10 +78,13 @@ export type RootRouteProps<RouteName extends keyof RootStackList> = RouteProp<
 
 export type AuthNavigationProp = StackNavigationProp<AuthStackList>;
 
-export type AuthRoutProp<RouteName extends keyof AuthStackList> = RouteProp<
+export type AuthRouteProp<RouteName extends keyof AuthStackList> = RouteProp<
   AuthStackList,
   RouteName
 >;
+
+export type AuthScreenProps<RouteName extends keyof AuthStackList> =
+  NativeStackScreenProps<AuthStackList, RouteName>;
 
 export type RecordsScreenProps = NativeStackScreenProps<
   WalkStackList,

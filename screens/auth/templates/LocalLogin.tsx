@@ -8,12 +8,14 @@ import BasicButton from '../../components/BasicButton';
 import {storeData} from '../../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from '../../../utils/constants';
 import {useRoute} from '@react-navigation/native';
-import {AuthRoutProp} from '../../../routes';
+import {AuthRouteProp} from '../../../routes';
 import FormInputBox from '../../components/Input/FormInputBox';
 import {
   MLocalLogin,
   MLocalLoginVariables,
 } from '../../../__generated__/MLocalLogin';
+import {mVLoginState} from '../../../apollo-setup';
+import {Alert} from 'react-native';
 
 interface ILogInScreenProps {
   setAccessToken: Function;
@@ -36,7 +38,7 @@ const LOGIN = gql`
 `;
 
 function LocalLogin({setAccessToken}: ILogInScreenProps) {
-  const route = useRoute<AuthRoutProp<'Login'>>();
+  const route = useRoute<AuthRouteProp<'Login'>>();
   const [login] = useMutation<MLocalLogin, MLocalLoginVariables>(LOGIN);
   const {handleSubmit, setValue, formState, control} = useForm<ILoginForm>({
     mode: 'onBlur',
@@ -56,8 +58,13 @@ function LocalLogin({setAccessToken}: ILogInScreenProps) {
     const res = await login({
       variables: {email, password},
     });
+    console.log(res);
+    if (res.data?.localLogin.error) {
+      Alert.alert('로그인 실패', res.data?.localLogin.error);
+    }
     if (res.data?.localLogin && res.data.localLogin.accessToken) {
       await saveTokens(res.data);
+      mVLoginState(true);
       setAccessToken(res.data.localLogin.accessToken);
     }
   };
@@ -71,13 +78,14 @@ function LocalLogin({setAccessToken}: ILogInScreenProps) {
   }, [route]);
 
   useEffect(() => {
-    setValue('email', 'dlgkrwns1021@naver.com');
-    setValue('password', 'test1234!');
+    // setValue('email', 'dlgkrwns1021@naver.com');
+    // setValue('password', 'test1234!');
   }, []);
 
   return (
     <View style={styles.wrapper}>
       <FormInputBox
+        titleColor={colors.PWhite}
         title={'이메일'}
         name={'email'}
         control={control}
@@ -91,6 +99,7 @@ function LocalLogin({setAccessToken}: ILogInScreenProps) {
         errors={formState.errors.email?.message}
       />
       <FormInputBox
+        titleColor={colors.PWhite}
         title={'비밀번호'}
         name={'password'}
         control={control}
@@ -108,6 +117,15 @@ function LocalLogin({setAccessToken}: ILogInScreenProps) {
       <BasicButton
         title="로그인"
         onPress={handleSubmit(onSumbit)}
+        fontColor={colors.PBlue}
+        fontWeight={'600'}
+        style={styles.buttonStyle}
+      />
+      <BasicButton
+        title="회원가입"
+        onPress={handleSubmit(onSumbit)}
+        fontColor={colors.PBlue}
+        fontWeight={'600'}
         style={styles.buttonStyle}
       />
     </View>
@@ -116,21 +134,16 @@ function LocalLogin({setAccessToken}: ILogInScreenProps) {
 
 const styles = StyleSheet.create({
   wrapper: {
-    backgroundColor: 'white',
+    backgroundColor: colors.PBlue,
     paddingHorizontal: '10%',
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  input: {
-    width: '100%',
-    height: 40,
-    borderWidth: 2,
-    borderColor: colors.PBlue,
-    marginBottom: 10,
-  },
   buttonStyle: {
     marginTop: 20,
+    backgroundColor: colors.PWhite,
+    color: colors.PBlue,
   },
 });
 

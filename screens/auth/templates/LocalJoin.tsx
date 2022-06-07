@@ -179,7 +179,7 @@ function LocalJoin() {
         button={{
           disabled:
             Boolean(formState?.errors?.email?.message) ||
-            !Boolean(getValues('email')) ||
+            !getValues('email') ||
             verifyDone,
           title: '이메일 인증',
           onPress: sendVerifyCode,
@@ -204,7 +204,7 @@ function LocalJoin() {
           disabled:
             (!enableVerify &&
               (Boolean(formState?.errors?.code?.message) ||
-                !Boolean(getValues('code')))) ||
+                !getValues('code'))) ||
             verifyDone,
           title: '번호 확인',
           onPress: checkVerifyCode,

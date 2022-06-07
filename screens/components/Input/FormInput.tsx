@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: colors.PLightGray,
     paddingLeft: 10,
+    backgroundColor: colors.PWhite,
   },
   disable: {
     borderColor: colors.PLightGray,

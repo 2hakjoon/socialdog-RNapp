@@ -17,7 +17,12 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Provider} from 'react-redux';
 import {applyMiddleware, createStore} from 'redux';
 import rootReducer from './module';
-import {RootTabNavigator, SnsStackList, WalkStackList} from './routes';
+import {
+  AuthStackList,
+  RootTabNavigator,
+  SnsStackList,
+  WalkStackList,
+} from './routes';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
@@ -34,10 +39,14 @@ import {GpsFilter} from './utils/filter/gpsFilter';
 import WalkHomeScreen from './screens/walkhome/WalkHomeScreen';
 import EditDogProfileScreen from './screens/edit-dog-profile/EditDogProfileScreen';
 import SplashScreen from 'react-native-splash-screen';
+import LocalLogin from './screens/auth/templates/LocalLogin';
+import AuthHome from './screens/auth/templates/AuthHome';
+import LocalJoin from './screens/auth/templates/LocalJoin';
 
 const RootTab = createBottomTabNavigator<RootTabNavigator>();
 const WalkStack = createNativeStackNavigator<WalkStackList>();
 const SnsStack = createNativeStackNavigator<SnsStackList>();
+const AuthStack = createNativeStackNavigator<AuthStackList>();
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
 
 export const gpsFilter = new GpsFilter({round: 3, prevWeight: 0.3});
@@ -108,7 +117,29 @@ const App = () => {
           <NavigationContainer>
             {!loginState ? (
               <>
-                <AuthScreen />
+                <AuthStack.Navigator>
+                  <AuthStack.Screen
+                    name={'AuthSelect'}
+                    component={AuthScreen}
+                    options={{
+                      headerShown: false,
+                    }}
+                  />
+                  <AuthStack.Screen
+                    name={'Login'}
+                    component={LocalLogin}
+                    options={{
+                      headerShown: false,
+                    }}
+                  />
+                  <AuthStack.Screen
+                    name={'Join'}
+                    component={LocalJoin}
+                    options={{
+                      headerShown: false,
+                    }}
+                  />
+                </AuthStack.Navigator>
                 <SafeAreaView style={{backgroundColor: colors.PBlue}} />
               </>
             ) : (

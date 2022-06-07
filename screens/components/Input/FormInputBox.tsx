@@ -6,6 +6,7 @@ import FormInput from './FormInput';
 
 interface IFormInputComp extends TextInputProps {
   title: string;
+  titleColor?: string;
   name: string;
   control: any;
   rules: RegisterOptions;
@@ -24,10 +25,11 @@ function FormInputBox({
   errors = '',
   secureTextEntry,
   maxLength,
+  titleColor,
 }: IFormInputComp) {
   return (
     <View style={styles.InputBox}>
-      <TextComp text={title} style={styles.sectionTitle} />
+      <TextComp text={title} style={styles.sectionTitle} color={titleColor} />
       <Controller
         name={name}
         control={control}
