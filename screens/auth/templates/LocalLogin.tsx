@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {Dispatch, SetStateAction, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {colors} from '../../../utils/colors';
 import {gql, useMutation} from '@apollo/client';

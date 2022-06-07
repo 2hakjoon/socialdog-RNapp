@@ -21,26 +21,29 @@ import AntDesignIcon from '../components/Icons/AntDesign';
 
 function AuthScreen({navigation}: AuthScreenProps<'AuthSelect'>) {
   const [meQuery, {loading: meQueryLoading}] = useLazyQuery<QMe>(ME);
-  const [checkingToken, setCheckingToken] = useState(true);
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [checkingToken, setCheckingToken] = useState<boolean>(false);
 
   useEffect(() => {
-    getData({key: USER_ACCESS_TOKEN}).then(token => {
-      if (token) {
-        mVUserAccessToken(token);
-        setCheckingToken(false);
-        meQuery().then(data => {
-          const user = data.data?.me.data;
-          // console.log(user);
-          if (user) {
-            mVLoginState(true);
-          } else if (!data.data?.me.ok) {
-            Alert.alert('로그인 실패', '회원정보를 찾을수 없습니다.');
-          }
-        });
-      } else {
-        setCheckingToken(false);
-      }
-    });
+    // getData({key: USER_ACCESS_TOKEN}).then(token => {
+    //   setLoginLoading(true);
+    //   if (token) {
+    //     mVUserAccessToken(token);
+    //     setCheckingToken(false);
+    //     meQuery().then(data => {
+    //       const user = data.data?.me.data;
+    //       // console.log(user);
+    //       if (user) {
+    //         mVLoginState(true);
+    //       } else if (!data.data?.me.ok) {
+    //         Alert.alert('로그인 실패', '회원정보를 찾을수 없습니다.');
+    //       }
+    //       setLoginLoading(false);
+    //     });
+    //   } else {
+    //     setCheckingToken(false);
+    //   }
+    // });
   }, []);
 
   return (
@@ -54,7 +57,7 @@ function AuthScreen({navigation}: AuthScreenProps<'AuthSelect'>) {
           <View style={styles.empty} />
         ) : (
           <>
-            {meQueryLoading ? (
+            {loginLoading ? (
               <View style={styles.loading}>
                 <TextComp
                   text={'로그인 중'}
@@ -70,7 +73,7 @@ function AuthScreen({navigation}: AuthScreenProps<'AuthSelect'>) {
               </View>
             ) : (
               <View style={styles.authButton}>
-                <KakaoLogin />
+                <KakaoLogin setLoginLoading={setLoginLoading} />
                 <TouchableOpacity
                   style={styles.buttonWrapper}
                   onPress={() => {
@@ -134,11 +137,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loading: {
-    flex: 1,
+    flex: 1.5,
     display: 'flex',
     height: '100%',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     flexDirection: 'row',
+    marginBottom: 50,
   },
 });
 

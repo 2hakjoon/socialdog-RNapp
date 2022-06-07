@@ -4,7 +4,7 @@ import {
   getProfile as getKakaoProfile,
   login,
 } from '@react-native-seoul/kakao-login';
-import React, {useState} from 'react';
+import React, {Dispatch, SetStateAction, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -25,6 +25,10 @@ import {
 import {QMe} from '../../../__generated__/QMe';
 import IconBubble from '../../components/Icons/IconBubble';
 import TextComp from '../../components/TextComp';
+
+interface IKakaoLogin {
+  setLoginLoading: Dispatch<SetStateAction<boolean>>;
+}
 
 const KAKAO_LOGIN = gql`
   mutation MKakaoLogin(
@@ -51,7 +55,7 @@ const KAKAO_LOGIN = gql`
   }
 `;
 
-function KakaoLogin() {
+function KakaoLogin({setLoginLoading}: IKakaoLogin) {
   const [kakaoLogin, {loading: kakaoLoginLoading}] = useMutation<
     MKakaoLogin,
     MKakaoLoginVariables
@@ -60,6 +64,7 @@ function KakaoLogin() {
 
   const signInWithKakao = async (): Promise<void> => {
     try {
+      setLoginLoading(true);
       const token: KakaoOAuthToken = await login();
       const tokenToDto = {
         ...token,
@@ -69,7 +74,6 @@ function KakaoLogin() {
       };
 
       const {data} = await kakaoLogin({variables: tokenToDto});
-
       const accessToken = data?.kakaoLogin.accessToken;
       const refreshToken = data?.kakaoLogin.refreshToken;
 
@@ -92,61 +96,44 @@ function KakaoLogin() {
           } else if (!data.data?.me.ok) {
             Alert.alert('로그인 실패', '회원정보를 찾을수 없습니다.');
           }
+          setLoginLoading(false);
         });
       }
     } catch (e) {
       console.log(e);
+      setLoginLoading(false);
     }
   };
-  // const signOutWithKakao = async (): Promise<void> => {
-  //   const message = await logout();
-
-  //   setResult(message);
-  // };
-
-  // const getKakaoProfile = async (): Promise<void> => {
-  //   const profile: KakaoProfile = await getProfile();
-
-  //   setResult(JSON.stringify(profile));
-  // };
-
-  // const unlinkKakao = async (): Promise<void> => {
-  //   const message = await unlink();
-
-  //   setResult(message);
-  // };
 
   return (
     <View style={styles.wrapper}>
-      <TouchableOpacity onPress={signInWithKakao} style={styles.buttonWrapper}>
-        {kakaoLoginLoading ? (
-          <View style={styles.loading}>
+      {kakaoLoginLoading ? (
+        <View style={styles.loading}>
+          <TextComp
+            text={'로그인 중'}
+            size={18}
+            weight={'600'}
+            color={'white'}
+          />
+          <ActivityIndicator
+            size={'small'}
+            color="white"
+            style={{paddingLeft: 6}}
+          />
+        </View>
+      ) : (
+        <TouchableOpacity style={styles.button} onPress={signInWithKakao}>
+          <IconBubble color="black" size={24} />
+          <View style={styles.textWrapper}>
             <TextComp
-              text={'로그인 중'}
+              text={'카카오 로그인'}
+              color={'#000000'}
               size={18}
-              weight={'600'}
-              color={'white'}
-            />
-            <ActivityIndicator
-              size={'small'}
-              color="white"
-              style={{paddingLeft: 6}}
+              weight={'500'}
             />
           </View>
-        ) : (
-          <TouchableOpacity style={styles.button}>
-            <IconBubble color="black" size={24} />
-            <View style={styles.textWrapper}>
-              <TextComp
-                text={'카카오 로그인'}
-                color={'#000000'}
-                size={18}
-                weight={'500'}
-              />
-            </View>
-          </TouchableOpacity>
-        )}
-      </TouchableOpacity>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
