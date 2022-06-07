@@ -70,9 +70,9 @@
 	<key>NSCameraUsageDescription</key>
 	<string>사진 촬용을 위해 카메라 사용 권한이 필요합니다.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>YOUR TEXT</string>
+	<string>위치정보 허용이 필요합니다.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>YOUR TEXT</string>
+	<string>위치정보 허용이 필요합니다.</string>
 	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
 	<dict>
 		<key>YOUR-PURPOSE-KEY</key>

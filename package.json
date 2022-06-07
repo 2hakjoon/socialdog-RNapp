@@ -7,6 +7,7 @@
     "dev:android": "rm .env && cp .env.development .env && react-native run-android",
     "test:android": "rm .env && cp .env.development .env && cd android && ./gradlew buildRelease && cd ../ && npx react-native run-android --variant=release",
     "build:android": "rm .env && cp .env.production .env && cd android && ./gradlew buildRelease && cd ../ && npx react-native run-android --variant=release",
+    "build:aab": "rm .env && cp .env.production .env && cd android && ./gradlew bundleRelease && cd ../",
     "ios": "react-native run-ios",
     "dev:ios": "rm .env && cp .env.development .env && react-native run-ios",
     "test:ios": "rm .env && cp .env.development .env && cd android && ./gradlew buildRelease && cd ../ && npx react-native run-ios --device --configuration Release",
