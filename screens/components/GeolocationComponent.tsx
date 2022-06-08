@@ -8,6 +8,7 @@ import BackgroundGeolocation, {
 } from '@mauron85/react-native-background-geolocation';
 import appConfig from '../../app.json';
 import {mvGeolocationPermission} from '../../apollo-setup';
+import useAppState from '../../hooks/useAppState';
 
 const LOCATION = 'LOCATION';
 
@@ -55,6 +56,18 @@ export const whenGeolocationPermissonDenied = () => {
 
 function GeolocationComponent() {
   const dispatch = useDispatch();
+  const appState = useAppState();
+
+  useEffect(() => {
+    if (appState === 'active') {
+      BackgroundGeolocation.checkStatus(data => {
+        if (data.authorization) {
+          mvGeolocationPermission(true);
+          getLocation();
+        }
+      });
+    }
+  }, [appState]);
 
   const getLocation = async () => {
     BackgroundGeolocation.getCurrentLocation(

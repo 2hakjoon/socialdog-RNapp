@@ -48,6 +48,7 @@
     "react-devtools": "^4.22.1",
     "react-hook-form": "^7.26.1",
     "react-native": "0.66.4",
+    "react-native-alert-async": "^1.0.5",
     "react-native-background-timer": "^2.4.1",
     "react-native-config": "^1.4.5",
     "react-native-google-places-autocomplete": "^2.4.1",

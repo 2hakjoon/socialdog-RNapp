@@ -26,6 +26,7 @@ import {CREATE_WALK} from '../../apollo-gqls/walks';
 import TextComp from '../components/TextComp';
 import {setGeolocation} from '../../module/geolocation';
 import {storeData} from '../../utils/asyncStorage';
+import AlertAsync from 'react-native-alert-async';
 
 interface latlngObj {
   latitude: number;
@@ -81,6 +82,19 @@ function RecordingScreen({route, navigation}: RecordsScreenProps) {
   };
 
   const saveRecordingAndReset = async () => {
+    const willSave = await AlertAsync(
+      '산책정보 저장',
+      '산책한 정보를 저장하시겠습니까?',
+      [
+        {text: '아니요', onPress: () => false},
+        {text: '네', onPress: () => true},
+      ],
+    );
+
+    if (willSave === false) {
+      return;
+    }
+
     try {
       const now = Date.now();
       // 기록의 사이즈를 줄이기 위해 키를 제거함.

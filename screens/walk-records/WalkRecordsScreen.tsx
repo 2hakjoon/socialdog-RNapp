@@ -336,9 +336,17 @@ function WalkRecordsScreen() {
           />
         </RNMapView>
       ) : (
-        <View style={styles.mapContainer}>
-          <Text>위치정보를 불러오는 중입니다.</Text>
-        </View>
+        <>
+          {geolocationPermission ? (
+            <View style={styles.mapContainer}>
+              <Text>위치정보를 불러오는 중입니다.</Text>
+            </View>
+          ) : (
+            <View style={styles.mapContainer}>
+              <Text>위치정보 권한을 허용해주세요.</Text>
+            </View>
+          )}
+        </>
       )}
       <View style={styles.calendarContainer}>
         <>
