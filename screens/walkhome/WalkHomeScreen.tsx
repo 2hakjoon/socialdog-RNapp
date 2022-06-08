@@ -1,3 +1,5 @@
+import {useReactiveVar} from '@apollo/client';
+import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
 import React, {useState} from 'react';
 import {
   Alert,
@@ -6,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {TypenameAndId} from '../../apollo-setup';
+import {mvGeolocationPermission, TypenameAndId} from '../../apollo-setup';
 import {WalkHomeScreenProps} from '../../routes';
 import {colors} from '../../utils/colors';
 import TextComp from '../components/TextComp';
@@ -17,14 +19,39 @@ function WalkHomeScreen({navigation}: WalkHomeScreenProps) {
   const [selectedDogId, setSeletedDogId] = useState<
     TypenameAndId | undefined
   >();
+
+  const geolocationPermission = useReactiveVar(mvGeolocationPermission);
+
   const moveToRecord = () => {
-    Alert.alert('산책시작', '산책을 시작하시겠습니까?', [
-      {text: '아니요', onPress: () => {}},
-      {
-        text: '네',
-        onPress: () => navigation.navigate('Record', selectedDogId),
-      },
-    ]);
+    if (geolocationPermission) {
+      Alert.alert('산책시작', '산책을 시작하시겠습니까?', [
+        {text: '아니요', onPress: () => {}},
+        {
+          text: '네',
+          onPress: () => navigation.navigate('Record', selectedDogId),
+        },
+      ]);
+    } else {
+      Alert.alert(
+        '위치정보 권한 필요.',
+        '소셜독은 앱이 백그라운드 및 항상 사용 중 일때 위치 정보를 수집하여 날씨 정보 및 산책기록 기능을 지원합니다.\n정상적인 서비스 이용을 위해서 위치정보 권한 설정이 필요합니다.\n설정화면으로 이동하시겠습니까?',
+        [
+          {
+            text: '아니요',
+            onPress: () => {
+              Alert.alert(
+                '위치정보 권한 거절.',
+                '위치정보 권한설정을 거절하셨습니다. 설정을 원하실 경우 설정화면에서 다시 허용해주세요.',
+              );
+            },
+          },
+          {
+            text: '예',
+            onPress: () => BackgroundGeolocation.showAppSettings(),
+          },
+        ],
+      );
+    }
   };
 
   return (

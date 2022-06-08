@@ -18,7 +18,12 @@ import {
   formatWalkingTime,
 } from '../../utils/dataformat/timeformat';
 import {colors} from '../../utils/colors';
-import {useLazyQuery, useMutation, useQuery} from '@apollo/client';
+import {
+  useLazyQuery,
+  useMutation,
+  useQuery,
+  useReactiveVar,
+} from '@apollo/client';
 import {now_yyyy_mm_dd} from '../../utils/dataformat/dateformat';
 import {
   QGetWalks,
@@ -40,6 +45,8 @@ import {
 import dayjs from 'dayjs';
 import * as lzstring from 'lz-string';
 import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
+import {whenGeolocationPermissonDenied} from '../components/GeolocationComponent';
+import {mvGeolocationPermission} from '../../apollo-setup';
 
 interface latlngObj {
   latitude: number;
@@ -66,6 +73,7 @@ function WalkRecordsScreen() {
     (state: RootState) => state.geolocation.geolocation,
   );
   const refMapView = useRef<RNMapView>(null);
+  const geolocationPermission = useReactiveVar(mvGeolocationPermission);
 
   //날짜를 선택할때마다 해당 날짜의 산책데이터 리스트를 recordList에 넣어줌.
   useEffect(() => {
@@ -84,8 +92,10 @@ function WalkRecordsScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      getLocation();
-    }, []),
+      if (geolocationPermission) {
+        getLocation();
+      }
+    }, [geolocationPermission]),
   );
 
   useEffect(() => {
@@ -179,6 +189,7 @@ function WalkRecordsScreen() {
               }),
             );
             //console.log(locationsWithKey);
+            setLocation(locationsWithKey[0]);
             setLocations(locationsWithKey);
           } catch (e) {
             console.log(e);
@@ -200,7 +211,11 @@ function WalkRecordsScreen() {
       },
       error => {
         console.log(error);
-        Alert.alert('Error', '위치정보를 불러오는데 실패했습니다.');
+        if (error.message === 'Permission denied') {
+          whenGeolocationPermissonDenied();
+        } else {
+          Alert.alert('오류가 발생했습니다.', '위치정보를 불러올 수 없습니다.');
+        }
       },
     );
 
@@ -321,7 +336,9 @@ function WalkRecordsScreen() {
           />
         </RNMapView>
       ) : (
-        <Text style={styles.mapContainer}>위치정보를 불러오는 중입니다.</Text>
+        <View style={styles.mapContainer}>
+          <Text>위치정보를 불러오는 중입니다.</Text>
+        </View>
       )}
       <View style={styles.calendarContainer}>
         <>
@@ -350,6 +367,8 @@ function WalkRecordsScreen() {
 const styles = StyleSheet.create({
   mapContainer: {
     flex: 7,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   calendarContainer: {
     flex: 3,

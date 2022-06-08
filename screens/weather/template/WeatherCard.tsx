@@ -16,6 +16,7 @@ import {ME} from '../../../apollo-gqls/auth';
 import {getWeatherData, storeWeatherData} from '../../../utils/asyncStorage';
 import {mvGeolocationPermission} from '../../../apollo-setup';
 import Config from 'react-native-config';
+import {colors} from '../../../utils/colors';
 
 function WeatherCard() {
   //0:onecall날씨정보, 1:미세먼지 2:주소
@@ -69,7 +70,7 @@ function WeatherCard() {
     if (geolocation?.latitude && geolocation.longitude) {
       getWeather({...geolocation});
     }
-  }, [geolocation]);
+  }, [geolocation, geolocationPermission]);
 
   useEffect(() => {
     getWeatherData().then(data => {
@@ -112,21 +113,33 @@ function WeatherCard() {
         <View
           style={{
             ...styles.tempContainer,
-            width: '100%',
-            height: '100%',
-            alignItems: 'center',
             justifyContent: 'center',
           }}>
           {geolocationPermission ? (
             <>
               {weahterDataLoding ? (
-                <TextComp text={'날씨정보를 받아오는 중입니다....'} />
+                <TextComp
+                  text={'날씨정보를 받아오는 중입니다....'}
+                  size={16}
+                  weight={'600'}
+                  color={colors.PDarkGray}
+                />
               ) : (
-                <TextComp text={'날씨정보를 받아오는데 실패했습니다.'} />
+                <TextComp
+                  text={'날씨정보를 받아오는데 실패했습니다.'}
+                  size={16}
+                  weight={'600'}
+                  color={colors.PDarkGray}
+                />
               )}
             </>
           ) : (
-            <TextComp text={'위치정보 권한을 설정해주세요.'} />
+            <TextComp
+              text={'날씨정보를 보려면 위치정보 권한을 설정해주세요.'}
+              size={16}
+              weight={'600'}
+              color={colors.PDarkGray}
+            />
           )}
         </View>
       )}
