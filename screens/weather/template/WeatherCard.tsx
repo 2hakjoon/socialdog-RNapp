@@ -10,22 +10,25 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../../module';
 import {Geolocation} from '../../../module/geolocation';
 import {UseNavigationProp} from '../../../routes';
-import {useQuery} from '@apollo/client';
+import {useQuery, useReactiveVar} from '@apollo/client';
 import {QMe} from '../../../__generated__/QMe';
 import {ME} from '../../../apollo-gqls/auth';
 import {getWeatherData, storeWeatherData} from '../../../utils/asyncStorage';
+import {mvGeolocationPermission} from '../../../apollo-setup';
+import Config from 'react-native-config';
 
 function WeatherCard() {
   //0:onecall날씨정보, 1:미세먼지 2:주소
   const [[weather, aqi, location], setWeatherData] = useState<
     [openWeather, openAqi, string]
   >([undefined, undefined, '']);
+  const geolocationPermission = useReactiveVar(mvGeolocationPermission);
+  const [weahterDataLoding, setWeahterDataLoading] = useState(true);
   const {data} = useQuery<QMe>(ME);
   const user = data?.me.data;
   const geolocation = useSelector(
     (state: RootState) => state.geolocation.geolocation,
   );
-  const OpenWeatherAPIkey = 'c426ab12a65113b5edf8fa2bc8bf914f';
 
   const navigation = useNavigation<UseNavigationProp<'WalkTab'>>();
 
@@ -34,13 +37,13 @@ function WeatherCard() {
       const response = await Promise.all([
         //날씨정보
         await fetch(
-          `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely,alerts&units=metric&appid=${OpenWeatherAPIkey}`,
+          `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely,alerts&units=metric&appid=${Config.OPEN_WEATHER_API_KEY}`,
         )
           .then(r => r.json())
           .catch(e => console.log(e)),
         //미세먼지
         await fetch(
-          `https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=${latitude}&lon=${longitude}&appid=${OpenWeatherAPIkey}`,
+          `https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=${latitude}&lon=${longitude}&appid=${Config.OPEN_WEATHER_API_KEY}`,
         )
           .then(r => r.json())
           .catch(e => console.log(e)),
@@ -50,6 +53,7 @@ function WeatherCard() {
           lng: longitude,
         }),
       ]);
+      setWeahterDataLoading(false);
       setWeatherData(response);
       storeWeatherData(response);
     } catch (e) {
@@ -107,12 +111,23 @@ function WeatherCard() {
       ) : (
         <View
           style={{
+            ...styles.tempContainer,
             width: '100%',
             height: '100%',
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <TextComp text={'날씨정보를 받아오는 중입니다....'} />
+          {geolocationPermission ? (
+            <>
+              {weahterDataLoding ? (
+                <TextComp text={'날씨정보를 받아오는 중입니다....'} />
+              ) : (
+                <TextComp text={'날씨정보를 받아오는데 실패했습니다.'} />
+              )}
+            </>
+          ) : (
+            <TextComp text={'위치정보 권한을 설정해주세요.'} />
+          )}
         </View>
       )}
     </View>
