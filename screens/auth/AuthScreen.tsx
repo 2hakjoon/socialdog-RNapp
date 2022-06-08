@@ -33,12 +33,12 @@ function AuthScreen({navigation}: AuthScreenProps<'AuthSelect'>) {
         meQuery().then(data => {
           const user = data.data?.me.data;
           // console.log(user);
+          setLoginLoading(false);
           if (user) {
             mVLoginState(true);
           } else if (!data.data?.me.ok) {
             Alert.alert('로그인 실패', '회원정보를 찾을수 없습니다.');
           }
-          setLoginLoading(false);
         });
       } else {
         setLoginLoading(false);
