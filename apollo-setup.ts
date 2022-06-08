@@ -24,10 +24,12 @@ import {
 } from './__generated__/MReissueAccessToken';
 import {REISSUE_ACCESS_TOKEN} from './apollo-gqls/auth';
 import {Alert} from 'react-native';
+import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
 
 export const mVUserAccessToken = makeVar('');
 export const mVUserRefreshToken = makeVar('');
 export const mVLoginState = makeVar(false);
+export const mvGeolocationPermission = makeVar(false);
 
 let ApolloLinkAccessToken = '';
 let ApolloLinkRefreshToken = '';
