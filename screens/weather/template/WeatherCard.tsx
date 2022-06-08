@@ -135,7 +135,7 @@ function WeatherCard() {
             </>
           ) : (
             <TextComp
-              text={'날씨정보를 보려면 위치정보 권한을 설정해주세요.'}
+              text={'날씨정보를 보기위해 위치정보 권한을 설정해주세요.'}
               size={16}
               weight={'600'}
               color={colors.PDarkGray}

@@ -17,21 +17,22 @@ import {
 import Foundation from '../components/Icons/Foundation';
 import {QMe} from '../../__generated__/QMe';
 import {ME} from '../../apollo-gqls/auth';
-import {gpsFilter} from '../../App';
 import * as lzstring from 'lz-string';
 import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
 import {geolocationConfig} from '../components/GeolocationComponent';
 import {RecordsScreenProps} from '../../routes';
 import {CREATE_WALK} from '../../apollo-gqls/walks';
-import TextComp from '../components/TextComp';
 import {setGeolocation} from '../../module/geolocation';
 import {storeData} from '../../utils/asyncStorage';
 import AlertAsync from 'react-native-alert-async';
+import {GpsFilter} from '../../utils/filter/gpsFilter';
 
 interface latlngObj {
   latitude: number;
   longitude: number;
 }
+
+const gpsFilter = new GpsFilter({round: 3, prevWeight: 0.3});
 
 function RecordingScreen({route, navigation}: RecordsScreenProps) {
   const [location, setLocation] = useState<latlngObj | null>(null);

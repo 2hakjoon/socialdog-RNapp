@@ -61,13 +61,15 @@ function WeatherScreen() {
 
   useEffect(() => {
     getWeatherData().then(data => {
+      //console.log(data);
       if (data !== null) {
         setWeatherData(data);
+      } else {
+        if (geolocation?.latitude && geolocation.longitude) {
+          getWeather({...geolocation});
+        }
       }
     });
-    if (geolocation?.latitude && geolocation.longitude) {
-      getWeather({...geolocation});
-    }
   }, [geolocation]);
 
   return (

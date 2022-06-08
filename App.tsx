@@ -35,7 +35,6 @@ import SocialScreen from './screens/social/SocialScreen';
 import {client, mVLoginState} from './apollo-setup';
 import WalkRecordsScreen from './screens/walk-records/WalkRecordsScreen';
 import {colors} from './utils/colors';
-import {GpsFilter} from './utils/filter/gpsFilter';
 import WalkHomeScreen from './screens/walkhome/WalkHomeScreen';
 import EditDogProfileScreen from './screens/edit-dog-profile/EditDogProfileScreen';
 import SplashScreen from 'react-native-splash-screen';
@@ -47,8 +46,6 @@ const WalkStack = createNativeStackNavigator<WalkStackList>();
 const SnsStack = createNativeStackNavigator<SnsStackList>();
 const AuthStack = createNativeStackNavigator<AuthStackList>();
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
-
-export const gpsFilter = new GpsFilter({round: 3, prevWeight: 0.3});
 
 const App = () => {
   useEffect(() => {
