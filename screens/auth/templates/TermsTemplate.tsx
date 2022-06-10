@@ -19,6 +19,7 @@ body { font-size: 180%; word-wrap: break-word; overflow-wrap: break-word; }
 
 function TermsTemplate({closeModal, nextStep}: ITermsTemplate) {
   const [termsOfPrivacy, setTermsOfPrivacy] = useState('');
+  const [termsOfService, setTermsOfService] = useState('');
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
   const [acceptService, setAcceptService] = useState(false);
 
@@ -34,6 +35,18 @@ function TermsTemplate({closeModal, nextStep}: ITermsTemplate) {
     //setTermsOfPrivacy(res.data);
   };
 
+  const getTermsOfService = async () => {
+    const res = await fetch(
+      'https://socialdog.s3.ap-northeast-2.amazonaws.com/Terms/termsofservice.txt',
+    );
+    let reader = new FileReader();
+    reader.onload = function () {
+      setTermsOfService(termHTMLStyle + reader.result);
+    };
+    reader.readAsText(await res.blob());
+    //setTermsOfPrivacy(res.data);
+  };
+
   const toggleAccectPrivacy = () => {
     setAcceptPrivacy(prev => !prev);
   };
@@ -43,6 +56,7 @@ function TermsTemplate({closeModal, nextStep}: ITermsTemplate) {
 
   useEffect(() => {
     getTermsOfPrivacy();
+    getTermsOfService();
   }, []);
 
   return (
@@ -97,7 +111,7 @@ function TermsTemplate({closeModal, nextStep}: ITermsTemplate) {
           <View style={styles.termBox}>
             <WebView
               source={{
-                html: termsOfPrivacy,
+                html: termsOfService,
               }}
             />
           </View>
