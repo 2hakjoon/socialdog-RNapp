@@ -3,6 +3,8 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { CreateAccountInputDto } from "./globalTypes";
+
 // ====================================================
 // GraphQL mutation operation: MCreateLocalAccount
 // ====================================================
@@ -18,7 +20,5 @@ export interface MCreateLocalAccount {
 }
 
 export interface MCreateLocalAccountVariables {
-  email: string;
-  password: string;
-  code: string;
+  args: CreateAccountInputDto;
 }

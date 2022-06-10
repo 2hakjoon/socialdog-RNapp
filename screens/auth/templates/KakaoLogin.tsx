@@ -14,7 +14,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {ME} from '../../../apollo-gqls/auth';
+import AlertAsync from 'react-native-alert-async';
+import {KAKAO_LOGIN, ME} from '../../../apollo-gqls/auth';
 import {mVLoginState, mVUserAccessToken} from '../../../apollo-setup';
 import {storeData} from '../../../utils/asyncStorage';
 import {USER_ACCESS_TOKEN, USER_REFRESH_TOKEN} from '../../../utils/constants';
@@ -25,46 +26,23 @@ import {
 import {QMe} from '../../../__generated__/QMe';
 import IconBubble from '../../components/Icons/IconBubble';
 import TextComp from '../../components/TextComp';
+import TermsTemplate from './TermsTemplate';
 
 interface IKakaoLogin {
   setLoginLoading: Dispatch<SetStateAction<boolean>>;
 }
 
-const KAKAO_LOGIN = gql`
-  mutation MKakaoLogin(
-    $accessToken: String!
-    $accessTokenExpiresAt: String!
-    $refreshToken: String!
-    $refreshTokenExpiresAt: String!
-    $scopes: String!
-  ) {
-    kakaoLogin(
-      args: {
-        accessToken: $accessToken
-        accessTokenExpiresAt: $accessTokenExpiresAt
-        refreshToken: $refreshToken
-        refreshTokenExpiresAt: $refreshTokenExpiresAt
-        scopes: $scopes
-      }
-    ) {
-      ok
-      error
-      accessToken
-      refreshToken
-    }
-  }
-`;
-
 function KakaoLogin({setLoginLoading}: IKakaoLogin) {
+  const [modalOpen, setModalOpen] = useState(false);
   const [kakaoLogin, {loading: kakaoLoginLoading}] = useMutation<
     MKakaoLogin,
     MKakaoLoginVariables
   >(KAKAO_LOGIN);
   const [meQuery, {loading: meQueryLoading}] = useLazyQuery<QMe>(ME);
 
-  const signInWithKakao = async (): Promise<void> => {
+  const signInWithKakao = async ({acceptTerms = false}): Promise<void> => {
     try {
-      setLoginLoading(true);
+      //setLoginLoading(true);
       const token: KakaoOAuthToken = await login();
       const tokenToDto = {
         ...token,
@@ -73,7 +51,14 @@ function KakaoLogin({setLoginLoading}: IKakaoLogin) {
         scopes: JSON.stringify(token.scopes),
       };
 
-      const {data} = await kakaoLogin({variables: tokenToDto});
+      const {data} = await kakaoLogin({
+        variables: {args: {...tokenToDto, acceptTerms}},
+      });
+      if (data?.kakaoLogin.acceptTerms === false) {
+        await AlertAsync('약관 동의', '새로 변경된 약관에 다시 동의 해 주세요');
+        setModalOpen(true);
+        return;
+      }
       const accessToken = data?.kakaoLogin.accessToken;
       const refreshToken = data?.kakaoLogin.refreshToken;
 
@@ -96,45 +81,62 @@ function KakaoLogin({setLoginLoading}: IKakaoLogin) {
           } else if (!data.data?.me.ok) {
             Alert.alert('로그인 실패', '회원정보를 찾을수 없습니다.');
           }
-          setLoginLoading(false);
+          //setLoginLoading(false);
         });
       }
     } catch (e) {
       // Alert.alert('error', `${e}`);
-      setLoginLoading(false);
+      //setLoginLoading(false);
     }
   };
 
+  const acceptTermsAndLogin = () => {
+    signInWithKakao({acceptTerms: true});
+  };
+  const closeModal = () => {
+    Alert.alert('창 닫기', '약관 동의 화면에서 떠나시겠습니까?', [
+      {text: '아니요', onPress: () => false},
+      {text: '예', onPress: () => setModalOpen(false)},
+    ]);
+  };
+
   return (
-    <View style={styles.wrapper}>
-      {kakaoLoginLoading ? (
-        <View style={styles.loading}>
-          <TextComp
-            text={'로그인 중'}
-            size={18}
-            weight={'600'}
-            color={'white'}
-          />
-          <ActivityIndicator
-            size={'small'}
-            color="white"
-            style={{paddingLeft: 6}}
-          />
-        </View>
-      ) : (
-        <TouchableOpacity style={styles.button} onPress={signInWithKakao}>
-          <IconBubble color="black" size={24} />
-          <View style={styles.textWrapper}>
+    <>
+      <View style={styles.wrapper}>
+        {kakaoLoginLoading ? (
+          <View style={styles.loading}>
             <TextComp
-              text={'카카오 로그인'}
-              color={'#000000'}
+              text={'로그인 중'}
               size={18}
-              weight={'500'}
+              weight={'600'}
+              color={'white'}
+            />
+            <ActivityIndicator
+              size={'small'}
+              color="white"
+              style={{paddingLeft: 6}}
             />
           </View>
-        </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => signInWithKakao({})}>
+            <IconBubble color="black" size={24} />
+            <View style={styles.textWrapper}>
+              <TextComp
+                text={'카카오 로그인'}
+                color={'#000000'}
+                size={18}
+                weight={'500'}
+              />
+            </View>
+          </TouchableOpacity>
+        )}
+      </View>
+      {modalOpen && (
+        <TermsTemplate nextStep={acceptTermsAndLogin} closeModal={closeModal} />
       )}
-    </View>
+    </>
   );
 }
 

@@ -3,6 +3,8 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { LoginInputDto } from "./globalTypes";
+
 // ====================================================
 // GraphQL mutation operation: MLocalLogin
 // ====================================================
@@ -10,9 +12,10 @@
 export interface MLocalLogin_localLogin {
   __typename: "LoginOutputDto";
   ok: boolean;
+  error: string | null;
   accessToken: string | null;
   refreshToken: string | null;
-  error: string | null;
+  acceptTerms: boolean | null;
 }
 
 export interface MLocalLogin {
@@ -20,6 +23,5 @@ export interface MLocalLogin {
 }
 
 export interface MLocalLoginVariables {
-  email: string;
-  password: string;
+  args: LoginInputDto;
 }

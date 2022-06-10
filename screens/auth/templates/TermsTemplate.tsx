@@ -10,13 +10,14 @@ import TextComp from '../../components/TextComp';
 
 interface ITermsTemplate {
   closeModal: () => void;
+  nextStep: () => void;
 }
 
 const termHTMLStyle = `<style>
 body { font-size: 180%; word-wrap: break-word; overflow-wrap: break-word; }
 </style>`;
 
-function TermsTemplate({closeModal}: ITermsTemplate) {
+function TermsTemplate({closeModal, nextStep}: ITermsTemplate) {
   const [termsOfPrivacy, setTermsOfPrivacy] = useState('');
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
   const [acceptService, setAcceptService] = useState(false);
@@ -26,7 +27,7 @@ function TermsTemplate({closeModal}: ITermsTemplate) {
       'https://socialdog.s3.ap-northeast-2.amazonaws.com/Terms/termsofprivacy.txt',
     );
     let reader = new FileReader();
-    reader.onload = async function () {
+    reader.onload = function () {
       setTermsOfPrivacy(termHTMLStyle + reader.result);
     };
     reader.readAsText(await res.blob());
@@ -70,17 +71,17 @@ function TermsTemplate({closeModal}: ITermsTemplate) {
           <View style={styles.termBox}>
             <WebView
               source={{
-                html: '' + termsOfPrivacy,
+                html: termsOfPrivacy,
               }}
             />
           </View>
           <View style={styles.labelWrapper}>
-            <TextComp text="개인정보 처리 방침" size={16} />
+            <TextComp text="서비스 이용 약관" size={16} />
             <TouchableOpacity
               onPress={toggleAccectService}
               style={styles.checkboxWrapper}>
               <TextComp text="동의합니다" size={14} />
-              {acceptPrivacy ? (
+              {acceptService ? (
                 <MaterialCommunityIcons
                   size={14}
                   name="checkbox-marked-outline"
@@ -96,11 +97,16 @@ function TermsTemplate({closeModal}: ITermsTemplate) {
           <View style={styles.termBox}>
             <WebView
               source={{
-                html: '' + termsOfPrivacy,
+                html: termsOfPrivacy,
               }}
             />
           </View>
-          <BasicButton title="동의 완료" onPress={() => {}} />
+
+          <BasicButton
+            disable={!(acceptPrivacy && acceptService)}
+            title="동의 완료"
+            onPress={nextStep}
+          />
         </View>
       </ModalRoundBox>
     </ModalBackground>

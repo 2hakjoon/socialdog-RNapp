@@ -9,6 +9,7 @@
 
 export interface dogs {
   __typename: "Dogs";
+  id: string;
   name: string;
   photo: string;
 }

@@ -19,6 +19,13 @@ export enum LoginStrategy {
   LOCAL = "LOCAL",
 }
 
+export interface CreateAccountInputDto {
+  email: string;
+  password: string;
+  code: string;
+  acceptTerms: boolean;
+}
+
 export interface CreateDogInputDto {
   name: string;
   photo: string;
@@ -55,6 +62,25 @@ export interface FileInputDto {
 
 export interface GetDogInputDto {
   id: string;
+}
+
+export interface KakaoLoginInputDto {
+  accessToken: string;
+  accessTokenExpiresAt?: string | null;
+  refreshToken?: string | null;
+  refreshTokenExpiresAt?: string | null;
+  scopes?: string | null;
+  acceptTerms: boolean;
+}
+
+export interface LoginInputDto {
+  email: string;
+  password: string;
+  acceptTerms: boolean;
+}
+
+export interface UpdateAuthLocalAcceptTermInputDto {
+  acceptTerms: boolean;
 }
 
 //==============================================================

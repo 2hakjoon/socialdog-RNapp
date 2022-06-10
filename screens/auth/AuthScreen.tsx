@@ -18,9 +18,6 @@ import {useLazyQuery} from '@apollo/client';
 import {QMe} from '../../__generated__/QMe';
 import {ME} from '../../apollo-gqls/auth';
 import AntDesignIcon from '../components/Icons/AntDesign';
-import ModalBackground from '../components/modal/ModalBackground';
-import ModalRoundBox from '../components/modal/ModalRoundBox';
-import TermsTemplate from './templates/TermsTemplate';
 
 function AuthScreen({navigation}: AuthScreenProps<'AuthSelect'>) {
   const [meQuery, {loading: meQueryLoading}] = useLazyQuery<QMe>(ME);
@@ -80,31 +77,32 @@ function AuthScreen({navigation}: AuthScreenProps<'AuthSelect'>) {
                 />
               </View>
             ) : (
-              <View style={styles.authButton}>
+              <>
                 <KakaoLogin setLoginLoading={setLoginLoading} />
-                <TouchableOpacity
-                  style={styles.buttonWrapper}
-                  onPress={() => {
-                    navigation.push('Login', {
-                      email: undefined,
-                      password: undefined,
-                    });
-                  }}>
-                  <AntDesignIcon color="black" size={24} name={'user'} />
-                  <View style={styles.textWrapper}>
-                    <TextComp
-                      text={'소셜독 계정 로그인'}
-                      size={18}
-                      weight={'500'}
-                    />
-                  </View>
-                </TouchableOpacity>
-              </View>
+                <View style={styles.authButton}>
+                  <TouchableOpacity
+                    style={styles.buttonWrapper}
+                    onPress={() => {
+                      navigation.push('Login', {
+                        email: undefined,
+                        password: undefined,
+                      });
+                    }}>
+                    <AntDesignIcon color="black" size={24} name={'user'} />
+                    <View style={styles.textWrapper}>
+                      <TextComp
+                        text={'소셜독 계정 로그인'}
+                        size={18}
+                        weight={'500'}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </>
             )}
           </>
         )}
       </>
-      <TermsTemplate closeModal={() => {}} />
     </View>
   );
 }
@@ -126,7 +124,6 @@ const styles = StyleSheet.create({
     marginBottom: 50,
   },
   authButton: {
-    flex: 1.5,
     justifyContent: 'center',
     marginBottom: 50,
     width: '100%',

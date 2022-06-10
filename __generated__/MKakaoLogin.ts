@@ -3,6 +3,8 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { KakaoLoginInputDto } from "./globalTypes";
+
 // ====================================================
 // GraphQL mutation operation: MKakaoLogin
 // ====================================================
@@ -13,6 +15,7 @@ export interface MKakaoLogin_kakaoLogin {
   error: string | null;
   accessToken: string | null;
   refreshToken: string | null;
+  acceptTerms: boolean | null;
 }
 
 export interface MKakaoLogin {
@@ -20,9 +23,5 @@ export interface MKakaoLogin {
 }
 
 export interface MKakaoLoginVariables {
-  accessToken: string;
-  accessTokenExpiresAt: string;
-  refreshToken: string;
-  refreshTokenExpiresAt: string;
-  scopes: string;
+  args: KakaoLoginInputDto;
 }
