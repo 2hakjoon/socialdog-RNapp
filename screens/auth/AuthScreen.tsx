@@ -18,6 +18,9 @@ import {useLazyQuery} from '@apollo/client';
 import {QMe} from '../../__generated__/QMe';
 import {ME} from '../../apollo-gqls/auth';
 import AntDesignIcon from '../components/Icons/AntDesign';
+import ModalBackground from '../components/modal/ModalBackground';
+import ModalRoundBox from '../components/modal/ModalRoundBox';
+import TermsTemplate from './templates/TermsTemplate';
 
 function AuthScreen({navigation}: AuthScreenProps<'AuthSelect'>) {
   const [meQuery, {loading: meQueryLoading}] = useLazyQuery<QMe>(ME);
@@ -30,16 +33,20 @@ function AuthScreen({navigation}: AuthScreenProps<'AuthSelect'>) {
       if (token) {
         setCheckingToken(false);
         mVUserAccessToken(token);
-        meQuery().then(data => {
-          const user = data.data?.me.data;
-          // console.log(user);
-          setLoginLoading(false);
-          if (user) {
-            mVLoginState(true);
-          } else if (!data.data?.me.ok) {
-            Alert.alert('로그인 실패', '회원정보를 찾을수 없습니다.');
-          }
-        });
+        meQuery()
+          .then(data => {
+            const user = data.data?.me.data;
+            // console.log(user);
+            setLoginLoading(false);
+            if (user) {
+              mVLoginState(true);
+            } else if (!data.data?.me.ok) {
+              Alert.alert('로그인 실패', '회원정보를 찾을수 없습니다.');
+            }
+          })
+          .catch(() => {
+            setLoginLoading(false);
+          });
       } else {
         setLoginLoading(false);
         setCheckingToken(false);
@@ -97,6 +104,7 @@ function AuthScreen({navigation}: AuthScreenProps<'AuthSelect'>) {
           </>
         )}
       </>
+      <TermsTemplate closeModal={() => {}} />
     </View>
   );
 }
