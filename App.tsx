@@ -40,7 +40,6 @@ import EditDogProfileScreen from './screens/edit-dog-profile/EditDogProfileScree
 import SplashScreen from 'react-native-splash-screen';
 import LocalLogin from './screens/auth/templates/LocalLogin';
 import LocalJoin from './screens/auth/templates/LocalJoin';
-import {deleteTokens} from './utils/asyncStorage';
 
 const RootTab = createBottomTabNavigator<RootTabNavigator>();
 const WalkStack = createNativeStackNavigator<WalkStackList>();
@@ -49,7 +48,6 @@ const AuthStack = createNativeStackNavigator<AuthStackList>();
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
 
 const App = () => {
-   deleteTokens()
   useEffect(() => {
     SplashScreen.hide();
   }, []);
@@ -160,7 +158,7 @@ const App = () => {
                   component={Sns}
                   options={{
                     headerShown: false,
-                    tabBarLabel: '친구들',
+                    tabBarLabel: '커뮤니티',
                     tabBarStyle: styles.tabBar,
                     tabBarIcon: ({color, size}) => (
                       <MIcon name="nature-people" color={color} size={size} />

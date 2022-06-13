@@ -1,5 +1,11 @@
-import React, {useState} from 'react';
-import {ActivityIndicator, Alert, StyleSheet, View} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  ActivityIndicator,
+  Alert,
+  BackHandler,
+  StyleSheet,
+  View,
+} from 'react-native';
 import Config from 'react-native-config';
 import WebView from 'react-native-webview';
 import {useSelector} from 'react-redux';
@@ -20,7 +26,48 @@ function SocialScreen() {
   window.localStorage.setItem('USER_ACCESS_TOKEN', '${mVUserAccessToken()}');
   window.localStorage.setItem('USER_REFRESH_TOKEN', '${mVUserRefreshToken()}');
   window.localStorage.setItem('GEOLOCATION', '${JSON.stringify(geolocation)}');
+  (function() {
+    function wrap(fn) {
+      return function wrapper() {
+        var res = fn.apply(this, arguments);
+        window.ReactNativeWebView.postMessage('navigationStateChange');
+        return res;
+      }
+    }
+
+    history.pushState = wrap(history.pushState);
+    history.replaceState = wrap(history.replaceState);
+    window.addEventListener('popstate', function() {
+      window.ReactNativeWebView.postMessage('navigationStateChange');
+    });
+  })();
+
+  true;
   `;
+
+  const webview = useRef<WebView<{}>>(null);
+  const [isCanGoBack, setIsCanGoBack] = useState(false);
+  const onPressHardwareBackButton = () => {
+    if (webview.current && isCanGoBack) {
+      webview.current.goBack();
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      onPressHardwareBackButton,
+    );
+    return () => {
+      BackHandler.removeEventListener(
+        'hardwareBackPress',
+        onPressHardwareBackButton,
+      );
+    };
+  }, [isCanGoBack]);
 
   return (
     <>
@@ -42,6 +89,13 @@ function SocialScreen() {
         </View>
       ) : (
         <WebView
+          ref={webview}
+          onMessage={({nativeEvent: state}) => {
+            if (state.data === 'navigationStateChange') {
+              // Navigation state updated, can check state.canGoBack, etc.
+              setIsCanGoBack(state.canGoBack);
+            }
+          }}
           source={{uri: Config.SOCIALDOG_FRONTEND}}
           style={{height: '100%', width: '100%'}}
           javaScriptEnabled={true}
