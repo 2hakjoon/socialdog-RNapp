@@ -23,6 +23,7 @@ import {Alert} from 'react-native';
 import {LOCAL_LOGIN} from '../../../apollo-gqls/auth';
 import TermsTemplate from './TermsTemplate';
 import AlertAsync from 'react-native-alert-async';
+import LoadingOverlay from '../../components/loading/LoadingOverlay';
 
 interface ILoginForm {
   email: string;
@@ -32,7 +33,10 @@ interface ILoginForm {
 function LocalLogin() {
   const [modalOpen, setModalOpen] = useState(false);
   const route = useRoute<AuthRouteProp<'Login'>>();
-  const [login] = useMutation<MLocalLogin, MLocalLoginVariables>(LOCAL_LOGIN);
+  const [login, {loading: loginLoading}] = useMutation<
+    MLocalLogin,
+    MLocalLoginVariables
+  >(LOCAL_LOGIN);
   const navigation = useNavigation<UseNavigationProp<'AuthTab'>>();
   const {handleSubmit, setValue, getValues, formState, control} =
     useForm<ILoginForm>({
@@ -147,6 +151,8 @@ function LocalLogin() {
           closeModal={closeTermTemplate}
         />
       )}
+
+      {loginLoading && <LoadingOverlay />}
     </>
   );
 }

@@ -38,6 +38,7 @@ import {
   CREATE_VERIFICATION,
   JOIN,
 } from '../../../apollo-gqls/auth';
+import LoadingOverlay from '../../components/loading/LoadingOverlay';
 
 interface IJoinForm {
   email: string;
@@ -54,20 +55,18 @@ function LocalJoin() {
   const [paswordError, setPasswordError] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
-  const [createAccount, {loading, error, data}] = useMutation<
-    MCreateLocalAccount,
-    MCreateLocalAccountVariables
-  >(JOIN);
+  const [createAccount, {loading: createAccountLoading, error, data}] =
+    useMutation<MCreateLocalAccount, MCreateLocalAccountVariables>(JOIN);
 
-  const [createVerification, {}] = useMutation<
-    MCreateVerification,
-    MCreateVerificationVariables
-  >(CREATE_VERIFICATION);
+  const [createVerification, {loading: createVerificationLoading}] =
+    useMutation<MCreateVerification, MCreateVerificationVariables>(
+      CREATE_VERIFICATION,
+    );
 
-  const [verifyEmailandCode] = useLazyQuery<
-    MVerifyEmailAndCode,
-    MVerifyEmailAndCodeVariables
-  >(CHECK_VERIFICATION);
+  const [verifyEmailandCode, {loading: verifyEmailAndCodeLoading}] =
+    useLazyQuery<MVerifyEmailAndCode, MVerifyEmailAndCodeVariables>(
+      CHECK_VERIFICATION,
+    );
 
   const {
     handleSubmit,
@@ -309,6 +308,9 @@ function LocalJoin() {
           closeModal={closeModal}
         />
       )}
+      {(createAccountLoading ||
+        createVerificationLoading ||
+        verifyEmailAndCodeLoading) && <LoadingOverlay />}
     </>
   );
 }

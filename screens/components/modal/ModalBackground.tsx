@@ -1,6 +1,5 @@
 import React, {ReactNode} from 'react';
-import {StyleSheet, Touchable, TouchableOpacity, View} from 'react-native';
-import {colors} from '../../../utils/colors';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 
 interface IModalBackground {
   children: ReactNode;
@@ -9,7 +8,10 @@ interface IModalBackground {
 
 function ModalBackground({children, closeModal}: IModalBackground) {
   return (
-    <TouchableOpacity onPress={closeModal} style={styles.wrapper}>
+    <TouchableOpacity
+      onPress={closeModal}
+      activeOpacity={1}
+      style={styles.wrapper}>
       {children}
     </TouchableOpacity>
   );

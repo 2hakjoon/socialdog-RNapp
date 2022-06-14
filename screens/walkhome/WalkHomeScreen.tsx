@@ -11,6 +11,7 @@ import {
 import {mvGeolocationPermission, TypenameAndId} from '../../apollo-setup';
 import {WalkHomeScreenProps} from '../../routes';
 import {colors} from '../../utils/colors';
+import LoadingOverlay from '../components/loading/LoadingOverlay';
 import TextComp from '../components/TextComp';
 import WeatherCard from '../weather/template/WeatherCard';
 import SelectDogTemplate from './template/SelectDogTemplate';
