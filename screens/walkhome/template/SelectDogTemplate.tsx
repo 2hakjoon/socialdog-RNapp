@@ -152,7 +152,7 @@ function SelectDogTemplate({setSeletedDogId}: ISelectedDogTemplate) {
     <>
       <View style={styles.wapper}>
         {getDogsLoading ? (
-          <ActivityIndicator size={'large'} color={'white'} />
+          <ActivityIndicator size={'large'} color={'black'} />
         ) : (
           <View style={styles.InnerWrapper}>
             {dogsData && (
