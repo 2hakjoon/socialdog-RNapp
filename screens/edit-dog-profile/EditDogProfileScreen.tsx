@@ -29,30 +29,23 @@ import {MCreateDog, MCreateDogVariables} from '../../__generated__/MCreateDog';
 import SmallButton from '../components/SmallButton';
 import DogProfilePhoto from '../components/profile-photo/DogProfilePhoto';
 import Config from 'react-native-config';
+import LoadingOverlay from '../components/loading/LoadingOverlay';
 
 function EditDogProfileScreen() {
-  const {params: user} = useRoute<RootRouteProps<'EditDogProfile'>>();
   const navigation = useNavigation<UseNavigationProp<'WalkTab'>>();
   const client = useApolloClient();
-  const {control, formState, handleSubmit, setValue} =
-    useForm<EditDogInputDto>();
-  const [createDog] = useMutation<MCreateDog, MCreateDogVariables>(CREATE_DOG);
+  const {control, formState, handleSubmit} = useForm<EditDogInputDto>();
+  const [createDog, {loading: createDogProfileLoading}] = useMutation<
+    MCreateDog,
+    MCreateDogVariables
+  >(CREATE_DOG);
 
-  const [createPreSignedUrl] = useMutation<
-    MCreatePreSignedUrls,
-    MCreatePreSignedUrlsVariables
-  >(CREATE_PRESIGNED_URL);
+  const [createPreSignedUrl, {loading: createPreSignedUrlLoading}] =
+    useMutation<MCreatePreSignedUrls, MCreatePreSignedUrlsVariables>(
+      CREATE_PRESIGNED_URL,
+    );
 
   const [newPhoto, setNewPhoto] = useState<Asset>();
-
-  useEffect(() => {
-    // setValue('username', user.username);
-    // setValue('dogname', user.dogname);
-  }, []);
-
-  const goBackToProfile = () => {
-    navigation.goBack();
-  };
 
   const getBlob = async (fileUri: string) => {
     const resp = await fetch(fileUri);
@@ -86,7 +79,7 @@ function EditDogProfileScreen() {
         method: 'PUT',
         body: blob,
       });
-      console.log(awsUploadresult);
+      // console.log(awsUploadresult);
       if (awsUploadresult.status !== 200) {
         throw new Error('파일 업로드 실패');
       }
@@ -110,7 +103,7 @@ function EditDogProfileScreen() {
       const res = await createDog({
         variables: {args: {name: formData.name, photo: file}},
       });
-      console.log(res);
+      // console.log(res);
       if (res.data?.createDog.error) {
         Alert.alert('오류', res.data?.createDog.error);
         return;
@@ -138,30 +131,35 @@ function EditDogProfileScreen() {
   };
 
   return (
-    <ScrollView style={styles.outerWrapper}>
-      <KeyboardAvoidingView
-        //behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        behavior="padding"
-        style={styles.wrapper}>
-        <View style={styles.photoContainer}>
-          <DogProfilePhoto size={130} url={newPhoto?.uri} />
-          <SmallButton title="사진등록" onPress={changeProfilePhoto} />
-        </View>
-        <View style={styles.inputWrapper}>
-          <FormInputBox
-            title="반려견 이름"
-            name="name"
-            control={control}
-            rules={{
-              required: '내용을 입력해주세요.',
-            }}
-            errors={formState.errors.name?.message}
-            maxLength={20}
-          />
-        </View>
-        <BasicButton title="저장하기" onPress={handleSubmit(onSubmit)} />
-      </KeyboardAvoidingView>
-    </ScrollView>
+    <>
+      <ScrollView style={styles.outerWrapper}>
+        <KeyboardAvoidingView
+          //behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior="padding"
+          style={styles.wrapper}>
+          <View style={styles.photoContainer}>
+            <DogProfilePhoto size={130} url={newPhoto?.uri} />
+            <SmallButton title="사진등록" onPress={changeProfilePhoto} />
+          </View>
+          <View style={styles.inputWrapper}>
+            <FormInputBox
+              title="반려견 이름"
+              name="name"
+              control={control}
+              rules={{
+                required: '내용을 입력해주세요.',
+              }}
+              errors={formState.errors.name?.message}
+              maxLength={20}
+            />
+          </View>
+          <BasicButton title="저장하기" onPress={handleSubmit(onSubmit)} />
+        </KeyboardAvoidingView>
+      </ScrollView>
+      {(createDogProfileLoading || createPreSignedUrlLoading) && (
+        <LoadingOverlay />
+      )}
+    </>
   );
 }
 const styles = StyleSheet.create({

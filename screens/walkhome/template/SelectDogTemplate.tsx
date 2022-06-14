@@ -8,6 +8,7 @@ import React, {
   useState,
 } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Platform,
   StyleSheet,
@@ -32,6 +33,7 @@ import {
 } from '../../../__generated__/MDeleteDog';
 import useEvictCache from '../../../hooks/useEvictCache';
 import {TypenameAndId} from '../../../apollo-setup';
+import LoadingOverlay from '../../components/loading/LoadingOverlay';
 
 const emptyDogProfile: QGetDogs_getMyDogs_data = {
   __typename: 'Dogs',
@@ -48,13 +50,16 @@ interface ISelectedDogTemplate {
 function SelectDogTemplate({setSeletedDogId}: ISelectedDogTemplate) {
   const navigation = useNavigation<UseNavigationProp<'WalkTab'>>();
 
-  const {data, refetch} = useQuery<QGetDogs>(GET_DOGS);
+  const {data, refetch, loading: getDogsLoading} = useQuery<QGetDogs>(GET_DOGS);
   const evictCache = useEvictCache();
   const [dogsData, setDogsData] = useState<QGetDogs_getMyDogs_data[]>([
     emptyDogProfile,
   ]);
 
-  const [deleteDog] = useMutation<MDeleteDog, MDeleteDogVariables>(DELETE_DOG);
+  const [deleteDog, {loading: deleteDogsLoading}] = useMutation<
+    MDeleteDog,
+    MDeleteDogVariables
+  >(DELETE_DOG);
 
   //console.log(dogsData);
   const [slideIndex, setSlideIndex] = useState<number>(0);
@@ -144,35 +149,42 @@ function SelectDogTemplate({setSeletedDogId}: ISelectedDogTemplate) {
   };
 
   return (
-    <View style={styles.wapper}>
-      <View style={styles.InnerWrapper}>
-        {dogsData && (
-          <Carousel
-            vertical={false}
-            data={dogsData}
-            renderItem={renderItem}
-            sliderWidth={300}
-            itemWidth={300}
-            onSnapToItem={e => onCarouselSnap(e)}
-          />
+    <>
+      <View style={styles.wapper}>
+        {getDogsLoading ? (
+          <ActivityIndicator size={'large'} color={'white'} />
+        ) : (
+          <View style={styles.InnerWrapper}>
+            {dogsData && (
+              <Carousel
+                vertical={false}
+                data={dogsData}
+                renderItem={renderItem}
+                sliderWidth={300}
+                itemWidth={300}
+                onSnapToItem={e => onCarouselSnap(e)}
+              />
+            )}
+            <View style={styles.dotsWrapper}>
+              {dogsData.map((_, idx) => {
+                return (
+                  <View style={{paddingHorizontal: 10}} key={Math.random()}>
+                    {idx === slideIndex ? (
+                      <>
+                        <FontAwesomeIcon name="circle" />
+                      </>
+                    ) : (
+                      <FontAwesomeIcon name="circle-o" />
+                    )}
+                  </View>
+                );
+              })}
+            </View>
+          </View>
         )}
-        <View style={styles.dotsWrapper}>
-          {dogsData.map((_, idx) => {
-            return (
-              <View style={{paddingHorizontal: 10}} key={Math.random()}>
-                {idx === slideIndex ? (
-                  <>
-                    <FontAwesomeIcon name="circle" />
-                  </>
-                ) : (
-                  <FontAwesomeIcon name="circle-o" />
-                )}
-              </View>
-            );
-          })}
-        </View>
       </View>
-    </View>
+      {deleteDogsLoading && <LoadingOverlay />}
+    </>
   );
 }
 

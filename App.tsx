@@ -40,7 +40,6 @@ import EditDogProfileScreen from './screens/edit-dog-profile/EditDogProfileScree
 import SplashScreen from 'react-native-splash-screen';
 import LocalLogin from './screens/auth/templates/LocalLogin';
 import LocalJoin from './screens/auth/templates/LocalJoin';
-import LoadingOverlay from './screens/components/loading/LoadingOverlay';
 import {deleteTokens} from './utils/asyncStorage';
 
 const RootTab = createBottomTabNavigator<RootTabNavigator>();
