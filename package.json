@@ -16,8 +16,8 @@
     "test": "jest",
     "codegen": "sudo apollo client:codegen __generated__ --target=typescript --outputFlat",
     "podinstall": "cd ios && arch -x86_64 pod install && cd ..",
-    "codepush:staging": "appcenter codepush release-react -a 2hakjoon/socialdog -d Staging -k private.pem",
-    "codepush:production": "appcenter codepush release-react -a 2hakjoon/socialdog -d Production -k private.pem",
+    "codepush:staging": "appcenter codepush release-react -a 2hakjoon/socialdog -d Staging -k private.pem && appcenter codepush release-react -a 2hakjoon/socialdog-1 -d Staging -k private.pem",
+    "codepush:production": "appcenter codepush release-react -a 2hakjoon/socialdog -d Production -k private.pem && appcenter codepush release-react -a 2hakjoon/socialdog-1 -d Production -k private.pem",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
