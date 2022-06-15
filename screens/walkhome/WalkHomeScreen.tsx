@@ -3,6 +3,7 @@ import BackgroundGeolocation from '@mauron85/react-native-background-geolocation
 import React, {useState} from 'react';
 import {
   Alert,
+  Button,
   Platform,
   StyleSheet,
   TouchableOpacity,
@@ -54,7 +55,6 @@ function WalkHomeScreen({navigation}: WalkHomeScreenProps) {
       );
     }
   };
-
   return (
     <View style={styles.wapper}>
       <View style={styles.weather}>

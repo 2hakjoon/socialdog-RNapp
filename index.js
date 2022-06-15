@@ -9,9 +9,10 @@ import App from './App';
 import {name as appName} from './app.json';
 
 const codePushConfig = {
-  checkFrequency: 'ON_APP_RESUME',
+  checkFrequency: CodePush.CheckFrequency.ON_APP_START,
   deploymentKey: Config.CODE_PUSH_KEY,
-  InstallMode: 'ON_NEXT_RESTART',
+  updateDialog: false,
+  InstallMode: CodePush.InstallMode.IMMEDIATE,
 };
 
 AppRegistry.registerComponent(appName, () => CodePush(codePushConfig)(App));

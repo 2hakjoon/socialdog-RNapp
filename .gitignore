@@ -63,3 +63,5 @@ buck-out/
 .env.development
 .env.dev
 ./utils/trackingData.ts
+private.pem
+public.pem

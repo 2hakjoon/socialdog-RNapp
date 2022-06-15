@@ -1,14 +1,13 @@
 <resources>
     <string name="app_name">소셜독</string>
     <string name="kakao_app_key">fbe8f38ac3b3616f9a30a104ae0dc9fa</string>
-    <string moduleConfig="true" name="CodePushDeploymentKey">nKQ08527myPTcgBqnJ5y9scfEc4vj4oHjg3K0</string>
     <string name="CodePushPublicKey">-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtPSR9lkGzZ4FR0lxF+ZA
-P6jJ8+Xi5L601BPN4QESoRVSrJM08roOCVrs4qoYqYJy3Of2cQWvNBEh8ti3FhHu
-tiuLFpNdfzM4DjAw0Ti5hOTfTixqVBXTJPYpSjDh7K6tUvp9MV0l5q/Ps3se1vud
-M1/X6g54lIX/QoEXTdMgR+SKXvlUIC13T7GkDHT6Z4RlwxkWkOmf2tGguRcEBL6j
-ww7w/3g0kWILz7nNPtXyDhIB9WLH7MKSJWdVCZm+cAqabUfpCFo7sHiyHLnUxcVY
-OTw3sz9ceaci7z2r8SZdsfjyjiDJrq69eWtvKVUpredy9HtyALtNuLjDITahdh8A
-zwIDAQAB
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4jc/Tq6CJjUHOl0TTCEp
+HQ/cDr61eY0OcbRboJz+NZlKvk0+U8L7RJg6QSqkAJx6weE4X8cOXjr+ImaTWR43
+PRMPw2tzxG7voLz57t6/bkaXae8IFpDvCCFXtp1ENC9eFif5yAYKD5j6tHs/U5j7
+Dhcrx4CHbxJ7iFQTR1Qta2MnE9DtBIGZWkgSsS+gh6jPnuDFhkZHo3EDx+HzYK79
+zxO8Jw2Vba3WuOd9+H47EnuzKFMePzmzP0sgfKw0044qW/sFXkjjaGgYSYiuyTao
+8uwrI+FjQCGxBgBdR8kYxbxPIPHs3aCuWlMmzviTAfF4zeHGT7Hl3hfmIijJV+NT
+9QIDAQAB
 -----END PUBLIC KEY-----</string>
 </resources>

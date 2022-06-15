@@ -138,7 +138,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 4
-        versionName "1.3"
+        versionName "1.13"
         // react-native-config
         resValue "string", "build_config_package", "com.socialdog"
 
@@ -175,6 +175,8 @@ android {
                     abiFilters nativeArchitectures.split(',')
                 }
             }
+            // Note: CodePush updates shouldn't be tested in Debug mode as they're overriden by the RN packager. However, because CodePush checks for updates in all modes, we must supply a key.
+            resValue "string", "CodePushDeploymentKey", '"nKQ08527myPTcgBqnJ5y9scfEc4vj4oHjg3K0"'
         }
         releaseStaging{
             // Caution! In production, you need to generate your own keystore file.

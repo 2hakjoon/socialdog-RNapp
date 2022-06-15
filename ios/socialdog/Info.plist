@@ -4,7 +4,13 @@
 <dict>
 	<key>CodePushPublicKey</key>
   <string>-----BEGIN PUBLIC KEY-----
-MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANkWYydPuyOumR/sn2agNBVDnzyRpM16NAUpYPGxNgjSEp0etkDNgzzdzyvyl+OsAGBYF3jCxYOXozum+uV5hQECAwEAAQ==
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4jc/Tq6CJjUHOl0TTCEp
+HQ/cDr61eY0OcbRboJz+NZlKvk0+U8L7RJg6QSqkAJx6weE4X8cOXjr+ImaTWR43
+PRMPw2tzxG7voLz57t6/bkaXae8IFpDvCCFXtp1ENC9eFif5yAYKD5j6tHs/U5j7
+Dhcrx4CHbxJ7iFQTR1Qta2MnE9DtBIGZWkgSsS+gh6jPnuDFhkZHo3EDx+HzYK79
+zxO8Jw2Vba3WuOd9+H47EnuzKFMePzmzP0sgfKw0044qW/sFXkjjaGgYSYiuyTao
+8uwrI+FjQCGxBgBdR8kYxbxPIPHs3aCuWlMmzviTAfF4zeHGT7Hl3hfmIijJV+NT
+9QIDAQAB
 -----END PUBLIC KEY-----</string>
 	<key>CodePushDeploymentKey</key>
 	<string>$(CODEPUSH_KEY)</string>
