@@ -151,37 +151,39 @@ function SelectDogTemplate({setSeletedDogId}: ISelectedDogTemplate) {
   return (
     <>
       <View style={styles.wapper}>
-        {getDogsLoading ? (
-          <ActivityIndicator size={'large'} color={'black'} />
-        ) : (
-          <View style={styles.InnerWrapper}>
-            {dogsData && (
-              <Carousel
-                vertical={false}
-                data={dogsData}
-                renderItem={renderItem}
-                sliderWidth={300}
-                itemWidth={300}
-                onSnapToItem={e => onCarouselSnap(e)}
-              />
-            )}
-            <View style={styles.dotsWrapper}>
-              {dogsData.map((_, idx) => {
-                return (
-                  <View style={{paddingHorizontal: 10}} key={Math.random()}>
-                    {idx === slideIndex ? (
-                      <>
-                        <FontAwesomeIcon name="circle" />
-                      </>
-                    ) : (
-                      <FontAwesomeIcon name="circle-o" />
-                    )}
-                  </View>
-                );
-              })}
-            </View>
-          </View>
-        )}
+        <View style={styles.InnerWrapper}>
+          {getDogsLoading ? (
+            <ActivityIndicator size={'large'} color={'black'} />
+          ) : (
+            <>
+              {dogsData && (
+                <Carousel
+                  vertical={false}
+                  data={dogsData}
+                  renderItem={renderItem}
+                  sliderWidth={300}
+                  itemWidth={300}
+                  onSnapToItem={e => onCarouselSnap(e)}
+                />
+              )}
+              <View style={styles.dotsWrapper}>
+                {dogsData.map((_, idx) => {
+                  return (
+                    <View style={{paddingHorizontal: 10}} key={Math.random()}>
+                      {idx === slideIndex ? (
+                        <>
+                          <FontAwesomeIcon name="circle" />
+                        </>
+                      ) : (
+                        <FontAwesomeIcon name="circle-o" />
+                      )}
+                    </View>
+                  );
+                })}
+              </View>
+            </>
+          )}
+        </View>
       </View>
       {deleteDogsLoading && <LoadingOverlay />}
     </>
@@ -194,6 +196,7 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
     borderRadius: 30,
     alignItems: 'center',
+    justifyContent: 'space-around',
     backgroundColor: 'white',
     width: '100%',
     height: '100%',
