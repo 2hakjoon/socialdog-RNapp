@@ -84,6 +84,7 @@ function TermsTemplate({closeModal, nextStep}: ITermsTemplate) {
           </View>
           <View style={styles.termBox}>
             <WebView
+              nestedScrollEnabled
               source={{
                 html: termsOfPrivacy,
               }}
@@ -110,6 +111,7 @@ function TermsTemplate({closeModal, nextStep}: ITermsTemplate) {
           </View>
           <View style={styles.termBox}>
             <WebView
+              nestedScrollEnabled
               source={{
                 html: termsOfService,
               }}
