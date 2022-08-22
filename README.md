@@ -3,9 +3,8 @@
 지역기반의 반려동물 커뮤니티 소셜독의 어플리케이션 입니다.     
 산책기록 기능을 구현하기 위해 React Native로 제작하였습니다.   
 커뮤니티 탭에서, 웹앱으로 구현된 소셜독 서비스를 이용할 수 있습니다.  
-플레이스토어에 배포되어 현재 다운로드 할 수 있습니다.  
-App 다운로드(안드로이드) : https://play.google.com/store/apps/details?id=com.socialdog    
-Code Push를 적용하여, 배포주기를 짧게 관리할 수 있습니다.
+플레이스토어에 배포 되어 있습니다. (안드로이드) : https://play.google.com/store/apps/details?id=com.socialdog    
+배포주기를 짧게 관리하기 위해 Code Push를 적용하였습니다.   
 
 
 ## 기술 스택
