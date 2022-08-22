@@ -16,21 +16,27 @@ Code Push를 적용하여, 배포주기를 짧게 관리할 수 있습니다.
 
 ## 산책 기록기능 데모 영상
 [![Video Label](http://img.youtube.com/vi/lpWQvNLFCIo/0.jpg)](https://youtu.be/lpWQvNLFCIo)
-클릭시 유튜브로 이동.
-
-
+클릭시 유튜브로 이동.   
+   
+---------------
+   
 ## 미리보기
 ### 로그인 화면
-![image](https://user-images.githubusercontent.com/61589338/185923431-8f568f54-d500-4f81-9c3d-1202c94b661e.png){: width="300"}{: .center}
-### 반려견 프로필 저장
-![image](https://user-images.githubusercontent.com/61589338/185923471-56d4b46c-8c18-4393-80dd-bc3232e85aec.png){: width="300"}{: .center}
-### 산책 기록
-![image](https://user-images.githubusercontent.com/61589338/185923521-6710536a-f9c9-4980-a774-489d242c8c1c.png){: width="300"}{: .center}
-### 산책 기록 확인
-![image](https://user-images.githubusercontent.com/61589338/185923578-13bf169f-6e2b-4b7b-9158-6597491b22fd.png){: width="300"}{: .center}
-### 웹앱으로 구현된 소셜독 커뮤니티
-![image](https://user-images.githubusercontent.com/61589338/185923650-328ca851-0ffe-43b1-a7e0-d083603861f0.png){: width="300"}{: .center}
+<img src = "https://user-images.githubusercontent.com/61589338/185923431-8f568f54-d500-4f81-9c3d-1202c94b661e.png" width="300px" />   
 
+### 반려견 프로필 저장
+<img src = "https://user-images.githubusercontent.com/61589338/185923471-56d4b46c-8c18-4393-80dd-bc3232e85aec.png" width="300px" />   
+
+### 산책 기록
+<img src = "https://user-images.githubusercontent.com/61589338/185923521-6710536a-f9c9-4980-a774-489d242c8c1c.png" width="300px" />   
+
+### 산책 기록 확인
+<img src = "https://user-images.githubusercontent.com/61589338/185923578-13bf169f-6e2b-4b7b-9158-6597491b22fd.png" width="300px" />   
+
+### 웹앱으로 구현된 소셜독 커뮤니티
+<img src = "https://user-images.githubusercontent.com/61589338/185923650-328ca851-0ffe-43b1-a7e0-d083603861f0.png" width="300px" />   
+
+---------------   
 
 ## 기능 구현
  - 로그인 관련  
