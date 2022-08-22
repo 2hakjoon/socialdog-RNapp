@@ -14,7 +14,7 @@ import RecordingScreen from './screens/record/RecordingScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Provider} from 'react-redux';
+import {Provider, useSelector} from 'react-redux';
 import {applyMiddleware, createStore} from 'redux';
 import rootReducer from './module';
 import {
